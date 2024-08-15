@@ -16,11 +16,6 @@
 ##'   1e05 (`?density` advises to use powers of 2 as the value gets rounded up
 ##'   anyway, but we found this not to be the case). Changing `n` changes the
 ##'   resolution of the density kernel but not the wiggliness.
-##' @param tolerance amount (as a proportion) that the relative difference
-##'   between `y_hdi_lower` and `y_hdi_upper` can be, calculated as their
-##'   absolute difference divided by their mean. If the calculation is larger
-##'   than `tolerance` then a warning is given. Only applicable when `density =
-##'   TRUE`. NOT USED NOW, decide if need to keep (prob (not).
 ##' @param allow_hdi_zero logical, if TRUE then allow HDI lower bound to include
 ##'   zero or be negative; if FALSE (the default) then do not allow this.
 ##' @param ... arguments to pass onto `density()`, including `to` which is
@@ -79,7 +74,6 @@ create_intervals.numeric <- function(dat,
                              credibility = 0.95,
                              from = 0,
                              n = 1e05,
-                             tolerance = 0.01,
                              allow_hdi_zero = FALSE,
                              ...
                              ){
@@ -248,12 +242,6 @@ create_intervals.numeric <- function(dat,
     }
 
     y_hdi_upper <- dens$y[i_hdi_upper]
-
-    #if(abs(y_hdi_lower - y_hdi_upper) / mean(c(y_hdi_lower, y_hdi_upper)) >
-   #    tolerance){
-   #   warning("y_hdi_lower and y_hdi_upper do not meet the tolerance specified; try rerunning with a higher value of n")
-   # }
-
   }
 
   # TODO think about left-skewed

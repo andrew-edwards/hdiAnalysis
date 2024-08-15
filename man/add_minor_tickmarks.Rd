@@ -13,6 +13,19 @@ add_minor_tickmarks(
   y_tick_end = NULL
 )
 }
+\arguments{
+\item{x_tick_start}{start of small tickmarks on x-axis}
+
+\item{x_tick_by}{interval between small tickmarks on x-axis}
+
+\item{x_tick_end}{end of small tickmarks on x-axis}
+
+\item{y_tick_start}{start of small tickmarks on y-axis}
+
+\item{y_tick_by}{interval between small tickmarks on y-axis}
+
+\item{y_tick_end}{end of small tickmarks on y-axis}
+}
 \value{
 adds minor tickmarks to an existing plot
 }
@@ -22,7 +35,6 @@ plot. Adapted from \code{pacea::add_tickmarks()}. Is exported but unlikely to be
 }
 \examples{
 \dontrun{
-
 }
 }
 \author{

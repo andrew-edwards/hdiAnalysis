@@ -3,18 +3,17 @@
 ##' Add sensible smaller (unlabelled) tickmarks to both axes of an existing
 ##' plot. Adapted from `pacea::add_tickmarks()`. Is exported but unlikely to be needed externally.
 ##'
-##' @param x_tick_start
-##' @param x_tick_by
-##' @param x_tick_end
-##' @param y_tick_start
-##' @param y_tick_by
-##' @param y_tick_end
+##' @param x_tick_start start of small tickmarks on x-axis
+##' @param x_tick_by interval between small tickmarks on x-axis
+##' @param x_tick_end end of small tickmarks on x-axis
+##' @param y_tick_start start of small tickmarks on y-axis
+##' @param y_tick_by interval between small tickmarks on y-axis
+##' @param y_tick_end end of small tickmarks on y-axis
 ##' @return adds minor tickmarks to an existing plot
 ##' @export
 ##' @author Andrew Edwards
 ##' @examples
 ##' \dontrun{
-##'
 ##' }
 add_minor_tickmarks <- function(x_tick_start = 0,
                                 x_tick_by = 2,
@@ -38,14 +37,7 @@ add_minor_tickmarks <- function(x_tick_start = 0,
        labels = FALSE,
        tcl = -0.2)
 
-  # Slightly larger ticks every decade (since not all get labelled automatically)
-  ## axis(1,
-  ##      seq(start_decade_ticks,
-  ##          max,
-  ##          by = "10 years"),
-  ##      labels = FALSE,
-  ##      tcl = -0.3)
-
+  # Small ticks every y_tick_by
   axis(2,
        seq(y_tick_start,
            y_tick_end,

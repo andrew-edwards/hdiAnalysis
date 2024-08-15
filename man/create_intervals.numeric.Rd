@@ -10,7 +10,6 @@
   credibility = 0.95,
   from = 0,
   n = 1e+05,
-  tolerance = 0.01,
   allow_hdi_zero = FALSE,
   ...
 )
@@ -36,11 +35,6 @@ default of 512 to give inaccurate results, so set a higher default here as
 1e05 (\code{?density} advises to use powers of 2 as the value gets rounded up
 anyway, but we found this not to be the case). Changing \code{n} changes the
 resolution of the density kernel but not the wiggliness.}
-
-\item{tolerance}{amount (as a proportion) that the relative difference
-between \code{y_hdi_lower} and \code{y_hdi_upper} can be, calculated as their
-absolute difference divided by their mean. If the calculation is larger
-than \code{tolerance} then a warning is given. Only applicable when \code{density = TRUE}. NOT USED NOW, decide if need to keep (prob (not).}
 
 \item{allow_hdi_zero}{logical, if TRUE then allow HDI lower bound to include
 zero or be negative; if FALSE (the default) then do not allow this.}

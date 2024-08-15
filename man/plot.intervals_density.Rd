@@ -28,6 +28,9 @@ tails shaded as specified and optional explanatory lines added}
   x_minor_ticks_by = 1,
   y_minor_ticks_by = 0.01,
   ticks_tcl = -0.2,
+  show_a_b = TRUE,
+  explanatory_lines_a_b = FALSE,
+  explanatory_lines_extra = FALSE,
   show_discontinuity = FALSE,
   discontinuity_multiplier = 2,
   ...
@@ -52,6 +55,15 @@ tails shaded as specified and optional explanatory lines added}
 1.0 puts them exactly at the minimum density of the ends of the credible
 interval)}
 
+\item{show_a_b}{logical, whether to show intervals a and b on ETI plot}
+
+\item{explanatory_lines_a_b}{logical, whether to plot extra lines to explain the
+ranges a and b for the ETI.}
+
+\item{explanatory_lines_extra}{logical, whether to plot extra lines to explain the
+ranges c and d for which all values in c are more likely than those in d,
+yet c is outside the ETI and d is inside it.}
+
 \item{show_discontinuity}{logical, if \code{TRUE} then plot the discontinuity in
 the HDI that arises (only matters if \code{ints_dens$intervals$warning == TRUE}).}
 
@@ -62,8 +74,6 @@ credible interval.}
 \item{...}{arguments to pass onto \code{plot()}}
 
 \item{dat_mcmc}{a numeric vector representing an MCMC sample.}
-
-\item{year}{Which year of recruitment (age-0) to plot}
 
 \item{rec_intervals}{result of \code{create_intervals(dat_mcmc)}; is calculated
 if not supplied. May be worth supplying so it's not being repeatedly calculated.}
@@ -77,8 +87,9 @@ result of running \code{create_intervals()} on a vector of values.
 }
 \examples{
 \dontrun{
-plot_recruitment_density()
-plot_recruitment_density(year = 2021)
+res <- create_intervals(rec_2021)
+plot(res)
+# And see results and result-extra vignettes.
 }
 }
 \author{

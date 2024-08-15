@@ -4,22 +4,39 @@
 \alias{create_intervals.data.frame}
 \title{Calculate ETIs and HDIs for a data frame of quantities.}
 \usage{
-\method{create_intervals}{data.frame}(dat_mcmc, allow_hdi_zero = FALSE, credibility = 0.95, ...)
+\method{create_intervals}{data.frame}(dat_mcmc, credibility = 0.95, ...)
 }
 \arguments{
-\item{...}{arguments to pass to \code{create_intervals()} and then \code{density()}
-TODO test changing from.}
+\item{dat_mcmc}{data.frame of MCMC (or other) samples as rows, and a
+different quantity in each named column. \code{NA}s get removed.}
+
+\item{...}{arguments to pass to \code{create_intervals()} and maybe onto \code{density()}}
 }
 \value{
-list first column is quantity, then rest is like
-\code{create_intervals.numeric()} TODO object of \code{res_all_years} which contains \code{year} plus
-\code{intervals} and \code{dens} for that year, plus \code{intervals_all_years} which
-contains all the intervals in one tibble with \code{year} as the first column.
+list object, also of class \code{intervals_density_list} for ease of
+plotting, with:
+\itemize{
+\item element \verb{[[i]]} corresponding to column \code{i} of the \code{dat_mcmc}. Each
+\verb{[[i]]} element is itself a list, giving the same results as
+\code{create_intervals.numeric()} for each single vector, plus also with the
+\verb{$name} element which is the name of column \code{i} of \code{dat_mcmc}.
+\item intervals_all_years tibble of all the intervals, with the first column,
+\code{quantity}, corresponding to each column of \code{dat_mcmc}, such that row \code{i}
+corresponds to column \code{i} of \code{dat_mcmc}. \code{quantity} is numeric if no
+column names of \code{dat_mcmc} contain non-digits.
+}
 }
 \description{
 For a data frame of MCMC (or other) samples as rows and some quantity
 given in each named column, calculate the ETI, HDI, and kernel density for
 each column, with \code{create_intervals()}.
+}
+\examples{
+\dontrun{
+res <- create_intervals(hake_recruitment_mcmc)
+res
+# See results.html vignette
+}
 }
 \author{
 Andrew Edwards

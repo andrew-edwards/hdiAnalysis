@@ -4,26 +4,28 @@
 ##' given in each named column, calculate the ETI, HDI, and kernel density for
 ##' each column, with `create_intervals()`.
 ##'
-##' @param dat_mcmc
-##' @param allow_hdi_zero
-##' @param credibility
-##' @param ... arguments to pass to `create_intervals()` and then `density()`
-##'   TODO test changing from.
-##' @return list first column is quantity, then rest is like
-##'   `create_intervals.numeric()` TODO object of `res_all_years` which contains `year` plus
-##'   `intervals` and `dens` for that year, plus `intervals_all_years` which
-##'   contains all the intervals in one tibble with `year` as the first column.
+##' @param dat_mcmc data.frame of MCMC (or other) samples as rows, and a
+##'   different quantity in each named column. `NA`s get removed.
+##' @param ... arguments to pass to `create_intervals()` and maybe onto `density()`
+##' @return list object, also of class `intervals_density_list` for ease of
+##'   plotting, with:
+##'  * element `[[i]]` corresponding to column `i` of the `dat_mcmc`. Each
+##'   `[[i]]` element is itself a list, giving the same results as
+##'   `create_intervals.numeric()` for each single vector, plus also with the
+##'   `$name` element which is the name of column `i` of `dat_mcmc`.
+##'  * intervals_all_years tibble of all the intervals, with the first column,
+##'   `quantity`, corresponding to each column of `dat_mcmc`, such that row `i`
+##'   corresponds to column `i` of `dat_mcmc`. `quantity` is numeric if no
+##'   column names of `dat_mcmc` contain non-digits.
 ##' @export
 ##' @author Andrew Edwards
 ##' @examples
 ##' \dontrun{
-##' res <- create_intervals.data.frame(hake_recruitment_mcmc)   # this works,
-##'   next doesn't yet
 ##' res <- create_intervals(hake_recruitment_mcmc)
 ##' res
+##' # See results.html vignette
 ##' }
 create_intervals.data.frame <- function(dat_mcmc,
-                                        allow_hdi_zero = FALSE,
                                         credibility = 0.95,
                                         ...){
   res_all <- list()
@@ -39,8 +41,6 @@ create_intervals.data.frame <- function(dat_mcmc,
     values <- values[!is.na(values)]    # Remove NA's, useful for sample size analysis
 
     res <- create_intervals(values,
-                            allow_hdi_zero = allow_hdi_zero,
-                            credibility = credibility,
                             ...)
 
     res_all[[i]] <- res
