@@ -1,32 +1,5 @@
-##' Calculate ETIs and HDIs for a data frame of quantities.
-##'
-##' For a data frame of MCMC (or other) samples as rows and some quantity
-##' given in each named column, calculate the ETI, HDI, and kernel density for
-##' each column, with `create_intervals()`.
-##'
-##' @param dat_mcmc data.frame of MCMC (or other) samples as rows, and a
-##'   different quantity in each named column. `NA`s get removed.
-##' @param ... arguments to pass to `create_intervals()` and maybe onto `density()`
-##' @return list object, also of class `intervals_density_list` for ease of
-##'   plotting, with:
-##'  * element `[[i]]` corresponding to column `i` of the `dat_mcmc`. Each
-##'   `[[i]]` element is itself a list, giving the same results as
-##'   `create_intervals.numeric()` for each single vector, plus also with the
-##'   `$name` element which is the name of column `i` of `dat_mcmc`.
-##'  * intervals_all_years tibble of all the intervals, with the first column,
-##'   `quantity`, corresponding to each column of `dat_mcmc`, such that row `i`
-##'   corresponds to column `i` of `dat_mcmc`. `quantity` is numeric if no
-##'   column names of `dat_mcmc` contain non-digits.
-##' @export
-##' @author Andrew Edwards
-##' @examples
-##' \dontrun{
-##' res <- create_intervals(hake_recruitment_mcmc)
-##' res
-##' # See results.html vignette
-##' }
+##' @rdname create_intervals
 create_intervals.data.frame <- function(dat_mcmc,
-                                        credibility = 0.95,
                                         ...){
   res_all <- list()
   intervals_all <- tibble::tibble()
