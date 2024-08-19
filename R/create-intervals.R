@@ -34,7 +34,8 @@
 ##'   the right-most equivalent to `from`.
 ##'
 ##' @md
-##' @return if `dat` is numeric then retuns a list object of class
+##' @return
+##' * If `dat` is numeric then retuns a list object of class
 ##'   `intervals_density` (such that we can plot it
 ##'   with `plot.intervals_density()`, with objects:  TODO check if that md
 ##'   above is needed
@@ -76,7 +77,7 @@
 ##'   `plot.intervals_density()` with `show_discontinuity = TRUE` to plot the
 ##'   discontinuities in the HDI.
 ##'     * allow_hdi_zero: logical of `allow_hdi_zero` used
-##' If `dat` is a data frame then return a list object of class
+##' * If `dat` is a data frame then return a list object of class
 ##'   `intervals_density_list` with:
 ##'  * element `[[i]]` corresponding to column `i` of the `dat_mcmc`. Each
 ##'   `[[i]]` element is itself a list of the form described above (since the

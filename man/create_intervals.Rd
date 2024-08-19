@@ -55,7 +55,8 @@ resolution of the density kernel but not the wiggliness.}
 zero or be negative; if FALSE (the default) then do not allow this.}
 }
 \value{
-if \code{dat} is numeric then retuns a list object of class
+\itemize{
+\item If \code{dat} is numeric then retuns a list object of class
 \code{intervals_density} (such that we can plot it
 with \code{plot.intervals_density()}, with objects:  TODO check if that md
 above is needed
@@ -99,9 +100,10 @@ create_intervals()." is printed and needs investigating. See
 \code{plot.intervals_density()} with \code{show_discontinuity = TRUE} to plot the
 discontinuities in the HDI.
 \item allow_hdi_zero: logical of \code{allow_hdi_zero} used
-If \code{dat} is a data frame then return a list object of class
-\code{intervals_density_list} with:
 }
+}
+\item If \code{dat} is a data frame then return a list object of class
+\code{intervals_density_list} with:
 \item element \verb{[[i]]} corresponding to column \code{i} of the \code{dat_mcmc}. Each
 \verb{[[i]]} element is itself a list of the form described above (since the
 intervals are calculated for each column in turn), plus also the

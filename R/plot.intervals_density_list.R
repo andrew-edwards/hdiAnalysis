@@ -1,78 +1,88 @@
 ##' Plot a time series of intervals from multiple samples, as calculated from
 ##' `create_intervals()` applied to a data frame object.
 ##'
-##' Default plot is to show show ETIs, HDIs, or both (maybe only works for a
-##' time series?), as saved in the `intervals_all` component of the list from
-##' `create_intervals()`. See example and vignette. Also option to plot the density for each quantity (years in
-##' our recruitment example).
+##' Default plot is to show show ETIs, HDIs, or both, as saved in the
+##' `intervals_all` component of the list from
+##' `create_intervals()`. See example and vignette. Also includes option to plot
+##' the density for each quantity (years in ##' our recruitment example).
 ##'
-##' TODO the hel
+##' TOOD might not need @inheritParams plot.intervals_density
 ##'
-##' @param obj a `pacea_recruitment` object, which is a time series. Function
-##'   will run on other objects (not give an error) but is not tested on those.
-##' @param type
-##' @param eti_bar_col
-##' @param hdi_bar_col
+##' @param obj `intervals_density_list` object from running [create_intervals()]
+##'   on a data frame, see full description in the return section of `?create_intervals`
+##' @param type `comparison` to plot both intervals for each value of `quantity`
+##'   (such as year, thus giving a time series, only works if `quantity` is
+##'   numeric), or `eti` or `hdi` to plot the
+##'   respective full distribution  and interval for each value of `quantity`;
+##'   `quantity` is the first column of `obj$intervals_all_years`, corresponding
+##'   to the original column names of the data frame used to crate `obj`.
+##' @param eti_bar_col colour used to plot the ETIs in comparison plot
+##' @param hdi_bar_col colour used to plot the HDIs in comparison plot
 ##' @param add_line_at_0.4 logical whether to add a line at 0.4, specifically
 ##'   for Figure 2B, also adds the 'Now' and 'Projections' text
 ##' @param add_line_at_0.4_col colour for 0.4 line
 ##' @param add_line_at_0.4_lty linetype for 0.4 line
-##' @param ylim
-##' @param leg_loc
-##' @param join_intervals
-##' @param value the column to plot if no uncertainties, or what to plot as dots
-##'   if showing uncertainties (likely always `median`)
-##' @param style `no_uncertainty` for plain time series without uncertainty,
-##'   gets overridden to have uncertainty bars if `low` and `high` are columns
-##'   of `obj`
-##' @param uncertainty_bar_col colour for uncertainty bars for certain types of
-##'   plot (e.g. estimated fish recruitment)
-##' @param y_max maximum y value for certain types of plot (use this if you get
-##'   an error when specifying `ylim`)
-##' @param add_line_at_1 whether to add a horizontal line at 1 (only sensible for scaled recruitments)
-##' @param add_line_at_1_col colour for line at 1
-##' @param add_line_at_1_lty line type of line at 1
-##' @param ... further options passed onto `plot.default()`
-##' @return plot of the time series as median with bars showing uncertainty (if
-##'   `low` and `high` are columns of `obj) to the current device; returns nothing.
+##' @param inc amount to shift ETI to left and HDI to right in comparison, tweak
+##'   as appropriate (depends on scale of x-axis)
+##' @param add_big_ticks_x slightly larger ticks every 10 values of the x-axis
+##'   quantity, since not all get labelled automatically
+##'
+##' @param ylim range for y-axis, if `NULL` (the default) then created
+##'   automatically (can probably subsume into `...`);
+##' @param y_tick_start where to start y tickmarks
+##' @param y_tick_end where to end y tickmarks
+##' @param y_tick_by increment for y tickmarks
+##' @param pch style of points for medians for comparison plots
+##' @param cex size of points for medians for comparison plots; set to 0 to not
+##'   show medians
+##' @param add_legend logical, whether to add a legend to comparison plot
+##' @param leg_loc location of legend, passed onto [legend()] as the `legend`
+##'   argument
+##' @param inset, vector of length two for shifting the legend (`inset` argument
+##'   to [legend()].
+##' @param join_intervals logical, if `TRUE` then join up the ends of the
+##'   intervals, which can be visually useful
+##' @param arrowhead_length
+##' @param mfrow `par(mfrow)` vector of length two (number of rows and number of
+##'   columns to plot panels into) to pass into [plot_densities()]
+##' @param ... further options passed onto [[plot.default()] for `type ==
+##'   "comparison"`, else passed onto [plot_densities()] for `type` being `eti`
+##'   or `hdi`
+##'
+##' @return plot of the required style (multiple plots for `type` being `eti` or
+##'   `hdi`
 ##' @export
 ##' @author Andrew Edwards
 ##' @examples
 ##' \dontrun{
-##'
+##' # And see vignettes
 ##' res_all_years <- create_intervals(dplyr::select(hake_recruitment_mcmc,
 ##'                                                          -"Virgin"))     # TODO
 ##' plot(res_all_years)
 ##' }
-plot.intervals_density_list <- function(obj,   # an intervals_density_list
-                                        # object from create_intervals() on a
-                                        # data frame
-                        type = "comparison", # or eti or hdi
-                        inc = 0.15,
-                        x_tick_extra_years = 20,
-                        add_big_ticks_x = TRUE,
-                        start_big_ticks_x = NULL,
-                        eti_bar_col = "blue",
-                        hdi_bar_col = "red",
-                        add_line_at_0.4 = FALSE,
-                        add_line_at_0.4_col = "darkgreen",
-                        add_line_at_0.4_lty = 5,
-                        ylim = NULL,   # if NULL then created automatically
-                        y_tick_start = 0,
-                        y_tick_end = NULL,
-                        y_tick_by = 1,
-                        pch = 20,
-                        cex = 0.8,   # Size of points for medians, set to 0 to
-                                     # not show medians
-                        inset = c(0, -0.02), #c(0.1,-0.02),   # For shifting legend
-                        add_legend = TRUE,
-                        leg_loc = "topright",
-                        join_intervals = FALSE, # join up the ends of the
-                                        # intervals, useful for sample size plot
-                        arrowhead_length = 0.15,
-                        mfrow = c(1, 1), # for plot_densities
-                        ...
-                        ){
+plot.intervals_density_list <- function(obj,
+                                        type = "comparison", # or eti or hdi
+                                        eti_bar_col = "blue",
+                                        hdi_bar_col = "red",
+                                        add_line_at_0.4 = FALSE,
+                                        add_line_at_0.4_col = "darkgreen",
+                                        add_line_at_0.4_lty = 5,
+                                        inc = 0.15,
+                                        add_big_ticks_x = TRUE,
+                                        ylim = NULL,
+                                        y_tick_start = 0,
+                                        y_tick_end = NULL,
+                                        y_tick_by = 1,
+                                        pch = 20,
+                                        cex = 0.8,
+                                        add_legend = TRUE,
+                                        leg_loc = "topright",
+                                        inset = c(0, -0.02),
+                                        join_intervals = FALSE,
+                                        arrowhead_length = 0.15,
+                                        mfrow = c(1, 1),
+                                        ...
+                                        ){
   if(!(type %in% c("comparison", "eti", "hdi"))){
     stop("type needs to be comparison, eti, or hdi.")}
 
@@ -206,9 +216,7 @@ plot.intervals_density_list <- function(obj,   # an intervals_density_list
     # Slightly larger ticks every 10 values of quantity (every decade if these are
     # years) since not all get labelled automatically
     if(add_big_ticks_x){
-      if(is.null(start_big_ticks_x)){
-        start_big_ticks_x <- (min(intervals$quantity) %/% 10) * 10
-      }
+      start_big_ticks_x <- (min(intervals$quantity) %/% 10) * 10
 
       axis(1,
            seq(start_big_ticks_x,
@@ -243,14 +251,6 @@ plot.intervals_density_list <- function(obj,   # an intervals_density_list
              bty = "n",
              inset = inset)
     }
-
-
-    #  add_tickmarks(intervals,
-    #                y_tick_by = y_tick_by,
-    #                y_tick_start = 0,
-    #                y_tick_end = ceiling(par("usr")[4]),
-    #                x_tick_extra_years = x_tick_extra_years,
-    #                start_decade_ticks = start_decade_ticks)
   }
   invisible()
 }

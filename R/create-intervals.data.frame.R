@@ -1,4 +1,5 @@
 ##' @rdname create_intervals
+##' @export
 create_intervals.data.frame <- function(dat_mcmc,
                                         ...){
   res_all <- list()

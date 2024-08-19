@@ -8,24 +8,22 @@
 \method{plot}{intervals_density_list}(
   obj,
   type = "comparison",
-  inc = 0.15,
-  x_tick_extra_years = 20,
-  add_big_ticks_x = TRUE,
-  start_big_ticks_x = NULL,
   eti_bar_col = "blue",
   hdi_bar_col = "red",
   add_line_at_0.4 = FALSE,
   add_line_at_0.4_col = "darkgreen",
   add_line_at_0.4_lty = 5,
+  inc = 0.15,
+  add_big_ticks_x = TRUE,
   ylim = NULL,
   y_tick_start = 0,
   y_tick_end = NULL,
   y_tick_by = 1,
   pch = 20,
   cex = 0.8,
-  inset = c(0, -0.02),
   add_legend = TRUE,
   leg_loc = "topright",
+  inset = c(0, -0.02),
   join_intervals = FALSE,
   arrowhead_length = 0.15,
   mfrow = c(1, 1),
@@ -33,8 +31,19 @@
 )
 }
 \arguments{
-\item{obj}{a \code{pacea_recruitment} object, which is a time series. Function
-will run on other objects (not give an error) but is not tested on those.}
+\item{obj}{\code{intervals_density_list} object from running \code{\link[=create_intervals]{create_intervals()}}
+on a data frame, see full description in the return section of \code{?create_intervals}}
+
+\item{type}{\code{comparison} to plot both intervals for each value of \code{quantity}
+(such as year, thus giving a time series, only works if \code{quantity} is
+numeric), or \code{eti} or \code{hdi} to plot the
+respective full distribution  and interval for each value of \code{quantity};
+\code{quantity} is the first column of \code{obj$intervals_all_years}, corresponding
+to the original column names of the data frame used to crate \code{obj}.}
+
+\item{eti_bar_col}{colour used to plot the ETIs in comparison plot}
+
+\item{hdi_bar_col}{colour used to plot the HDIs in comparison plot}
 
 \item{add_line_at_0.4}{logical whether to add a line at 0.4, specifically
 for Figure 2B, also adds the 'Now' and 'Projections' text}
@@ -43,43 +52,59 @@ for Figure 2B, also adds the 'Now' and 'Projections' text}
 
 \item{add_line_at_0.4_lty}{linetype for 0.4 line}
 
-\item{...}{further options passed onto \code{plot.default()}}
+\item{inc}{amount to shift ETI to left and HDI to right in comparison, tweak
+as appropriate (depends on scale of x-axis)}
 
-\item{value}{the column to plot if no uncertainties, or what to plot as dots
-if showing uncertainties (likely always \code{median})}
+\item{add_big_ticks_x}{slightly larger ticks every 10 values of the x-axis
+quantity, since not all get labelled automatically}
 
-\item{style}{\code{no_uncertainty} for plain time series without uncertainty,
-gets overridden to have uncertainty bars if \code{low} and \code{high} are columns
-of \code{obj}}
+\item{ylim}{range for y-axis, if \code{NULL} (the default) then created
+automatically (can probably subsume into \code{...});}
 
-\item{uncertainty_bar_col}{colour for uncertainty bars for certain types of
-plot (e.g. estimated fish recruitment)}
+\item{y_tick_start}{where to start y tickmarks}
 
-\item{y_max}{maximum y value for certain types of plot (use this if you get
-an error when specifying \code{ylim})}
+\item{y_tick_end}{where to end y tickmarks}
 
-\item{add_line_at_1}{whether to add a horizontal line at 1 (only sensible for scaled recruitments)}
+\item{y_tick_by}{increment for y tickmarks}
 
-\item{add_line_at_1_col}{colour for line at 1}
+\item{pch}{style of points for medians for comparison plots}
 
-\item{add_line_at_1_lty}{line type of line at 1}
+\item{cex}{size of points for medians for comparison plots; set to 0 to not
+show medians}
+
+\item{add_legend}{logical, whether to add a legend to comparison plot}
+
+\item{leg_loc}{location of legend, passed onto \code{\link[=legend]{legend()}} as the \code{legend}
+argument}
+
+\item{inset, }{vector of length two for shifting the legend (\code{inset} argument
+to \code{\link[=legend]{legend()}}.}
+
+\item{join_intervals}{logical, if \code{TRUE} then join up the ends of the
+intervals, which can be visually useful}
+
+\item{mfrow}{\code{par(mfrow)} vector of length two (number of rows and number of
+columns to plot panels into) to pass into \code{\link[=plot_densities]{plot_densities()}}}
+
+\item{...}{further options passed onto [\code{\link[=plot.default]{plot.default()}} for \code{type == "comparison"}, else passed onto \code{\link[=plot_densities]{plot_densities()}} for \code{type} being \code{eti}
+or \code{hdi}}
 }
 \value{
-plot of the time series as median with bars showing uncertainty (if
-\code{low} and \code{high} are columns of `obj) to the current device; returns nothing.
+plot of the required style (multiple plots for \code{type} being \code{eti} or
+\code{hdi}
 }
 \description{
-Default plot is to show show ETIs, HDIs, or both (maybe only works for a
-time series?), as saved in the \code{intervals_all} component of the list from
-\code{create_intervals()}. See example and vignette. Also option to plot the density for each quantity (years in
-our recruitment example).
+Default plot is to show show ETIs, HDIs, or both, as saved in the
+\code{intervals_all} component of the list from
+\code{create_intervals()}. See example and vignette. Also includes option to plot
+the density for each quantity (years in ##' our recruitment example).
 }
 \details{
-TODO the hel
+TOOD might not need @inheritParams plot.intervals_density
 }
 \examples{
 \dontrun{
-
+# And see vignettes
 res_all_years <- create_intervals(dplyr::select(hake_recruitment_mcmc,
                                                          -"Virgin"))     # TODO
 plot(res_all_years)

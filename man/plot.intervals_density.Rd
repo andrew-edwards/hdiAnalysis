@@ -3,19 +3,14 @@
 \name{plot.intervals_density}
 \alias{plot.intervals_density}
 \title{Plot kernel density function of an \code{intervals_density} object, with
-tails shaded as specified and optional explanatory lines added}
+tails shaded as specified and ETI or HDI shown and optional explanatory lines added}
 \usage{
 \method{plot}{intervals_density}(
   ints_dens,
-  dat = NULL,
   type = "hdi",
   col_main = "blue",
   col_main_text = NULL,
   col_tail = "red",
-  main_title = NULL,
-  main_title_include = FALSE,
-  hdi_horizontal = TRUE,
-  col_hdi_horizontal = "darkgrey",
   rug_top = FALSE,
   rug_bottom = FALSE,
   interval_arrows = FALSE,
@@ -27,9 +22,10 @@ tails shaded as specified and optional explanatory lines added}
   lwd_border = 0.4,
   x_minor_ticks_by = 1,
   y_minor_ticks_by = 0.01,
-  ticks_tcl = -0.2,
   show_a_b = TRUE,
+  hdi_horizontal = TRUE,
   explanatory_lines_a_b = FALSE,
+  col_explanatory_lines = "darkgrey",
   explanatory_lines_extra = FALSE,
   show_discontinuity = FALSE,
   discontinuity_multiplier = 2,
@@ -37,9 +33,16 @@ tails shaded as specified and optional explanatory lines added}
 )
 }
 \arguments{
+\item{ints_dens}{object of class \code{intervals_density}, resulting from running
+\code{create_intervals()} on a vector of values.}
+
 \item{type}{type of intervals: either \code{hdi} or \code{equal}}
 
-\item{main_title_include}{logical whether to include a main title}
+\item{col_main}{colour to fill in density and arrows corresponding to the interval}
+
+\item{col_main_text}{colour to label the intervals (default is \code{col_main})}
+
+\item{col_tail}{colour to fill in density and arrows corresponding to the tails}
 
 \item{rug_top}{logical whether to show rug at the top for the density values}
 
@@ -49,41 +52,52 @@ tails shaded as specified and optional explanatory lines added}
 
 \item{y_arrow}{value on y-axis to show the arrows depicting intervals}
 
+\item{arrowhead_length}{length of arrowheads on intervals}
+
+\item{arrowhead_gap}{half the gap between arrowheads of interval; manually
+tweak to give a slight gap between them as they default if they touch too
+much. Half of required gap since amount is applied to each arrow.}
+
 \item{col_bars}{colour of the bars showing regions A and B}
 
 \item{bars_multiplier}{numeric multiplier, to nudge the bars higher (value of
 1.0 puts them exactly at the minimum density of the ends of the credible
 interval)}
 
+\item{lwd_border}{line width of polygon outlines used to define the
+different regions}
+
+\item{x_minor_ticks_by, }{y_minor_ticks_by increments for adding minor tick
+marks on the x and y axes}
+
 \item{show_a_b}{logical, whether to show intervals a and b on ETI plot}
+
+\item{hdi_horizontal}{logical, whether to horizontal line at density of HDI}
 
 \item{explanatory_lines_a_b}{logical, whether to plot extra lines to explain the
 ranges a and b for the ETI.}
+
+\item{col_explanatory_lines}{colour for explanatory lines}
 
 \item{explanatory_lines_extra}{logical, whether to plot extra lines to explain the
 ranges c and d for which all values in c are more likely than those in d,
 yet c is outside the ETI and d is inside it.}
 
 \item{show_discontinuity}{logical, if \code{TRUE} then plot the discontinuity in
-the HDI that arises (only matters if \code{ints_dens$intervals$warning == TRUE}).}
+the HDI that arises (only matters if \code{ints_dens$intervals$warning == TRUE}) as points.}
 
-\item{discontinuity_multiplier}{numeric, y-axis value to plot points showing
-discontinuities, multiplies the minimum density of the ends of the
-credible interval.}
+\item{discontinuity_multiplier}{how much to move the \code{show_discontinuity}
+points up from the density level of the HDI (just to improve how it looks)}
 
 \item{...}{arguments to pass onto \code{plot()}}
-
-\item{dat_mcmc}{a numeric vector representing an MCMC sample.}
-
-\item{rec_intervals}{result of \code{create_intervals(dat_mcmc)}; is calculated
-if not supplied. May be worth supplying so it's not being repeatedly calculated.}
 }
 \value{
-invisible
+the desired plot
 }
 \description{
-TODO creates plot on object of class \code{intervals_density}, which is the
-result of running \code{create_intervals()} on a vector of values.
+Creates plot on object of class \code{intervals_density}, which is the
+result of running \code{create_intervals()} on a vector of values. Used to make
+Fig. 1A. See vignettes.
 }
 \examples{
 \dontrun{

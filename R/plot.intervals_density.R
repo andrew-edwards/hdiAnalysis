@@ -1,46 +1,47 @@
 ##' Plot kernel density function of an `intervals_density` object, with
-##' tails shaded as specified and optional explanatory lines added
+##' tails shaded as specified and ETI or HDI shown and optional explanatory lines added
 ##'
-##' TODO creates plot on object of class `intervals_density`, which is the
-##' result of running `create_intervals()` on a vector of values.
+##' Creates plot on object of class `intervals_density`, which is the
+##' result of running `create_intervals()` on a vector of values. Used to make
+##' Fig. 1A. See vignettes.
 ##'
-##' @param ints_dens
-##' @param dat
+##' @param ints_dens object of class `intervals_density`, resulting from running
+##'   `create_intervals()` on a vector of values.
 ##' @param type type of intervals: either `hdi` or `equal`
-##' @param col_main
-##' @param col_main_text
-##' @param col_tail
-##' @param main_title
-##' @param col_hdi_horizontal
+##' @param col_main colour to fill in density and arrows corresponding to the interval
+##' @param col_main_text colour to label the intervals (default is `col_main`)
+##' @param col_tail colour to fill in density and arrows corresponding to the tails
 ##' @param rug_top logical whether to show rug at the top for the density values
 ##' @param rug_bottom logical whether to show rug at the bottom for the raw data values
 ##' @param interval_arrows logical whether to show arrows depicting intervals
 ##' @param y_arrow value on y-axis to show the arrows depicting intervals
-##' @param arrowhead_length
-##' @param arrowhead_gap
+##' @param arrowhead_length length of arrowheads on intervals
+##' @param arrowhead_gap half the gap between arrowheads of interval; manually
+##'   tweak to give a slight gap between them as they default if they touch too
+##'   much. Half of required gap since amount is applied to each arrow.
 ##' @param col_bars colour of the bars showing regions A and B
 ##' @param bars_multiplier numeric multiplier, to nudge the bars higher (value of
 ##'   1.0 puts them exactly at the minimum density of the ends of the credible
 ##'   interval)
-##' @param lwd_border
+##' @param lwd_border line width of polygon outlines used to define the
+##'   different regions
+##' @param x_minor_ticks_by, y_minor_ticks_by increments for adding minor tick
+##'   marks on the x and y axes
 ##' @param show_a_b logical, whether to show intervals a and b on ETI plot
+##' @param hdi_horizontal logical, whether to horizontal line at density of HDI
+##' @param col_explanatory_lines colour for explanatory lines
 ##' @param explanatory_lines_a_b logical, whether to plot extra lines to explain the
 ##'   ranges a and b for the ETI.
 ##' @param explanatory_lines_extra logical, whether to plot extra lines to explain the
 ##'   ranges c and d for which all values in c are more likely than those in d,
 ##'   yet c is outside the ETI and d is inside it.
-##' @param ... arguments to pass onto `plot()`
-##' @param dat_mcmc a numeric vector representing an MCMC sample.
-##' @param main_title_include logical whether to include a main title
 ##' @param show_discontinuity logical, if `TRUE` then plot the discontinuity in
 ##'   the HDI that arises (only matters if `ints_dens$intervals$warning ==
-##'   TRUE`).
-##' @param discontinuity_multiplier numeric, y-axis value to plot points showing
-##'   discontinuities, multiplies the minimum density of the ends of the
-##'   credible interval.
-##' @param rec_intervals result of `create_intervals(dat_mcmc)`; is calculated
-##'   if not supplied. May be worth supplying so it's not being repeatedly calculated.
-##' @return invisible
+##'   TRUE`) as points.
+##' @param discontinuity_multiplier how much to move the `show_discontinuity`
+##'   points up from the density level of the HDI (just to improve how it looks)
+##' @param ... arguments to pass onto `plot()`
+##' @return the desired plot
 ##' @export
 ##' @author Andrew Edwards
 ##' @examples
@@ -50,37 +51,25 @@
 ##' # And see results and result-extra vignettes.
 ##' }
 plot.intervals_density <- function(ints_dens,
-                                   dat = NULL,   # include if want rugs added
                                    type = "hdi",
                                    col_main = "blue",
                                    col_main_text = NULL,
                                    col_tail = "red",
-                                   main_title = NULL, # might not do anything
-                                        # now, need no main for dens plot
-                                   main_title_include = FALSE,
-                                   hdi_horizontal = TRUE,
-                                   col_hdi_horizontal = "darkgrey",
                                    rug_top = FALSE,
                                    rug_bottom = FALSE,
                                    interval_arrows = FALSE,
                                    y_arrow = 0.098,
                                    arrowhead_length = 0.2,
-                                   arrowhead_gap = 0,  # half the gap between arrow heads
-                                        # manually tweak to give a slight gap
-                                        # between them as they default is they
-                                        # touch too much. Half since applied to
-                                        # each arrow
+                                   arrowhead_gap = 0,
                                    col_bars = "black",
                                    bars_multiplier = 1.5,
                                    lwd_border = 0.4,
-                                   # x_small_ticks_add = TRUE,  # whether to add
-                                        # them or not
-                                   x_minor_ticks_by = 1, # increment for adding
-                                   # minor tick marks
+                                   x_minor_ticks_by = 1,
                                    y_minor_ticks_by = 0.01,
-                                   ticks_tcl = -0.2,
                                    show_a_b = TRUE,
+                                   hdi_horizontal = TRUE,
                                    explanatory_lines_a_b = FALSE,
+                                   col_explanatory_lines = "darkgrey",
                                    explanatory_lines_extra = FALSE,
                                    show_discontinuity = FALSE,
                                    discontinuity_multiplier = 2,
@@ -98,17 +87,6 @@ plot.intervals_density <- function(ints_dens,
   dens <- ints_dens$density
   credibility <- ints_dens$credibility
   eti_lower_percentile <- (1 - credibility)/2 * 100   # For annotating
-
-  # Reorder Just use for title, maybe also low and high, actually prob not
-  if(type == "eti"){
-      if(is.null(main_title)) {
-        main_title <- "Equal-tailed interval"
-    }
-  } else { # type == "hdi"
-    if(is.null(main_title)) {
-      main_title <- "Highest density interval"
-    }
-  }
 
   # TODO change to x_interval_low etc.
   # low and high values of the interval for plotting, already calculated
@@ -192,7 +170,7 @@ plot.intervals_density <- function(ints_dens,
     abline(h = min(c(y_interval_low,
                      y_interval_high)),  # If not a true HDI then use the min
                                          # TODO think more, and test with left-skewed
-           col = col_hdi_horizontal,
+           col = col_explanatory_lines,
            lwd = 1.5)
     box()
   }
@@ -201,13 +179,13 @@ plot.intervals_density <- function(ints_dens,
   if(type == "eti" & explanatory_lines_a_b){
     abline(h = c(y_interval_low,
                  y_interval_high),
-           col = col_hdi_horizontal,
+           col = col_explanatory_lines,
            lwd = 1)
     abline(v = c(interval_low,
                  interval_high,
                  ints$a_lower,
                  ints$b_lower),
-           col = col_hdi_horizontal,  # TODO change name
+           col = col_explanatory_lines,  # TODO change name
            lwd = 1)                   # TODO generalise
   }
 
@@ -217,7 +195,7 @@ plot.intervals_density <- function(ints_dens,
     # results-extra vignette.
     abline(h = c(y_interval_low,
                  y_interval_high),
-           col = col_hdi_horizontal,
+           col = col_explanatory_lines,
            lwd = 1)
 
     green_density <- mean(c(y_interval_low,
@@ -230,14 +208,14 @@ plot.intervals_density <- function(ints_dens,
 
     abline(h = green_density,
            col = "darkgreen",
-           lwd = 2)                   # TODO generalise
+           lwd = 2)
 
     abline(v = c(interval_low,
                  interval_high,
                  dens$x[i_green_left_min],
                  dens$x[i_green_right_min]),
-           col = col_hdi_horizontal,  # TODO change name
-           lwd = 1)                   # TODO generalise
+           col = col_explanatory_lines,
+           lwd = 1)
 
     # Also draw the new intervals:
     shape::Arrows(dens$x[i_green_left_min],
@@ -288,11 +266,6 @@ plot.intervals_density <- function(ints_dens,
     rug(dens$x,
         side=3)
   }
-
-  # Data not included in function, but user could just add manually
-  # if(rug_bottom){
-  #  rug(dat_mcmc)
-  #}
 
   if(interval_arrows){
     # main interval (usually 90% or 95%)
