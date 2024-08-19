@@ -11,6 +11,7 @@
 ##' @export
 ##' @author Andrew Edwards
 ##' @examples
+##' \dontrun{
 ##' intermediate_y(5, 4, 6, 10, 17)
 ##' }
 intermediate_y <- function(x_val,
