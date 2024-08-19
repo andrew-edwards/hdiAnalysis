@@ -20,6 +20,11 @@ the intermediate y value
 Given x1 and x2 and corresponding y1 and y2, calculate the intermediate
 value at \code{x_val} where \verb{x1 <= x_val <= x2}, by a simple linear interpolation.
 }
+\examples{
+\dontrun{
+intermediate_y(5, 4, 6, 10, 17)
+}
+}
 \author{
 Andrew Edwards
 }

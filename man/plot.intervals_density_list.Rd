@@ -28,7 +28,7 @@
   leg_loc = "topright",
   join_intervals = FALSE,
   arrowhead_length = 0.15,
-  mfrow = NULL,
+  mfrow = c(1, 1),
   ...
 )
 }
@@ -75,14 +75,7 @@ time series?), as saved in the \code{intervals_all} component of the list from
 our recruitment example).
 }
 \details{
-TODO adapting from \code{plot_series} which I can delete once finalised.
-
-Adapted from \code{pacea::plot.pacea_recruitment()}.
-
-TODO Temporal plot for a time series (of class
-\code{pacea_recruitment}) object. The \code{style} option here (unlike for
-\code{plot.pacea_index()} defaults to \code{no_uncertainty} and gets changed to
-\code{uncertainty} if \code{low} and \code{high} are columns of \code{obj}.
+TODO the hel
 }
 \examples{
 \dontrun{

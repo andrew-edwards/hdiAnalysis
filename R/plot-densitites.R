@@ -1,5 +1,9 @@
-##' Calll from plot.intervals_density_list()
-##'  <desc>
+##' Plots densities and ETIs or HDIs for multiplie quantities (e.g. years).
+##'
+##' Plots the density and ETI/HDI for each quantitiey (such as year) in a
+##'  `intervals_density_list` object that is returned from [create_intervals()]
+##'  applied to a data frame. Called from [plot.intervals_density_list()],
+##'  probably not needed by users.
 ##'
 ##' @param obj
 ##' @param type
@@ -16,7 +20,7 @@
 plot_densities <- function(obj,
                            type,
                            quantity = NULL,
-                           mfrow = c(2, 2),
+                           mfrow = c(1, 1),
                            ...){
 
   # plot all quantities, esp for vignette since html
@@ -24,6 +28,7 @@ plot_densities <- function(obj,
     quantity <- obj$intervals_all$quantity
   }
 
+  mfrow_orig <- par()$mfrow
   par(mfrow = mfrow)
 
   for(i in 1:length(quantity)){
@@ -50,4 +55,5 @@ plot_densities <- function(obj,
           cex = 0.7,
           line = 0.3) # TODO Add to function, cex is indpt of par(c
   }
+  par(mfrow = mfrow_orig)
 }

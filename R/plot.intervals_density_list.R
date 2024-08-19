@@ -6,14 +6,7 @@
 ##' `create_intervals()`. See example and vignette. Also option to plot the density for each quantity (years in
 ##' our recruitment example).
 ##'
-##' TODO adapting from `plot_series` which I can delete once finalised.
-##'
-##' Adapted from `pacea::plot.pacea_recruitment()`.
-##'
-##' TODO Temporal plot for a time series (of class
-##' `pacea_recruitment`) object. The `style` option here (unlike for
-##' `plot.pacea_index()` defaults to `no_uncertainty` and gets changed to
-##' `uncertainty` if `low` and `high` are columns of `obj`.
+##' TODO the hel
 ##'
 ##' @param obj a `pacea_recruitment` object, which is a time series. Function
 ##'   will run on other objects (not give an error) but is not tested on those.
@@ -77,7 +70,7 @@ plot.intervals_density_list <- function(obj,   # an intervals_density_list
                         join_intervals = FALSE, # join up the ends of the
                                         # intervals, useful for sample size plot
                         arrowhead_length = 0.15,
-                        mfrow = NULL, # for plot_densities
+                        mfrow = c(1, 1), # for plot_densities
                         ...
                         ){
   if(!(type %in% c("comparison", "eti", "hdi"))){
@@ -93,7 +86,7 @@ plot.intervals_density_list <- function(obj,   # an intervals_density_list
 
 
   if(type == "comparison"){       # Doing a comparison of intervals for each value of
-                        # quantity, which will be a time series if quantity
+    # quantity, which will be a time series if quantity
     # represents years
 
     intervals <- obj$intervals_all
@@ -101,23 +94,23 @@ plot.intervals_density_list <- function(obj,   # an intervals_density_list
       stop("plot.intervals_density_list() not yet implemented for non-numeric values of quantity")
     }
 
-   if(is.null(ylim)){
-     ylim = c(0,
-              max(c(intervals$eti_upper,
-                    intervals$hdi_upper)))
-   }
+    if(is.null(ylim)){
+      ylim = c(0,
+               max(c(intervals$eti_upper,
+                     intervals$hdi_upper)))
+    }
 
-  # ETI:
+    # ETI:
     eti_x_val <- intervals$quantity - inc        # Shift ETI ones to the left
     median_x_val <- eti_x_val                    # Where to plot median, change
-                                                 # if don't want both ETI and HDI
+    # if don't want both ETI and HDI
 
-  plot(median_x_val,
-       intervals$median,  # should be vector
-       pch = pch,
-       ylim = ylim,
-       cex = cex,
-       ...)
+    plot(median_x_val,
+         intervals$median,  # should be vector
+         pch = pch,
+         ylim = ylim,
+         cex = cex,
+         ...)
 
     segments(x0 = eti_x_val,
              y0 = intervals$eti_lower,
@@ -130,85 +123,85 @@ plot.intervals_density_list <- function(obj,   # an intervals_density_list
            pch = pch,        # plot points again to be on top of bars
            cex = cex)
 
-  # HDI:
-  hdi_x_val <- intervals$quantity + inc        # Shift HDI ones to the right
-  median_x_val <- hdi_x_val                    # Do this to plot median on HDI.
+    # HDI:
+    hdi_x_val <- intervals$quantity + inc        # Shift HDI ones to the right
+    median_x_val <- hdi_x_val                    # Do this to plot median on HDI.
 
-  # HDI:
-  segments(x0 = hdi_x_val,
-           y0 = intervals$hdi_lower,
-           x1 = hdi_x_val,
-           y1 = intervals$hdi_upper,
-           col = hdi_bar_col)
+    # HDI:
+    segments(x0 = hdi_x_val,
+             y0 = intervals$hdi_lower,
+             x1 = hdi_x_val,
+             y1 = intervals$hdi_upper,
+             col = hdi_bar_col)
 
-  points(median_x_val,
-         intervals$median,
-         pch = pch,
-         cex = cex)
+    points(median_x_val,
+           intervals$median,
+           pch = pch,
+           cex = cex)
 
-  # abline(h = 0, col = "lightgrey")
+    # abline(h = 0, col = "lightgrey")
 
-  if(join_intervals){
-    lines(eti_x_val,
-          intervals$eti_lower,
-          col = eti_bar_col,
-          lty = 2)
+    if(join_intervals){
+      lines(eti_x_val,
+            intervals$eti_lower,
+            col = eti_bar_col,
+            lty = 2)
 
-    lines(eti_x_val,
-          intervals$eti_upper,
-          col = eti_bar_col,
-          lty = 2)
+      lines(eti_x_val,
+            intervals$eti_upper,
+            col = eti_bar_col,
+            lty = 2)
 
-    lines(hdi_x_val,
-          intervals$hdi_lower,
-          col = hdi_bar_col,
-          lty = 2)
+      lines(hdi_x_val,
+            intervals$hdi_lower,
+            col = hdi_bar_col,
+            lty = 2)
 
-    lines(hdi_x_val,
-          intervals$hdi_upper,
-          col = hdi_bar_col,
-          lty = 2)
-  }
+      lines(hdi_x_val,
+            intervals$hdi_upper,
+            col = hdi_bar_col,
+            lty = 2)
+    }
 
     # TODO leave these for now
-  # For relative biomass plots
-  if(add_line_at_0.4){
-    abline(h = 0.4,
-           col = add_line_at_0.4_col,
-           lty = add_line_at_0.4_lty)
-    # Also denote 'now' and 'projections', likely only want if adding the line
-    # (implying relative spawning biomass plots; TODO should generalise).
-    text(2024,
-         0.07,
-         "Now")
-         # adj = c(0.5, 1))
-#         pos = 4)
-    shape::Arrows(2025,
-                  -0.05,
-                  2027.5,
-                  -0.05,
-                  lwd = 1,
-                  code = 2,
-                  col = "black",,
-                  arr.type = "triangle",
-                  arr.adj = 1,
-                  arr.length = arrowhead_length)
-    text(2024.7,
-         0.05,
-         "Projections",
-         pos = 4)
-  }
+    # For relative biomass plots
+    if(add_line_at_0.4){
+      abline(h = 0.4,
+             col = add_line_at_0.4_col,
+             lty = add_line_at_0.4_lty)
+      # Also denote 'now' and 'projections', likely only want if adding the line
+      # (implying relative spawning biomass plots; TODO should generalise).
+      text(2024,
+           0.07,
+           "Now")
+      # adj = c(0.5, 1))
+      #         pos = 4)
+      shape::Arrows(2025,
+                    -0.05,
+                    2027.5,
+                    -0.05,
+                    lwd = 1,
+                    code = 2,
+                    col = "black",,
+                    arr.type = "triangle",
+                    arr.adj = 1,
+                    arr.length = arrowhead_length)
+      text(2024.7,
+           0.05,
+           "Projections",
+           pos = 4)
+    }
 
 
-  # Adapted from pacea::add_tickmarks():
+    # Adapted from pacea::add_tickmarks():
 
-  min = min(intervals$quantity)
-  max = max(intervals$quantity)
-  axis(1,
-       seq(min,
-           max),
-       labels = FALSE,
-       tcl = -0.2)
+    min = min(intervals$quantity)
+    max = max(intervals$quantity)
+    axis(1,
+         seq(min,
+             max),
+         labels = FALSE,
+         tcl = -0.2)
 
     # Slightly larger ticks every 10 values of quantity (every decade if these are
     # years) since not all get labelled automatically
@@ -224,40 +217,40 @@ plot.intervals_density_list <- function(obj,   # an intervals_density_list
            labels = FALSE,
            tcl = -0.3)
     }
-  # y-axis tickmarks:
-  if(is.null(y_tick_start)){
-    y_tick_start <- floor(par("usr")[3])
-  }
-  if(is.null(y_tick_end)){
-    y_tick_end  <- ceiling(par("usr")[4])
-  }
+    # y-axis tickmarks:
+    if(is.null(y_tick_start)){
+      y_tick_start <- floor(par("usr")[3])
+    }
+    if(is.null(y_tick_end)){
+      y_tick_end  <- ceiling(par("usr")[4])
+    }
 
-  axis(2,
-       seq(y_tick_start,
-           y_tick_end,
-           by = y_tick_by),
-       labels = FALSE,
-       tcl = -0.2)
+    axis(2,
+         seq(y_tick_start,
+             y_tick_end,
+             by = y_tick_by),
+         labels = FALSE,
+         tcl = -0.2)
 
-  if(add_legend){
-    legend(leg_loc,
-           legend = c("Equal-tailed interval",
-                      "Highest density interval"),
-           lty = 1,
-           lwd = 2,
-           col = c(eti_bar_col,
-                   hdi_bar_col),
-           bty = "n",
-           inset = inset)
-  }
+    if(add_legend){
+      legend(leg_loc,
+             legend = c("Equal-tailed interval",
+                        "Highest density interval"),
+             lty = 1,
+             lwd = 2,
+             col = c(eti_bar_col,
+                     hdi_bar_col),
+             bty = "n",
+             inset = inset)
+    }
 
 
-#  add_tickmarks(intervals,
-#                y_tick_by = y_tick_by,
-#                y_tick_start = 0,
-#                y_tick_end = ceiling(par("usr")[4]),
-#                x_tick_extra_years = x_tick_extra_years,
-#                start_decade_ticks = start_decade_ticks)
+    #  add_tickmarks(intervals,
+    #                y_tick_by = y_tick_by,
+    #                y_tick_start = 0,
+    #                y_tick_end = ceiling(par("usr")[4]),
+    #                x_tick_extra_years = x_tick_extra_years,
+    #                start_decade_ticks = start_decade_ticks)
   }
   invisible()
 }
