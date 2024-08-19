@@ -2,14 +2,29 @@
 % Please edit documentation in R/figure-2.R
 \name{figure_2}
 \alias{figure_2}
-\title{Fig 2
-\if{html}{\out{<desc>}}}
+\title{Plot Figure 2 as a pdf file with specific dimensions for the manuscript.}
 \usage{
 figure_2(file = "figure-2.pdf", height = 4, width = 114/25.4)
 }
+\arguments{
+\item{file}{filename to save pdf file}
+
+\item{height}{height of pdf file (inches)}
+
+\item{width}{width of pdf file (inches)}
+}
+\value{
+nothing, but saves the pdf
+}
 \description{
-Fig 2
-\if{html}{\out{<desc>}}
+Useful for the manuscript, maybe less so for other users, though could be
+useful as a template. Generally running in
+the vignettes folder then copying over to the write up repository.
+}
+\examples{
+\dontrun{
+figure_2()
+}
 }
 \author{
 Andrew Edwards

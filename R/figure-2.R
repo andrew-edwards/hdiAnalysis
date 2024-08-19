@@ -1,13 +1,18 @@
-##' Fig 2
-##'  <desc>
+##' Plot Figure 2 as a pdf file with specific dimensions for the manuscript.
 ##'
-##' @return
+##' Useful for the manuscript, maybe less so for other users, though could be
+##'   useful as a template. Generally running in
+##'   the vignettes folder then copying over to the write up repository.
+##' @param file filename to save pdf file
+##' @param height height of pdf file (inches)
+##' @param width width of pdf file (inches)
+##' @return nothing, but saves the pdf
 ##' @export
 ##' @author Andrew Edwards
 ##' @examples
-##' @ontrun{
-##' @
-##' @}
+##' \dontrun{
+##' figure_2()
+##' }
 figure_2 <- function(file = "figure-2.pdf",
                      height = 4,
                      width = 114/25.4){
@@ -54,5 +59,7 @@ figure_2 <- function(file = "figure-2.pdf",
         cex = 0.7,
         line = 0.3)
 
-   dev.off()
+  dev.off()
+
+  invisible()
 }

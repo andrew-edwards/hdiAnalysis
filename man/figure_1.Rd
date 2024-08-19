@@ -2,7 +2,7 @@
 % Please edit documentation in R/figure-1.R
 \name{figure_1}
 \alias{figure_1}
-\title{Plot Figure 1 for a specific dimension.}
+\title{Plot Figure 1 as a pdf file with specific dimensions for the manuscript.}
 \usage{
 figure_1(
   file = "figure-1.pdf",
@@ -12,6 +12,20 @@ figure_1(
   xlab = "Recruitment (billions of fish)",
   ...
 )
+}
+\arguments{
+\item{file}{filename to save pdf file}
+
+\item{height}{height of pdf file (inches)}
+
+\item{width}{width of pdf file (inches)}
+
+\item{xlim, }{xlab x-axis range and label, as passed onto \code{\link[=plot.numeric]{plot.numeric()}}}
+
+\item{...}{further arguments passed onto \code{\link[=plot.numeric]{plot.numeric()}}}
+}
+\value{
+nothing, but saves the pdf
 }
 \description{
 Useful for the manuscript, maybe less so for other users, though could be
