@@ -32,7 +32,6 @@
 ##'   zero or be negative; if FALSE (the default) then do not allow this.
 ##' @param ... arguments to pass onto `density()`, including `to` which is
 ##'   the right-most equivalent to `from`.
-##'
 ##' @md
 ##' @return
 ##' * If `dat` is numeric then retuns a list object of class

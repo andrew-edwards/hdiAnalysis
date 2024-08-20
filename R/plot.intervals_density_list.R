@@ -6,8 +6,6 @@
 ##' `create_intervals()`. See example and vignette. Also includes option to plot
 ##' the density for each quantity (years in ##' our recruitment example).
 ##'
-##' TOOD might not need @inheritParams plot.intervals_density
-##'
 ##' @param obj `intervals_density_list` object from running [create_intervals()]
 ##'   on a data frame, see full description in the return section of `?create_intervals`
 ##' @param type `comparison` to plot both intervals for each value of `quantity`
@@ -26,7 +24,6 @@
 ##'   as appropriate (depends on scale of x-axis)
 ##' @param add_big_ticks_x slightly larger ticks every 10 values of the x-axis
 ##'   quantity, since not all get labelled automatically
-##'
 ##' @param ylim range for y-axis, if `NULL` (the default) then created
 ##'   automatically (can probably subsume into `...`);
 ##' @param y_tick_start where to start y tickmarks
@@ -42,13 +39,13 @@
 ##'   to [legend()].
 ##' @param join_intervals logical, if `TRUE` then join up the ends of the
 ##'   intervals, which can be visually useful
-##' @param arrowhead_length
+##' @param arrowhead_length length of arrowhead, specifically for the
+##'   `add_line_at_0.4` relative biomass plot
 ##' @param mfrow `par(mfrow)` vector of length two (number of rows and number of
 ##'   columns to plot panels into) to pass into [plot_densities()]
-##' @param ... further options passed onto [[plot.default()] for `type ==
+##' @param ... further arguments passed onto [[plot.default()] for `type ==
 ##'   "comparison"`, else passed onto [plot_densities()] for `type` being `eti`
-##'   or `hdi`
-##'
+##'   or `hdi` (and then onto [plot.intervals_density()]).
 ##' @return plot of the required style (multiple plots for `type` being `eti` or
 ##'   `hdi`
 ##' @export

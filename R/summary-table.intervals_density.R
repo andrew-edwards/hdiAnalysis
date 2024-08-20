@@ -1,16 +1,5 @@
-##' Print a Markdown summary table of main results from `create_intervals()`
-##' output of a single vector
-##'
-##' @param int_dens `intervals_density` object as output from `create_intervals()`
-##' @param dig number of decimal places to show
-##' @return Markdown code (for automatic use straight in an R Markdown document, for instance)
+##' @rdname summary_table
 ##' @export
-##' @author Andrew Edwards
-##' @examples
-##' \dontrun{
-##' res <- create_intervals(rec_2021)
-##' summary_table(res)
-##' }
 summary_table.intervals_density <- function(int_dens,
                                             dig = 2){
   stopifnot("intervals_density" %in% class(int_dens))

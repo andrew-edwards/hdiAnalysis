@@ -1,4 +1,5 @@
 ##' @rdname create_intervals
+##' @export
 create_intervals.numeric <- function(dat,
                                      density = FALSE,
                                      credibility = 0.95,

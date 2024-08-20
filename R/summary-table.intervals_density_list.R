@@ -1,17 +1,5 @@
-##' Print a Markdown summary table of main results from `create_intervals()`
-##' output of a tibble (e.g. for multiple years)
-##'
-##' @param int_dens_list `intervals_density_list` object as output from
-##'   `create_intervals()` being applied to a tibble
-##' @param dig number of decimal places to show
-##' @return Markdown code (for automatic use straight in an R Markdown document, for instance)
+##' @rdname summary_table
 ##' @export
-##' @author Andrew Edwards
-##' @examples
-##' \dontrun{
-##' res <- create_intervals(rec_2021) TODO
-##' summary_table(res)
-##' }
 summary_table.intervals_density_list <- function(int_dens_list,
                                                  dig = 2){
   stopifnot("intervals_density_list" %in% class(int_dens_list))

@@ -83,11 +83,14 @@ to \code{\link[=legend]{legend()}}.}
 \item{join_intervals}{logical, if \code{TRUE} then join up the ends of the
 intervals, which can be visually useful}
 
+\item{arrowhead_length}{length of arrowhead, specifically for the
+\code{add_line_at_0.4} relative biomass plot}
+
 \item{mfrow}{\code{par(mfrow)} vector of length two (number of rows and number of
 columns to plot panels into) to pass into \code{\link[=plot_densities]{plot_densities()}}}
 
-\item{...}{further options passed onto [\code{\link[=plot.default]{plot.default()}} for \code{type == "comparison"}, else passed onto \code{\link[=plot_densities]{plot_densities()}} for \code{type} being \code{eti}
-or \code{hdi}}
+\item{...}{further arguments passed onto [\code{\link[=plot.default]{plot.default()}} for \code{type == "comparison"}, else passed onto \code{\link[=plot_densities]{plot_densities()}} for \code{type} being \code{eti}
+or \code{hdi} (and then onto \code{\link[=plot.intervals_density]{plot.intervals_density()}}).}
 }
 \value{
 plot of the required style (multiple plots for \code{type} being \code{eti} or
@@ -98,9 +101,6 @@ Default plot is to show show ETIs, HDIs, or both, as saved in the
 \code{intervals_all} component of the list from
 \code{create_intervals()}. See example and vignette. Also includes option to plot
 the density for each quantity (years in ##' our recruitment example).
-}
-\details{
-TOOD might not need @inheritParams plot.intervals_density
 }
 \examples{
 \dontrun{

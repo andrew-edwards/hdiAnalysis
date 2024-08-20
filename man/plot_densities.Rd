@@ -6,6 +6,25 @@
 \usage{
 plot_densities(obj, type, quantity = NULL, mfrow = c(1, 1), ...)
 }
+\arguments{
+\item{obj}{\code{intervals_density_list} object from running \code{\link[=create_intervals]{create_intervals()}}
+on a data frame, see full description in the return section of \code{?create_intervals}}
+
+\item{type}{\code{comparison} to plot both intervals for each value of \code{quantity}
+(such as year, thus giving a time series, only works if \code{quantity} is
+numeric), or \code{eti} or \code{hdi} to plot the
+respective full distribution  and interval for each value of \code{quantity};
+\code{quantity} is the first column of \code{obj$intervals_all_years}, corresponding
+to the original column names of the data frame used to crate \code{obj}.}
+
+\item{mfrow}{\code{par(mfrow)} vector of length two (number of rows and number of
+columns to plot panels into) to pass into \code{\link[=plot_densities]{plot_densities()}}}
+
+\item{...}{extra arguments passed onto \code{\link[=plot.intervals_density]{plot.intervals_density()}}}
+}
+\value{
+plots multiple panels of density and ETI or HDI
+}
 \description{
 Plots the density and ETI/HDI for each quantitiey (such as year) in a
 \code{intervals_density_list} object that is returned from \code{\link[=create_intervals]{create_intervals()}}
