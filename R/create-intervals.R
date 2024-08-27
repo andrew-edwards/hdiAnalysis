@@ -28,6 +28,8 @@
 ##' @param allow_hdi_zero logical, if TRUE then allow HDI lower bound to include
 ##'   zero or be negative; if FALSE (the default) then do not allow this
 ##'   (requires `min(dat) >= 0`.
+##' @param tol tolerance for integral checking, see description in
+##'   `?integrate_simpsons()`
 ##' @param ... arguments to pass onto `density()`, including `from` (the
 ##'   left-most point of the grid at which the density is to be
 ##'   estimated) and `to` (the right-most equivalent to `from`). If `from` is

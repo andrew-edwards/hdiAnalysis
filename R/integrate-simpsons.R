@@ -25,7 +25,11 @@
 ##'   trapezoid rule (and interpolation) approximation is used to add the extra
 ##'   area on the left and/or right ends of domain.
 ##' @param tol numeric tolerance for checking that `dens$x` are equally spaced;
-##'   increase if get an error.
+##'   increase if get an error. Checks that the following is true::
+##'   `diff(range(diff(dens$x))) / max(diff(dens$x)) <= tol`, i.e. the ratio of the
+##'   difference between the max and min differences between `dens$x` values ,
+##'   over the maximum difference between `dens$x` values is `<= tol`. Default
+##'   is somewhat arbitirarily set to 1e-05.
 ##' @return numeric value of the integral
 ##' @export
 ##' @author Andrew Edwards
@@ -39,14 +43,14 @@
 ##' }
 integrate_simpsons <- function(dens,
                                domain,
-                               tol = 1e-08){
+                               tol = 1e-05){
   stopifnot(class(dens) == "density")
   stopifnot(min(dens$y) >= 0)
 
   diff_x <- diff(dens$x)
 
   stopifnot("Check that dens$x is equally spaced; increase `tol` if needed" =
-              diff(range(diff_x)) <= tol)
+              diff(range(diff_x)) / max(diff_x) <= tol)
 
   if(!missing(domain)){
     stopifnot(length(domain) == 2)

@@ -18,6 +18,7 @@ create_intervals(dat, ...)
   credibility = 0.95,
   n = 1e+05,
   allow_hdi_zero = FALSE,
+  tol = 1e-05,
   ...
 )
 }
@@ -58,6 +59,9 @@ resolution of the density kernel but not the wiggliness.}
 \item{allow_hdi_zero}{logical, if TRUE then allow HDI lower bound to include
 zero or be negative; if FALSE (the default) then do not allow this
 (requires \code{min(dat) >= 0}.}
+
+\item{tol}{tolerance for integral checking, see description in
+\code{?integrate_simpsons()}}
 }
 \value{
 \itemize{

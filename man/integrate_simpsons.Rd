@@ -4,7 +4,7 @@
 \alias{integrate_simpsons}
 \title{Integration of a one-dimensional kernel density estimate using Simpson's rule of integration}
 \usage{
-integrate_simpsons(dens, domain, tol = 1e-08)
+integrate_simpsons(dens, domain, tol = 1e-05)
 }
 \arguments{
 \item{dens}{kernel density estimate, that has \verb{$x} as the x values with
@@ -19,7 +19,11 @@ trapezoid rule (and interpolation) approximation is used to add the extra
 area on the left and/or right ends of domain.}
 
 \item{tol}{numeric tolerance for checking that \code{dens$x} are equally spaced;
-increase if get an error.}
+increase if get an error. Checks that the following is true::
+\code{diff(range(diff(dens$x))) / max(diff(dens$x)) <= tol}, i.e. the ratio of the
+difference between the max and min differences between \code{dens$x} values ,
+over the maximum difference between \code{dens$x} values is \verb{<= tol}. Default
+is somewhat arbitirarily set to 1e-05.}
 }
 \value{
 numeric value of the integral
