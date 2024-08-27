@@ -92,13 +92,15 @@ test_that("create_intervals results on hake 2021 recruitment and others do not c
                tolerance = 1e-5)
 
   # Density = TRUE, allow_hdi_zero = FALSE
-  res_1 <- create_intervals(dplyr::pull(hake_recruitment_mcmc, "1966"))
+  res_1 <- create_intervals(dplyr::pull(hake_recruitment_mcmc, "1966"),
+                            density = TRUE,
+                            allow_hdi_zero = FALSE)
 
   res_1_manual <- c(1.63342,
                     0.05706769,
                     10.65658,
                     0.00613024,
-                    8.43236)   # calculated 2024-08-27
+                    8.69117952)   # calculated 2024-08-27
   expect_equal(res_1$intervals[1:5] %>% as.numeric(),
                res_1_manual,
                tolerance = 1e-5)

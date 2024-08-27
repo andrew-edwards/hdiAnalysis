@@ -77,11 +77,11 @@ create_intervals.numeric <- function(dat,
   if(length(hdi_res_list$warnings) == 0){
     hdi_res_warning <- FALSE
   } else {
-    hdi_res_warning <- TRUE
+    hdi_res_warning <- TRUE        # nocov start
 
     if(hdi_res_list$warnings !=
        "The HDI is discontinuous but allowSplit = FALSE;\n    the result is a valid CrI but not HDI."){
-      warning("New type of warning in create_intervals().")
+      warning("New type of warning in create_intervals().") # nocov end
     }
   }
 
