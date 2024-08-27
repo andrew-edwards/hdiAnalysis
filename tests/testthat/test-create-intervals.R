@@ -1,30 +1,77 @@
 # create_intervals(). Quick test just to keep GHA happy for now.
 test_that("create_intervals results on hake 2021 recruitment do not change; only checks one value for now to get working", {
-  res_2021_test <- create_intervals(rec_2021,
-                                    density = TRUE)
+  # Check full intervals results for default run (not checking density)
+  intervals_names <- c("median",
+                       "eti_lower",
+                       "eti_upper",
+                       "hdi_lower",
+                       "hdi_upper",
+                       "width_eti",
+                       "width_hdi",
+                       "width_diff",
+                       "a_lower",
+                       "b_lower",
+                       "i_eti_lower",
+                       "y_eti_lower",
+                       "i_eti_upper",
+                       "y_eti_upper",
+                       "i_hdi_lower",
+                       "y_hdi_lower",
+                       "i_hdi_upper",
+                       "y_hdi_upper",
+                       "hdi_height",
+                       "integral_full",
+                       "integral_eti",
+                       "integral_hdi",
+                       "warning",
+                       "allow_hdi_zero")
 
-  #vec_results <- c(10.1873, 4.085088, 29.49938,  2.702156,  25.55708, 25.4143, 22.85492,
-  #  2.559376, 21 ,0.03289304, 123, 0.003572334, 1, 16, 0.008976952, 108,
-  #  0.006995915) # calculated 2024-05-16
-  vec_results <- c(10.187300,  4.085088, 29.499385,  2.529758, 25.517941) # calculated 2024-06-05
-  # ints_here <- tibble::tibble_row(t(vec_results))
-  ## names(ints_here) <- c("median",
-  ##                       "2.5",
-  ##                       "97.5",
-  ##                       "hdi_lower",
-  ##                       "hdi_upper",
-  ##                       "width_equal",
-  ##                       "width_hdi",
-  ##                       "width_diff",
-  ##                       "i_low_equal",
-  ##                       "y_low_equal_interp",
-  ##                       "i_high_equal",
-  ##                       "y_high_equal_interp",
-  ##                       "i_low_hdi",
-  ##                       "y_low_hdi_interp",
-  ##                       "i_high_hdi",
-  ##                       "y_high_hdi_interp")
-  expect_equal(res_2021_test$intervals[1:5] %>% as.numeric(),
-               vec_results,
+  res_2021_default_create <- create_intervals(rec_2021)
+
+  res_2021_default_manual <- as.data.frame(
+    t(c(1.018730e+01,
+        4.085088e+00,
+        2.949938e+01,
+        2.802050e+00,
+        2.518480e+01,
+        2.541430e+01,
+        2.238275e+01,
+        3.031547e+00,
+        2.081478e+00,
+        1.562305e+01,
+        3.245000e+03,
+        3.280246e-02,
+        2.342700e+04,
+        3.579759e-03,
+        2.226000e+03,
+        1.002599e-02,
+        2.000100e+04,
+        7.297533e-03,
+        NA,
+        1.000000e+00,
+        9.418215e-01,
+        9.453085e-01,
+        0,
+        0))) %>%
+    tibble::as_tibble()
+
+  names(res_2021_default_manual) <- intervals_names
+  res_2021_default_manual$"hdi_height" <- NA
+  res_2021_default_manual$"warning" <- as.logical(res_2021_default_manual$"warning")
+  res_2021_default_manual$"allow_hdi_zero" <- as.logical(res_2021_default_manual$"allow_hdi_zero")
+
+  expect_equal(res_2021_default_create$intervals,
+               res_2021_default_manual,
+               tolerance = 1e-5)
+
+  # Density = TRUE, just check the first values
+  res_2021_density_true_create <- create_intervals(rec_2021,
+                                                   density = TRUE)
+
+  res_2021_density_true_manual <- c(10.187300,  4.085088, 29.499385,  2.529758,
+                                    25.517941) # calculated 2024-06-05
+
+  expect_equal(res_2021_density_true_create$intervals[1:5] %>% as.numeric(),
+               res_2021_density_true_manual,
                tolerance = 1e-5)
 })
