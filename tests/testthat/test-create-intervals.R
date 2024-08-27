@@ -106,7 +106,6 @@ test_that("create_intervals results on hake 2021 recruitment and others do not c
                tolerance = 1e-5)
 })
 
-
 test_that("create_intervals.numeric() works with negative MCMC values", {
   res_2 <- create_intervals(rec_2021 - 10)    # Shift to have lots of negative values
 
@@ -118,6 +117,11 @@ test_that("create_intervals.numeric() works with negative MCMC values", {
   expect_equal(res_2$intervals[1:5] %>% as.numeric(),
                res_2_manual,
                tolerance = 1e-5)
+})
 
+
+test_that("decreasing distribution works, for which should be left-hand value or 0 and so add to coverage", {
+  exp_sim <- rexp(8000)
+  res_3 <- create_intervals(exp_sim)
 
 })

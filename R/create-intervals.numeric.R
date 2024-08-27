@@ -33,14 +33,13 @@ create_intervals.numeric <- function(dat,
   }
 # browser()
   dens$y <- dens$y / integrate_simpsons(dens,
-                                        tol = tol)  # normalise to ensure
-                                       # integrates to 1. TODO:
-  # think more if this is okay to do.
-  # OR may have to just extend the range of density, by making 'to' bigger than
+                                        tol = tol)
+  # This may not be perfectly okay to do, but works well. More for when
+  # density=TRUE is used. Think for default rec_2021 integral was 1.000003
+  # before rescaling, so not a huge deal.
+  # Could just extend the range of density, by making 'to' bigger than
   # the default. Or just increase cut quite a bit (will just take slightly
-  # longer to run); do a browser() to check the integral above. Was 1.000003
-  # ish, so not the problem in this case. i.e. it's not missing some off the
-  # ends. But try cut idea.
+  # longer to run); do a browser() to check the integral above.
 
   if(density){
     # These get overwritten if calculations are redone in next if()
@@ -58,8 +57,7 @@ create_intervals.numeric <- function(dat,
 
       dens$y <- dens$y / integrate_simpsons(dens,
                                             tol = tol)  # normalise as for
-                                        # above. TODO write up in methods, and
-                                        # the rest.
+                                        # above.
       hdi_res_list <- with_warnings(HDInterval::hdi(dens,
                                                     credMass = credibility))
       hdi_height <- attr(hdi_res_list$value,
@@ -160,9 +158,7 @@ create_intervals.numeric <- function(dat,
               # because of the asymmetry. But, probably simpler to just rerun
               # with a higher n, so do that. See notes for sketch of idea.
 
-    i_hdi_lower <- which(dens$x == intervals$hdi_lower)   # should give a value,
-                                                          # TODO need to test,
-                                                          # and for upper
+    i_hdi_lower <- which(dens$x == intervals$hdi_lower)   # should give a value.
     # Keep the above one as default as already used for many calculations in
     # manuscript (though the next line should give same answer anyway), but then
     # home in if not perfectly  accurate. Had to add this for hake age1 calculation.
