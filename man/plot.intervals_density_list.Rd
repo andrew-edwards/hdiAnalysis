@@ -106,7 +106,7 @@ the density for each quantity (years in ##' our recruitment example).
 \dontrun{
 # And see vignettes
 res_all_years <- create_intervals(dplyr::select(hake_recruitment_mcmc,
-                                                         -"Virgin"))     # TODO
+                                                         -"Virgin"))
 plot(res_all_years)
 }
 }

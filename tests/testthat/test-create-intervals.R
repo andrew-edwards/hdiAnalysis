@@ -1,5 +1,5 @@
 # create_intervals(). Quick test just to keep GHA happy for now.
-test_that("create_intervals results on hake 2021 recruitment do not change; only checks one value for now to get working", {
+test_that("create_intervals results on hake 2021 recruitment and others do not change", {
   # Check full intervals results for default run (not checking density)
   intervals_names <- c("median",
                        "eti_lower",
@@ -101,6 +101,20 @@ test_that("create_intervals results on hake 2021 recruitment do not change; only
                     8.43236)   # calculated 2024-08-27
   expect_equal(res_1$intervals[1:5] %>% as.numeric(),
                res_1_manual,
+               tolerance = 1e-5)
+})
+
+
+test_that("create_intervals.numeric() works with negative MCMC values", {
+  res_2 <- create_intervals(rec_2021 - 10)    # Shift to have lots of negative values
+
+  res_2_manual <- c(1.873000e-01,
+                    -5.914912e+00,
+                    1.949938e+01,
+                    -7.197950e+00,
+                    1.518480e+01)   # 2024-08-27
+  expect_equal(res_2$intervals[1:5] %>% as.numeric(),
+               res_2_manual,
                tolerance = 1e-5)
 
 

@@ -3,15 +3,21 @@
 create_intervals.numeric <- function(dat,
                                      density = FALSE,
                                      credibility = 0.95,
-                                     from = 0,
                                      n = 1e05,
                                      allow_hdi_zero = FALSE,
                                      ...
                                      ){
 
   stopifnot(credibility > 0 & credibility < 1)
+  stopifnot(min(dat) < 0 & !allow_hdi_zero)
 
-  if(!is.null(from)){
+  # If all data are >= 0 and `from` is undefined then set from = 0, assume
+  #  true distribution should be non-negative.
+  if(min(dat) >= 0 & !hasArg(from)){
+    from = 0
+  }
+
+  if(exists("from")){
     dens <- density(dat,
                     from = from,
                     n = n,
@@ -42,8 +48,6 @@ create_intervals.numeric <- function(dat,
 
     if(hdi_res_list$value["lower"] == 0 & !allow_hdi_zero){
       # Redo dens and HDI to force lower bound to be >0, will be min(dat).
-      #  If data go negative this will still use the min(dat), as `from` will be is
-      #  <0. TODO think more, add to help.
       dens <- density(dat,
                       from = min(dat),
                       n = n,

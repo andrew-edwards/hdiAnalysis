@@ -16,7 +16,6 @@ create_intervals(dat, ...)
   dat,
   density = FALSE,
   credibility = 0.95,
-  from = 0,
   n = 1e+05,
   allow_hdi_zero = FALSE,
   ...
@@ -29,8 +28,17 @@ which automatically uses \code{\link[=create-intervals.numeric]{create-intervals
 column), which automatically uses \code{\link[=create-intervals.data.frame]{create-intervals.data.frame()}} and
 the column names, and removes \code{NA}s.}
 
-\item{...}{arguments to pass onto \code{density()}, including \code{to} which is
-the right-most equivalent to \code{from}.}
+\item{...}{arguments to pass onto \code{density()}, including \code{from} (the
+left-most point of the grid at which the density is to be
+estimated) and \code{to} (the right-most equivalent to \code{from}). If \code{from} is
+undefined then the default in \code{density()} will be used, which is
+'cut * bw' outside of 'min(x)' (see \code{?density}), and can fall below 0. If
+\code{min(dat) >= 0} then \code{from} is set to 0 (if it is not explicitly defined)
+as it is assumed that values are positive. Though if \code{density} is TRUE and
+\code{allow_hdi_zero} is FALSE but the lower end of the HDI is 0 then \code{from}
+will get set to be the minimum of the data (since \code{allow_hdi_zero} says
+that we do not want the end of the HDI interval to be zero, and this is a
+parsimonious way of forcing it to be >0.}
 
 \item{density}{if TRUE then use the density approach for the HDI
 calculation, rather than the \code{hdi()} default of just the sample values. If
@@ -40,10 +48,6 @@ values of the probability density function at specified points.}
 \item{credibility}{numeric value between 0 and 1 specifying the interval to
 be specified (0.95 for 95\%, 0.90 for 90\%, etc.)}
 
-\item{from}{the left-most point of the grid at which the density is to be
-estimated; if NULL then the default in \code{density()} will be used, which is
-'cut * bw' outside of 'min(x)' (see \code{?density}), and can fall below 0.}
-
 \item{n}{the number of equally spaced points at which the density is
 to be estimated, to be passed onto \code{density()}. We found the \code{density()}
 default of 512 to give inaccurate results, so set a higher default here as
@@ -52,7 +56,8 @@ anyway, but we found this not to be the case). Changing \code{n} changes the
 resolution of the density kernel but not the wiggliness.}
 
 \item{allow_hdi_zero}{logical, if TRUE then allow HDI lower bound to include
-zero or be negative; if FALSE (the default) then do not allow this.}
+zero or be negative; if FALSE (the default) then do not allow this
+(requires \code{min(dat) >= 0}.}
 }
 \value{
 \itemize{

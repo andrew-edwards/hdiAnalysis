@@ -19,9 +19,6 @@
 ##'   values of the probability density function at specified points.
 ##' @param credibility numeric value between 0 and 1 specifying the interval to
 ##'   be specified (0.95 for 95%, 0.90 for 90%, etc.)
-##' @param from the left-most point of the grid at which the density is to be
-##'   estimated; if NULL then the default in `density()` will be used, which is
-##'   'cut * bw' outside of 'min(x)' (see `?density`), and can fall below 0.
 ##' @param n the number of equally spaced points at which the density is
 ##'   to be estimated, to be passed onto `density()`. We found the `density()`
 ##'   default of 512 to give inaccurate results, so set a higher default here as
@@ -29,9 +26,19 @@
 ##'   anyway, but we found this not to be the case). Changing `n` changes the
 ##'   resolution of the density kernel but not the wiggliness.
 ##' @param allow_hdi_zero logical, if TRUE then allow HDI lower bound to include
-##'   zero or be negative; if FALSE (the default) then do not allow this.
-##' @param ... arguments to pass onto `density()`, including `to` which is
-##'   the right-most equivalent to `from`.
+##'   zero or be negative; if FALSE (the default) then do not allow this
+##'   (requires `min(dat) >= 0`.
+##' @param ... arguments to pass onto `density()`, including `from` (the
+##'   left-most point of the grid at which the density is to be
+##'   estimated) and `to` (the right-most equivalent to `from`). If `from` is
+##'   undefined then the default in `density()` will be used, which is
+##'   'cut * bw' outside of 'min(x)' (see `?density`), and can fall below 0. If
+##'   `min(dat) >= 0` then `from` is set to 0 (if it is not explicitly defined)
+##'   as it is assumed that values are positive. Though if `density` is TRUE and
+##'   `allow_hdi_zero` is FALSE but the lower end of the HDI is 0 then `from`
+##'   will get set to be the minimum of the data (since `allow_hdi_zero` says
+##'   that we do not want the end of the HDI interval to be zero, and this is a
+##'   parsimonious way of forcing it to be >0.
 ##' @md
 ##' @return
 ##' * If `dat` is numeric then retuns a list object of class
