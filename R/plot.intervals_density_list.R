@@ -54,7 +54,7 @@
 ##' \dontrun{
 ##' # And see vignettes
 ##' res_all_years <- create_intervals(dplyr::select(hake_recruitment_mcmc,
-##'                                                          -"Virgin"))     # TODO
+##'                                                          -"Virgin"))
 ##' plot(res_all_years)
 ##' }
 plot.intervals_density_list <- function(obj,
@@ -170,14 +170,14 @@ plot.intervals_density_list <- function(obj,
             lty = 2)
     }
 
-    # TODO leave these for now
+    # Leave these for now, though quite specific. Ideally would generalise.
     # For relative biomass plots
     if(add_line_at_0.4){
       abline(h = 0.4,
              col = add_line_at_0.4_col,
              lty = add_line_at_0.4_lty)
       # Also denote 'now' and 'projections', likely only want if adding the line
-      # (implying relative spawning biomass plots; TODO should generalise).
+      # (implying relative spawning biomass plots; could generalise).
       text(2024,
            0.07,
            "Now")
