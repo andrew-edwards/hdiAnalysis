@@ -75,17 +75,17 @@ test_that("create_intervals results on hake 2021 recruitment and others do not c
                res_2021_density_true_manual,
                tolerance = 1e-5)
 
-  # Density = TRUE, from = NULL
+  # Density = TRUE, from = 0.1
   res_2021_density_from_create <- create_intervals(rec_2021,
                                                    density = TRUE,
-                                                   from = NULL)
+                                                   from = 0.1)
 
   res_2021_density_from_manual <- c(10.1873,
                                     4.085088,
                                     29.49938,
-                                    2.529013,
-                                    25.51883) # calculated 2024-08-27, slightly
-                                        # different to above that has from=0
+                                    2.529608,
+                                    25.517150) # calculated 2024-08-27, slightly
+                                        # different to above that gives from=0
 
   expect_equal(res_2021_density_from_create$intervals[1:5] %>% as.numeric(),
                res_2021_density_from_manual,

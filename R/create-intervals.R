@@ -27,7 +27,7 @@
 ##'   resolution of the density kernel but not the wiggliness.
 ##' @param allow_hdi_zero logical, if TRUE then allow HDI lower bound to include
 ##'   zero or be negative; if FALSE (the default) then do not allow this
-##'   (requires `min(dat) >= 0`.
+##'   (requires `min(dat) >= 0`).
 ##' @param tol tolerance for integral checking, see description in
 ##'   `?integrate_simpsons()`
 ##' @param ... arguments to pass onto `density()`, including `from` (the

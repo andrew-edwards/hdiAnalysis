@@ -10,7 +10,8 @@ create_intervals.numeric <- function(dat,
                                      ){
 
   stopifnot(credibility > 0 & credibility < 1)
-  stopifnot(min(dat) < 0 & !allow_hdi_zero)
+  stopifnot((min(dat) < 0 & !allow_hdi_zero) |
+            min(dat) >= 0)
 
   # If all data are >= 0 and `from` is undefined then set from = 0, assume
   #  true distribution should be non-negative.
