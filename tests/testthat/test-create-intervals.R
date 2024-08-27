@@ -74,4 +74,34 @@ test_that("create_intervals results on hake 2021 recruitment do not change; only
   expect_equal(res_2021_density_true_create$intervals[1:5] %>% as.numeric(),
                res_2021_density_true_manual,
                tolerance = 1e-5)
+
+  # Density = TRUE, from = NULL
+  res_2021_density_from_create <- create_intervals(rec_2021,
+                                                   density = TRUE,
+                                                   from = NULL)
+
+  res_2021_density_from_manual <- c(10.1873,
+                                    4.085088,
+                                    29.49938,
+                                    2.529013,
+                                    25.51883) # calculated 2024-08-27, slightly
+                                        # different to above that has from=0
+
+  expect_equal(res_2021_density_from_create$intervals[1:5] %>% as.numeric(),
+               res_2021_density_from_manual,
+               tolerance = 1e-5)
+
+  # Density = TRUE, allow_hdi_zero = FALSE
+  res_1 <- create_intervals(dplyr::pull(hake_recruitment_mcmc, "1966"))
+
+  res_1_manual <- c(1.63342,
+                    0.05706769,
+                    10.65658,
+                    0.00613024,
+                    8.43236)   # calculated 2024-08-27
+  expect_equal(res_1$intervals[1:5] %>% as.numeric(),
+               res_1_manual,
+               tolerance = 1e-5)
+
+
 })
