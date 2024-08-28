@@ -123,5 +123,26 @@ test_that("create_intervals.numeric() works with negative MCMC values", {
 test_that("decreasing distribution works, for which should be left-hand value or 0 and so add to coverage", {
   exp_sim <- rexp(8000)
   res_3 <- create_intervals(exp_sim)
+})
+
+# test_that("left-skewed distribution works", {
+#  exp_sim_2 <- max(exp_sim) - exp_sim
+#  res_4 <- create_intervals(exp_sim_2)
+# })
+
+test_that("create_intervals.data.frame() works", {
+  res_5 <- create_intervals(dplyr::select(hake_recruitment_mcmc,
+                                          c('1966', '1967')))
+
+  res_5_manual_1966 <- c(1.966000e+03,
+                         1.633420e+00,
+                         5.706769e-02,
+                         1.065658e+01,
+                         6.130240e-03,
+                         8.432360e+00,
+                         1.059951e+01)  # 2024-08-27
+  expect_equal(res_5$intervals[1, 1:7] %>% as.numeric(),
+               res_5_manual_1966,
+               tolerance = 1e-5)
 
 })
