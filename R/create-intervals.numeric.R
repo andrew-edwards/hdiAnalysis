@@ -161,9 +161,10 @@ create_intervals.numeric <- function(dat,
     i_hdi_lower <- which(dens$x == intervals$hdi_lower)   # should give a value.
     # Keep the above one as default as already used for many calculations in
     # manuscript (though the next line should give same answer anyway), but then
-    # home in if not perfectly  accurate. Had to add this for hake age1 calculation.
+    # home in if not perfectly  accurate. Had to add this for hake age1
+    # calculation, so know that it works (hence skip coverage).
     if(length(i_hdi_lower) == 0){
-      i_hdi_lower <- which.min(abs(dens$x - intervals$hdi_lower))
+      i_hdi_lower <- which.min(abs(dens$x - intervals$hdi_lower)) # nocov
     }
 
 
@@ -173,7 +174,7 @@ create_intervals.numeric <- function(dat,
 
     # Same as for i_hdi_lower
     if(length(i_hdi_upper) == 0){
-      i_hdi_upper <- which.min(abs(dens$x - intervals$hdi_upper))
+      i_hdi_upper <- which.min(abs(dens$x - intervals$hdi_upper)) # nocov
     }
 
     y_hdi_upper <- dens$y[i_hdi_upper]
