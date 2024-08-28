@@ -19,7 +19,8 @@ RoxygenNote: 7.2.3
 Remotes: github::pbs-assess/pacea
 Imports:
     dplyr (>= 1.0.2),
-    HDInterval
+    HDInterval,
+    stringr
 Suggests:
     rmarkdown,
     knitr,
