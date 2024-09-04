@@ -20,7 +20,8 @@ Remotes: github::pbs-assess/pacea
 Imports:
     dplyr (>= 1.0.2),
     HDInterval,
-    stringr
+    stringr,
+    shape
 Suggests:
     rmarkdown,
     knitr,
