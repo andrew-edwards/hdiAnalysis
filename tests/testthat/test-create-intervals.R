@@ -64,6 +64,16 @@ test_that("create_intervals results on hake 2021 recruitment and others do not c
                res_2021_default_manual,
                tolerance = 1e-5)
 
+  # Test some plotting options
+  expect_error(plot(res_2021_default_create,
+                    type = "demure"))
+  expect_invisible(plot(res_2021_default_create,
+                        type = "eti",
+                        explanatory_lines_a_b = TRUE,
+                        explanatory_lines_extra = TRUE,
+                        rug_top = TRUE))
+
+
   # Density = TRUE, just check the first values
   res_2021_density_true_create <- create_intervals(rec_2021,
                                                    density = TRUE)
