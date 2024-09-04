@@ -73,6 +73,7 @@ test_that("create_intervals results on hake 2021 recruitment and others do not c
                         explanatory_lines_extra = TRUE,
                         rug_top = TRUE))
 
+  expect_output(summary_table(res_2021_default_create))
 
   # Density = TRUE, just check the first values
   res_2021_density_true_create <- create_intervals(rec_2021,
@@ -167,6 +168,9 @@ test_that("create_intervals.data.frame() works as does plotting in various ways"
 
   expect_error(plot(res_5,
                     type = "very demure"))
+
+  expect_no_error(summary_table(res_5)) # Returns a knitr kable, so just check
+                                        #  it runs
 
   res_5_char <- res_5
   res_5_char$intervals_all$quantity <- c("hello", "goodbye")
