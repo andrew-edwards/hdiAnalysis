@@ -1,4 +1,3 @@
-# create_intervals(). Quick test just to keep GHA happy for now.
 test_that("create_intervals results on hake 2021 recruitment and others do not change", {
   # Check full intervals results for default run (not checking density)
   intervals_names <- c("median",
