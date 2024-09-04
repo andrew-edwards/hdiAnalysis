@@ -30,7 +30,7 @@ plot_densities <- function(obj,
     this_quantity_i <- which(obj$intervals_all$quantity == this_quantity)
 
     # This calls plot.intervals_density()
-    plot(res_all_years$res_all[[this_quantity_i]],
+    plot(obj$res_all[[this_quantity_i]],
          # main_title = as.character(this_quantity),
          # main_title_include = TRUE,
          type = type,

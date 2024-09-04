@@ -1,3 +1,4 @@
+# Also some plotting that does not get covered by figure_1() and figure_2()
 test_that("create_intervals results on hake 2021 recruitment and others do not change", {
   # Check full intervals results for default run (not checking density)
   intervals_names <- c("median",
@@ -130,7 +131,7 @@ test_that("decreasing distribution works, for which should be left-hand value or
 #  res_4 <- create_intervals(exp_sim_2)
 # })
 
-test_that("create_intervals.data.frame() works", {
+test_that("create_intervals.data.frame() works as does plotting in various ways", {
   res_5 <- create_intervals(dplyr::select(hake_recruitment_mcmc,
                                           c('1966', '1967')))
 
@@ -144,4 +145,21 @@ test_that("create_intervals.data.frame() works", {
   expect_equal(res_5$intervals[1, 1:7] %>% as.numeric(),
                res_5_manual_1966,
                tolerance = 1e-5)
+
+  expect_invisible(plot(res_5,
+                        type = "hdi"))
+  expect_invisible(plot(res_5,
+                        type = "eti"))
+
+  expect_invisible(plot(res_5,
+                        join_intervals = TRUE,
+                        y_tick_start = NULL))
+
+  expect_error(plot(res_5,
+                    type = "very demure"))
+
+  res_5_char <- res_5
+  res_5_char$intervals_all$quantity <- c("hello", "goodbye")
+  expect_error(plot(res_5_char))
+
 })
