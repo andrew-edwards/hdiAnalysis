@@ -113,7 +113,7 @@ plot.intervals_density <- function(ints_dens,
   # Did have this also but don't think needed. Can't actually not be ETI, but
   # have this for clarity anyway.
   if(ints$hdi_lower == min(dens$x & type == "eti")){
-    fill_left_tail = FALSE} else {
+    fill_left_tail = FALSE} else {                      # nocov
                             fill_left_tail = TRUE}
 
 
@@ -324,7 +324,8 @@ plot.intervals_density <- function(ints_dens,
   if(type == "hdi" & show_discontinuity & ints$warning){
 
     # If not a true HDI
-    # then pick the min:  TODO can move this earlier as needed elsewhere also
+    # then pick the min:  TODO can move this earlier as needed elsewhere also,
+    # not fully tested as unlikedly to be needed too much  # nocov start
     y_interval_critical <-  min(y_interval_low,
                                 y_interval_high)
 
@@ -338,7 +339,7 @@ plot.intervals_density <- function(ints_dens,
 
     points(dens$x[i_to_plot],
            rep(y_interval_critical * discontinuity_multiplier,
-               length(i_to_plot)))
+               length(i_to_plot)))                        # nocov end
   }
 
 
