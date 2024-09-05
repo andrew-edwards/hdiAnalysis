@@ -3,7 +3,10 @@
 ##'
 ##' Creates plot on object of class `intervals_density`, which is the
 ##' result of running `create_intervals()` on a vector of values. Used to make
-##' Fig. 1A. See vignettes.
+##' Fig. 1A. See vignettes. For left-skewed distributions, the extra
+##' functionality that adds explanatory lines etc. is not fully implemented, but
+##' the basic figure works okay. Please make an Issue on GitHub if you would
+##' find it helpful for this to be fixed (it just seemed a low priority).
 ##'
 ##' @param ints_dens object of class `intervals_density`, resulting from running
 ##'   `create_intervals()` on a vector of values.
@@ -48,6 +51,15 @@
 ##' \dontrun{
 ##' res <- create_intervals(rec_2021)
 ##' plot(res)
+##'
+##' # Left-skewed example:
+##' left <- 60 - rec_2021[rec_2021 < 60]
+##' res <- create_intervals(left)
+##' par(mfrow = c(2, 1))
+##' plot(res, type = "eti", show_a_b = FALSE)
+##' plot(res, type = "hdi", show_a_b = FALSE)
+##' summary_table(res)    # shows that a and b ranges are not properly
+##'   calculated yet.
 ##' # And see results and result-extra vignettes.
 ##' }
 plot.intervals_density <- function(ints_dens,
@@ -88,7 +100,6 @@ plot.intervals_density <- function(ints_dens,
   credibility <- ints_dens$credibility
   eti_lower_percentile <- (1 - credibility)/2 * 100   # For annotating
 
-  # TODO change to x_interval_low etc.
   # low and high values of the interval for plotting, already calculated
   if(type == "eti"){
      interval_low <- ints$eti_lower
@@ -119,7 +130,6 @@ plot.intervals_density <- function(ints_dens,
 
   # TODO think about more, putting back in again now have one solution for zero
   # issue, to see if plot works again.
-  # HERE not sure about this, think clearly
 #  if(ints$allow_hdi_zero & ints$hdi_lower == 0){
     dens$x <- c(0, dens$x)
     dens$y <- c(0, dens$y)
@@ -135,8 +145,6 @@ plot.intervals_density <- function(ints_dens,
 
   add_minor_tickmarks(x_tick_by = x_minor_ticks_by,
                       y_tick_by = y_minor_ticks_by)   # TODO make more general, esp for y-axis
-
-  # TODO STILL need to think and CHECK EVERYTHING AGAIN
 
   # Full distribution
   polygon(dens,
@@ -185,8 +193,8 @@ plot.intervals_density <- function(ints_dens,
                  interval_high,
                  ints$a_lower,
                  ints$b_lower),
-           col = col_explanatory_lines,  # TODO change name
-           lwd = 1)                   # TODO generalise
+           col = col_explanatory_lines,
+           lwd = 1)
   }
 
   if(type == "eti" & explanatory_lines_extra){
@@ -397,18 +405,5 @@ plot.intervals_density <- function(ints_dens,
          "b",
          col = col_bars,
          pos = 3)
-
-   # need to generalise
-    # TODO Marie had +1 in first bit below, think about; might be because of
-    # polygon not line - now added in above, it's to stop it crossing over main curve
-
-    ## polygon(c(dens$x[i_left_side+1], dens$x[dens$x > dens$x[i_left_side] &
-    ##       dens$x <= interval_high], interval_high, interval_high,
-    ##       dens$x[i_left_side+1]),
-    ##       c(dens$y[i_left_side +1], dens$y[dens$x > dens$x[i_left_side] & dens$x
-    ##       <= interval_high], y_interval_high, 0, 0),
-    ##       col = col_included,
-    ##       border = NA,
-    ##       main = "")
   }
 }
