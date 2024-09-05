@@ -1,7 +1,7 @@
 ##' Shorthand for `as.data.frame()` for printing all of a tibble.
 ##'
-##' @details Often want to print all of a (small) tibble, but `as.data.frame()`
-##'   is cumbersome.
+##' You often want to print all of a (small) tibble, but `as.data.frame()`
+##'   is cumbersome, and so this is a useful shortcut.
 ##'
 ##' @param tib `tibble` to be printed to console, R Markdown file, etc.
 ##'

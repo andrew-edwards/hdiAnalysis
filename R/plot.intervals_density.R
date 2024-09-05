@@ -20,9 +20,9 @@
 ##' @param y_arrow value on y-axis to show the arrows depicting intervals
 ##' @param arrowhead_length length of arrowheads on intervals
 ##' @param arrowhead_gap half the gap between arrowheads of interval; manually
-##'   tweak to give a slight gap between them as they default if they touch too
+##'   tweak to give a slight gap between them if they touch too
 ##'   much. Half of required gap since amount is applied to each arrow.
-##' @param col_bars colour of the bars showing regions A and B
+##' @param col_bars colour of the bars showing regions a and b
 ##' @param bars_multiplier numeric multiplier, to nudge the bars higher (value of
 ##'   1.0 puts them exactly at the minimum density of the ends of the credible
 ##'   interval)
@@ -37,14 +37,14 @@
 ##'   ranges a and b for the ETI.
 ##' @param explanatory_lines_extra logical, whether to plot extra lines to explain the
 ##'   ranges c and d for which all values in c are more likely than those in d,
-##'   yet c is outside the ETI and d is inside it.
+##'   yet c is outside the ETI and d is inside it; see vignette.
 ##' @param show_discontinuity logical, if `TRUE` then plot the discontinuity in
 ##'   the HDI that arises (only matters if `ints_dens$intervals$warning ==
 ##'   TRUE`) as points.
 ##' @param discontinuity_multiplier how much to move the `show_discontinuity`
 ##'   points up from the density level of the HDI (just to improve how it looks)
 ##' @param ... arguments to pass onto `plot()`
-##' @return the desired plot
+##' @return The desired plot.
 ##' @export
 ##' @author Andrew Edwards
 ##' @examples
@@ -59,8 +59,9 @@
 ##' plot(res, type = "eti", show_a_b = FALSE)
 ##' plot(res, type = "hdi", show_a_b = FALSE)
 ##' summary_table(res)    # shows that a and b ranges are not properly
-##'   calculated yet.
-##' # And see results and result-extra vignettes.
+##'   calculated yet for left-skewed distributions. Create an Issue if you would
+##'   like this functionality.
+##' # And see results and result-extra vignettes, rendered on the GitHub page.
 ##' }
 plot.intervals_density <- function(ints_dens,
                                    type = "hdi",

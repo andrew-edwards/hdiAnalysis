@@ -2,7 +2,8 @@
 ##'
 ##' Useful for the manuscript, maybe less so for other users, though could be
 ##'   useful as a template. Generally running in
-##'   the vignettes folder then copying over to the write up repository.
+##'   the vignettes folder then copying over to the write up repository. Was
+##'   also useful for running the tests.
 ##' @param file filename to save pdf file
 ##' @param height height of pdf file (inches)
 ##' @param width width of pdf file (inches)

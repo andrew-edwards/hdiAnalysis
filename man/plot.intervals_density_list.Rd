@@ -94,17 +94,17 @@ or \code{hdi} (and then onto \code{\link[=plot.intervals_density]{plot.intervals
 }
 \value{
 plot of the required style (multiple plots for \code{type} being \code{eti} or
-\code{hdi}
+\code{hdi})
 }
 \description{
-Default plot is to show show ETIs, HDIs, or both, as saved in the
+Default plot is to show ETIs and HDIs as in Fig. 2 of the manuscript, as saved in the
 \code{intervals_all} component of the list from
 \code{create_intervals()}. See example and vignette. Also includes option to plot
-the density for each quantity (years in ##' our recruitment example).
+the density for each quantity (years in our recruitment example).
 }
 \examples{
 \dontrun{
-# And see vignettes
+# Also see the vignettes
 res_all_years <- create_intervals(dplyr::select(hake_recruitment_mcmc,
                                                          -"Virgin"))
 plot(res_all_years)

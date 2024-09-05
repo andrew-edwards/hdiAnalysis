@@ -10,6 +10,10 @@
 #' @author Chris Grandin
 #' @return A Character string. A formatted version of the number `x`.
 #' @export
+#' @examples
+#' \dontrun{
+#' f(123456)
+#' }
 f <- function(x, digits = 0){
   format(round(x,
                digits),

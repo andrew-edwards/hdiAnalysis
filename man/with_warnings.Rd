@@ -10,14 +10,15 @@ with_warnings(expr)
 \item{expr}{expression to be evaluated}
 }
 \description{
-This function is used by chi.2.eksp to ensure that the function works correctly. It makes use
-of functions that provide a mechanism for handling unusual conditions, including errors and warnings.
-A list is returned of the value and the associated warning. Used in
-\code{\link[=create_intervals.numeric]{create_intervals.numeric()}}.
+Used in \code{\link[=create_intervals.numeric]{create_intervals.numeric()}} to save the warnings. Originally written
+by Bill Dunlap. Taken from
+https://rdrr.io/github/Boshoffsmit/novaReport/src/R/withWarnings.R
+and then adapted.
 }
 \details{
-Taken from https://rdrr.io/github/Boshoffsmit/novaReport/src/R/withWarnings.R
-and then adapted.
+Original help: This function is used by chi.2.eksp to ensure that the function works correctly. It makes use
+of functions that provide a mechanism for handling unusual conditions, including errors and warnings.
+A list is returned of the value and the associated warning.
 }
 \references{
 Bill Dunlap - original co-author

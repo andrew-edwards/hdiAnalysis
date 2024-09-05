@@ -1,10 +1,10 @@
 ##' Plot a time series of intervals from multiple samples, as calculated from
 ##' `create_intervals()` applied to a data frame object.
 ##'
-##' Default plot is to show show ETIs, HDIs, or both, as saved in the
+##' Default plot is to show ETIs and HDIs as in Fig. 2 of the manuscript, as saved in the
 ##' `intervals_all` component of the list from
 ##' `create_intervals()`. See example and vignette. Also includes option to plot
-##' the density for each quantity (years in ##' our recruitment example).
+##' the density for each quantity (years in our recruitment example).
 ##'
 ##' @param obj `intervals_density_list` object from running [create_intervals()]
 ##'   on a data frame, see full description in the return section of `?create_intervals`
@@ -47,12 +47,12 @@
 ##'   "comparison"`, else passed onto [plot_densities()] for `type` being `eti`
 ##'   or `hdi` (and then onto [plot.intervals_density()]).
 ##' @return plot of the required style (multiple plots for `type` being `eti` or
-##'   `hdi`
+##'   `hdi`)
 ##' @export
 ##' @author Andrew Edwards
 ##' @examples
 ##' \dontrun{
-##' # And see vignettes
+##' # Also see the vignettes
 ##' res_all_years <- create_intervals(dplyr::select(hake_recruitment_mcmc,
 ##'                                                          -"Virgin"))
 ##' plot(res_all_years)

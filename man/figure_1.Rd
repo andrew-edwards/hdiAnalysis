@@ -30,7 +30,8 @@ nothing, but saves the pdf
 \description{
 Useful for the manuscript, maybe less so for other users, though could be
 useful as a template. Generally running in
-the vignettes folder then copying over to the write up repository.
+the vignettes folder then copying over to the write up repository. Was
+also useful for running the tests.
 }
 \examples{
 \dontrun{

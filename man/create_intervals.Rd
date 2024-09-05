@@ -5,7 +5,7 @@
 \alias{create_intervals}
 \alias{create_intervals.data.frame}
 \alias{create_intervals.numeric}
-\title{Calculate equal-tailed intervals and highest density intervals and related
+\title{Calculate equal-tailed intervals, highest density intervals, and related
 quantities.}
 \usage{
 create_intervals(dat, ...)
@@ -39,10 +39,10 @@ as it is assumed that values are positive. Though if \code{density} is TRUE and
 \code{allow_hdi_zero} is FALSE but the lower end of the HDI is 0 then \code{from}
 will get set to be the minimum of the data (since \code{allow_hdi_zero} says
 that we do not want the end of the HDI interval to be zero, and this is a
-parsimonious way of forcing it to be >0.}
+parsimonious way of forcing it to be >0).}
 
 \item{density}{if TRUE then use the density approach for the HDI
-calculation, rather than the \code{hdi()} default of just the sample values. If
+calculation, rather than the \code{HDInterval::hdi()} default of just the sample values. If
 FALSE (the default) then the density kernel is only used to estimate the y
 values of the probability density function at specified points.}
 
@@ -51,12 +51,13 @@ be specified (0.95 for 95\%, 0.90 for 90\%, etc.)}
 
 \item{n}{the number of equally spaced points at which the density is
 to be estimated, to be passed onto \code{density()}. We found the \code{density()}
-default of 512 to give inaccurate results, so set a higher default here as
+default of 512 to give inaccurate results (see vignette), so set a higher default here as
 1e05 (\code{?density} advises to use powers of 2 as the value gets rounded up
 anyway, but we found this not to be the case). Changing \code{n} changes the
 resolution of the density kernel but not the wiggliness.}
 
-\item{allow_hdi_zero}{logical, if TRUE then allow HDI lower bound to include
+\item{allow_hdi_zero}{logical, only relevant if \code{density = TRUE}. If TRUE
+then allow HDI lower bound to include
 zero or be negative; if FALSE (the default) then do not allow this
 (requires \code{min(dat) >= 0}).}
 
@@ -65,10 +66,9 @@ zero or be negative; if FALSE (the default) then do not allow this
 }
 \value{
 \itemize{
-\item If \code{dat} is numeric then retuns a list object of class
+\item If \code{dat} is numeric then returns a list object of class
 \code{intervals_density} (such that we can plot it
-with \code{plot.intervals_density()}, with objects:  TODO check if that md
-above is needed
+with \code{plot.intervals_density()}, with objects:
 \itemize{
 \item intervals: one-row tibble with columns:
 \itemize{
@@ -113,6 +113,7 @@ discontinuities in the HDI.
 }
 \item If \code{dat} is a data frame then return a list object of class
 \code{intervals_density_list} with:
+\itemize{
 \item element \verb{[[i]]} corresponding to column \code{i} of the \code{dat_mcmc}. Each
 \verb{[[i]]} element is itself a list of the form described above (since the
 intervals are calculated for each column in turn), plus also the
@@ -123,13 +124,15 @@ corresponds to column \code{i} of \code{dat_mcmc}. \code{quantity} is numeric if
 column names of \code{dat_mcmc} contain non-digits (e.g. represents years).
 }
 }
+}
 \description{
-For a numeric vector (e.g. MCMC samples of an estimated population size) or
+Works for a numeric vector (e.g. MCMC samples of an estimated population size) or
 a data frame (such as MCMC samples of an estimated population size in 10
 different years -- years would be the named columns, each row would be an
-MCMC sample). Calculate the ETI, HDI, their respective widths, kernel
-density, and other useful information. See our manuscript and Appendix for
-further background.
+MCMC sample). Calculate the ETI, HDI (using appropriate functions from
+HDInterval), their respective widths, kernel density, and other useful
+information. See our manuscript, Appendix, and vignettes for
+further background and uses.
 }
 \examples{
 \dontrun{

@@ -22,6 +22,11 @@ The formatted number will have comma-separated thousands, millions, etc.
 and the exact number of decimal points given by \code{digits}, even if the
 last one is a zero.
 }
+\examples{
+\dontrun{
+f(123456)
+}
+}
 \author{
 Chris Grandin
 }

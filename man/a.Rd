@@ -13,11 +13,8 @@ a(tib)
 print \code{a} as a data.frame, so show all the rows.
 }
 \description{
-Shorthand for \code{as.data.frame()} for printing all of a tibble.
-}
-\details{
-Often want to print all of a (small) tibble, but \code{as.data.frame()}
-is cumbersome.
+You often want to print all of a (small) tibble, but \code{as.data.frame()}
+is cumbersome, and so this is a useful shortcut.
 }
 \examples{
 \dontrun{

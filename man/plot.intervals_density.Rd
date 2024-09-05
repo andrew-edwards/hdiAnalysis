@@ -55,10 +55,10 @@ tails shaded as specified and ETI or HDI shown and optional explanatory lines ad
 \item{arrowhead_length}{length of arrowheads on intervals}
 
 \item{arrowhead_gap}{half the gap between arrowheads of interval; manually
-tweak to give a slight gap between them as they default if they touch too
+tweak to give a slight gap between them if they touch too
 much. Half of required gap since amount is applied to each arrow.}
 
-\item{col_bars}{colour of the bars showing regions A and B}
+\item{col_bars}{colour of the bars showing regions a and b}
 
 \item{bars_multiplier}{numeric multiplier, to nudge the bars higher (value of
 1.0 puts them exactly at the minimum density of the ends of the credible
@@ -81,7 +81,7 @@ ranges a and b for the ETI.}
 
 \item{explanatory_lines_extra}{logical, whether to plot extra lines to explain the
 ranges c and d for which all values in c are more likely than those in d,
-yet c is outside the ETI and d is inside it.}
+yet c is outside the ETI and d is inside it; see vignette.}
 
 \item{show_discontinuity}{logical, if \code{TRUE} then plot the discontinuity in
 the HDI that arises (only matters if \code{ints_dens$intervals$warning == TRUE}) as points.}
@@ -92,18 +92,31 @@ points up from the density level of the HDI (just to improve how it looks)}
 \item{...}{arguments to pass onto \code{plot()}}
 }
 \value{
-the desired plot
+The desired plot.
 }
 \description{
 Creates plot on object of class \code{intervals_density}, which is the
 result of running \code{create_intervals()} on a vector of values. Used to make
-Fig. 1A. See vignettes.
+Fig. 1A. See vignettes. For left-skewed distributions, the extra
+functionality that adds explanatory lines etc. is not fully implemented, but
+the basic figure works okay. Please make an Issue on GitHub if you would
+find it helpful for this to be fixed (it just seemed a low priority).
 }
 \examples{
 \dontrun{
 res <- create_intervals(rec_2021)
 plot(res)
-# And see results and result-extra vignettes.
+
+# Left-skewed example:
+left <- 60 - rec_2021[rec_2021 < 60]
+res <- create_intervals(left)
+par(mfrow = c(2, 1))
+plot(res, type = "eti", show_a_b = FALSE)
+plot(res, type = "hdi", show_a_b = FALSE)
+summary_table(res)    # shows that a and b ranges are not properly
+  calculated yet for left-skewed distributions. Create an Issue if you would
+  like this functionality.
+# And see results and result-extra vignettes, rendered on the GitHub page.
 }
 }
 \author{
