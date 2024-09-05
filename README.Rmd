@@ -37,15 +37,22 @@ This package accompanies the manuscript:
 
 *Reducing uncertainty in stock assessments by billions of fish*
 
-by Andrew M. Edwards and Marie Auger-Méthé, being submitted shortly to the
+by Andrew M. Edwards and Marie Auger-Méthé, being submitted to the
 *Proceedings of the National Academy of Sciences*.
 
-The manuscript (available upon request) should be read first to understand the potential of the
+In the manuscript (available upon request) we show that using highest density
+intervals (HDIs) to characterise uncertainty is preferable to using the usual
+equal-tailed intervals. The HDIs are shorter (less uncertainty) and also lead to
+unanticipated conservation implications in our example application.
+
+This package provides functionality to calculate, understand, and plot highest
+density intervals. The manuscript should be read first to understand the potential of the
 package. Two rendered vignettes are designed to help users investigate
 highest density intervals for their own applications. The vignettes include
 examples of our simple plotting
 functions to help understand and
-check calculated HDIs, plus code to streamline the calculation of HDIs for time series of MCMC
+check calculated HDIs, plus code to streamline the calculation of HDIs for time
+series of (Markov chain Monte Carlo) MCMC
 values and to produce simple summary tables of results.
 
 The two vignettes are rendered and viewable on the GitHub site, and are:

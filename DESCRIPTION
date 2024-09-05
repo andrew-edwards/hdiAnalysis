@@ -1,15 +1,20 @@
 Package: hdiAnalysis
-Title: An R package for investigating the use of hdi in stock assessments
-Version: 0.0.0.9000
-Authors@R:
+Title: An R package for calculating and plotting highest density intervals
+Version: 1.0.0
+Authors@R: c(
     person(c("A.", "M."), "Edwards",
-    email = "andrew.edwards@dfo-mpo.gc.ca",
-    role = c("aut", "cre"),
-    comment = c(ORCID = "0000-0003-2749-8198"))
+        email = "andrew.edwards@dfo-mpo.gc.ca",
+        role = c("aut", "cre"),
+        comment = c(ORCID = "0000-0003-2749-8198")),
+    person("M.", "Auger-Méthé",
+        email = "auger-methe@stat.ubc.ca",
+        role = c("aut"),
+        comment = c(ORCID = "0000-0003-3550-4930")))
 URL: https://github.com/andrew-edwards/HDIanalysis
 BugReports: https://github.com/andrew-edwards/HDIanalysis/issues
 Maintainer: Andrew Edwards <andrew.edwards@dfo-mpo.gc.ca>
-Description: What the package does (one paragraph).
+Date: 2024-09-05
+Description: This package provides functionality to calculate, understand, and plot highest density intervals. In our manuscript 'Reducing uncertainty in stock assessments by billions of fish' we show that using highest density intervals to characterise uncertainty is preferable to using the usual equal-tailed intervals. This was for a specific fisheries stock assessment, but the lessons are more generally applicable. See the manuscript and GitHub site (particularly vignettes) for details.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
