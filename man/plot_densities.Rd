@@ -26,7 +26,7 @@ columns to plot panels into) to pass into \code{\link[=plot_densities]{plot_dens
 plots multiple panels of density and ETI or HDI
 }
 \description{
-Plots the density and ETI/HDI for each quantitiey (such as year) in a
+Plots the density and ETI/HDI for each quantity (such as year) in a
 \code{intervals_density_list} object that is returned from \code{\link[=create_intervals]{create_intervals()}}
 applied to a data frame. Called from \code{\link[=plot.intervals_density_list]{plot.intervals_density_list()}},
 probably not needed by users.

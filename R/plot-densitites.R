@@ -1,6 +1,6 @@
 ##' Plots densities and ETIs or HDIs for multiplie quantities (e.g. years).
 ##'
-##' Plots the density and ETI/HDI for each quantitiey (such as year) in a
+##' Plots the density and ETI/HDI for each quantity (such as year) in a
 ##'  `intervals_density_list` object that is returned from [create_intervals()]
 ##'  applied to a data frame. Called from [plot.intervals_density_list()],
 ##'  probably not needed by users.
