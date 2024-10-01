@@ -340,14 +340,14 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Results</h1>
 <h4 class="author">Andrew Edwards</h4>
-<h4 class="date">Last rendered on 15 August, 2024</h4>
+<h4 class="date">Last rendered on 01 October, 2024</h4>
 
 
 
 <!-- To build either run
 rmarkdown::render("results.Rmd")
  or click the knit button in RStudio -->
-<p>This vignette reproduces the main results in the manuscript, and can easily be used as a template for users to apply to their own data or model outputs. The longer <code>results-extra</code> vignette gives more details of outputs and further examples of plotting features.</p>
+<p>This vignette for our <a href="https://github.com/andrew-edwards/hdiAnalysis?tab=readme-ov-file#hdianalysis">hdiAnalysis R package</a> reproduces the main results in the manuscript, and can easily be used as a template for users to apply to their own data or model outputs. The longer <a href="http://htmlpreview.github.io/?https://github.com/andrew-edwards/hdiAnalysis/blob/main/vignettes/results-extra.html">results-extra.html</a> vignette gives more details of outputs and further examples of plotting features.</p>
 <p>Set up:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(hdiAnalysis)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
@@ -2422,8 +2422,8 @@ manually checked, code is below but not run or printed in vignette): -->
 <span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; other attached packages:</span></span>
-<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] dplyr_1.1.4            hdiAnalysis_0.0.0.9000 testthat_3.2.1        </span></span>
-<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4] devtools_2.4.5         usethis_2.2.2         </span></span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] dplyr_1.1.4       hdiAnalysis_1.0.0 testthat_3.2.1    devtools_2.4.5   </span></span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [5] usethis_2.2.2    </span></span>
 <span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
 <span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] sass_0.4.8        utf8_1.2.4        generics_0.1.3    shape_1.4.6      </span></span>
@@ -2436,9 +2436,9 @@ manually checked, code is below but not run or printed in vignette): -->
 <span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [29] tools_4.3.2       memoise_2.0.1     httpuv_1.6.13     vctrs_0.6.5      </span></span>
 <span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [33] R6_2.5.1          mime_0.12         lifecycle_1.0.4   stringr_1.5.1    </span></span>
 <span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [37] fs_1.6.3          htmlwidgets_1.6.4 miniUI_0.1.1.1    pkgconfig_2.0.3  </span></span>
-<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [41] pillar_1.9.0      bslib_0.6.1       later_1.3.2       glue_1.6.2       </span></span>
-<span id="cb23-38"><a href="#cb23-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [45] profvis_0.3.8     Rcpp_1.0.11       highr_0.10        xfun_0.41        </span></span>
-<span id="cb23-39"><a href="#cb23-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [49] tibble_3.2.1      tidyselect_1.2.0  knitr_1.45        xtable_1.8-4     </span></span>
+<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [41] bslib_0.6.1       pillar_1.9.0      later_1.3.2       glue_1.6.2       </span></span>
+<span id="cb23-38"><a href="#cb23-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [45] profvis_0.3.8     Rcpp_1.0.11       highr_0.10        tidyselect_1.2.0 </span></span>
+<span id="cb23-39"><a href="#cb23-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [49] tibble_3.2.1      xfun_0.41         knitr_1.45        xtable_1.8-4     </span></span>
 <span id="cb23-40"><a href="#cb23-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [53] htmltools_0.5.7   rmarkdown_2.25    compiler_4.3.2</span></span></code></pre></div>
 </div>
 

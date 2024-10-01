@@ -23,7 +23,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-This vignette follows on from the `results.Rmd` vignette, including:
+This vignette follows on from the
+[results.html](http://htmlpreview.github.io/?https://github.com/andrew-edwards/hdiAnalysis/blob/main/vignettes/results.html)
+vignette for our [hdiAnalysis R package](https://github.com/andrew-edwards/hdiAnalysis?tab=readme-ov-file#hdianalysis), including:
 
 - plotting of all density functions when multiple years of data are analysed
  (specifically all years of recruitment shown in Figure 2A).

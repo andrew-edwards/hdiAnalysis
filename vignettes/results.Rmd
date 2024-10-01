@@ -23,10 +23,12 @@ knitr::opts_chunk$set(
 )
 ```
 
-This vignette reproduces the main results in the manuscript, and can easily be
+This vignette for our [hdiAnalysis R
+package](https://github.com/andrew-edwards/hdiAnalysis?tab=readme-ov-file#hdianalysis)
+reproduces the main results in the manuscript, and can easily be
 used as a template for users to apply to their own data or model outputs. The longer
-`results-extra` vignette gives more details of outputs and further examples of
-plotting features.
+[results-extra.html](http://htmlpreview.github.io/?https://github.com/andrew-edwards/hdiAnalysis/blob/main/vignettes/results-extra.html)
+vignette gives more details of outputs and further examples of plotting features.
 
 Set up:
 ```{r setup}
