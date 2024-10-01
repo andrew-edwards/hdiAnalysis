@@ -35,8 +35,8 @@ An R package for calculating and plotting highest density intervals
 
 This package accompanies the manuscript:
 
-*Reducing uncertainty in stock assessments by billions of fish by using highest
-density intervals* TODO decide
+*Using highest density intervals can reduce uncertainty in
+  stock assessments by billions of fish*
 
 by Andrew M. Edwards and Marie Auger-Méthé, being submitted to
 *Nature Communications*.
