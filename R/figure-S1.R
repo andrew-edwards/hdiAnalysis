@@ -1,4 +1,4 @@
-##' Plot Figure 1 as a pdf file with specific dimensions for the manuscript.
+##' Plot Figure S1 as a pdf file with specific dimensions for the manuscript.
 ##'
 ##' Useful for the manuscript, maybe less so for other users, though could be
 ##'   useful as a template. Generally running in
@@ -14,14 +14,14 @@
 ##' @author Andrew Edwards
 ##' @examples
 ##' \dontrun{
-##' figure_1()
+##' figure_s1()
 ##' }
-figure_1 <- function(file = "figure-1.pdf",
-                     height = 4,
-                     width = 114/25.4,
-                     xlim = c(0, 40),
-                     xlab = "Recruitment (billions of fish)",
-                     ...){
+figure_s1 <- function(file = "figure-s1.pdf",
+                      height = 4,
+                      width = 114/25.4,
+                      xlim = c(0, 40),
+                      xlab = "Recruitment (billions of fish)",
+                      ...){
 
   res_2021 <- create_intervals(rec_2021)
 
@@ -36,29 +36,34 @@ figure_1 <- function(file = "figure-1.pdf",
       cex = 0.6)
 
    plot(res_2021,
-       type = "eti",
-       xlim = xlim,
-       ylim = c(0, 0.11),
-       interval_arrows = TRUE,
-       xlab = xlab,
-       arrowhead_gap = 0.1,
-       x_minor_ticks_by = 2,
-       ...)
+        type = "eti",
+        xlim = xlim,
+        ylim = c(0, 0.11),
+        interval_arrows = TRUE,
+        xlab = xlab,
+        arrowhead_gap = 0.1,
+        x_minor_ticks_by = 2,
+        explanatory_lines_a_b = TRUE,
+        ...)
 
-  mtext("A. Equal-tailed interval", side = 3, adj = 0, cex = 0.7,
+  mtext("A. Equal-tailed interval: construction of a and b", side = 3, adj = 0, cex = 0.7,
         line = 0.3)
 
-  plot(res_2021,
-       type = "hdi",
-       xlim = xlim,
-       ylim = c(0, 0.11),
-       interval_arrows = TRUE,
-       xlab = xlab,
-       arrowhead_gap = 0.1,
-       x_minor_ticks_by = 2,
-       ...)
 
-  mtext("B. Highest density interval", side = 3, adj = 0, cex = 0.7,
+# From above:
+   plot(res_2021,
+        type = "eti",
+        xlim = xlim,
+        ylim = c(0, 0.11),
+        interval_arrows = TRUE,
+        xlab = xlab,
+        arrowhead_gap = 0.1,
+        x_minor_ticks_by = 2,
+        show_a_b = FALSE,
+        explanatory_lines_extra = TRUE,
+        ...)
+
+  mtext("B. Equal-tailed interval: construction of c and d", side = 3, adj = 0, cex = 0.7,
         line = 0.3)
 
   dev.off()

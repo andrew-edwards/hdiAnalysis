@@ -51,7 +51,7 @@ summary(vec)
 length(vec)
 ```
 
-We use the `create_intervals` function to do the main calculations. We call the
+We use our `create_intervals()` function to do the main calculations. We call the
 results here `res_vec` for results on a vector, so that the subsequent code will not need changing by users for their own analyses:
 
 ```{r vectorres}
@@ -265,6 +265,8 @@ behaviour, but in fact the HDI is very slightly above 0.4:
 dplyr::filter(res_all_years_2$intervals_all,
               quantity %in% c(2016, 2020))
 ```
+
+Figure 2 is created as a pdf file with our function `figure_2()`.
 
 To see all the values of interest:
 ```{r summarytab2}

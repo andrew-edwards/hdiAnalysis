@@ -29,8 +29,9 @@ vignette for our [hdiAnalysis R package](https://github.com/andrew-edwards/hdiAn
 
 - plotting of all density functions when multiple years of data are analysed
  (specifically all years of recruitment shown in Figure 2A).
-- detailed demonstration of how intervals a and b are calculated in Fig. 1B
-- calculation on a longer MCMC chain that used for the hake assessment.
+- details of plotting Fig. S.1, demonstrating of how ranges a and b (Fig. 1B)
+  and ranges c and d are defined
+- calculation on a longer MCMC chain for the hake assessment results.
 - exporation of additional options for calculating HDIs, based on the kernel
 density estimate of the MCMC sample.
 - session information (documenting R and package version numbers).
@@ -82,11 +83,10 @@ plot(res_all_years,
      mfrow = c(30, 2))  # 59 default
 ```
 
-## Detailed explanation of calculation of intervals 'a' and 'b' in Figure 1A
+## Detailed explanation of calculation of ranges 'a', 'b', 'c', and 'd' in Figure S.1
 
-The calculation of intervals 'a' and 'b' in Fig. 1A is described in the Extended
-Methods, with explicit options given here to add helpful lines to further
-understanding:
+The calculation of ranges 'a' and 'b' in Fig. 1A is described with respect to
+the more detailed Fig. S.1A, which is calculated here:
 
 ```{r ab}
 res_vec <- create_intervals(rec_2021)
@@ -96,7 +96,7 @@ plot(res_vec,
      xlim = c(0, 40),
      ylim = c(0, 0.11),
      interval_arrows = TRUE,
-     xlab = "Recruitment (billions of age-0 fish)",
+     xlab = "Recruitment (billions of fish)",
      arrowhead_gap = 0.1,
      explanatory_lines_a_b = TRUE)
 ```
@@ -109,7 +109,7 @@ two values; the intersection of these lines with the opposite limb of the
 distribution gives the other two vertical grey lines, defining the left ends
 of 'a' and 'b'. Therefore, 'a' and 'b' both span the same range of densities on
 the y-axis,
-but 'a' is outside of the ETI while 'b' is inside of it.
+but 'a' is outside of the ETI while 'b' is inside of it. (See also Supporting Information).
 
 Another undesirable feature of ETIs (for asymmetric distributions) is that there
 we can construct ranges `c` and `d` for which all values in `c` are more likely
@@ -120,14 +120,14 @@ plot(res_vec,
      xlim = c(0, 40),
      ylim = c(0, 0.11),
      interval_arrows = TRUE,
-     xlab = "Recruitment (billions of age-0 fish)",
+     xlab = "Recruitment (billions of fish)",
      arrowhead_gap = 0.1,
      explanatory_lines_a_b = FALSE,
      show_a_b = FALSE,
      explanatory_lines_extra = TRUE)
 ```
 
-Here, the horizontal green line is set (as an example) at the mean of the
+Here, the horizontal green line is set (as an example) halfway between the
 densities at the ends of the ETI (horizontal grey lines are as in the previous
 figure). Its intersections with the density curve define the left ends of `c`
 and `d`, and all values within `c` are more likely than all those in `d`, but
@@ -135,6 +135,9 @@ and `d`, and all values within `c` are more likely than all those in `d`, but
 point between the two grey lines to create such ranges `c` and `d`. This includes at
 the density corresponding the HDI, as in Figure 12.2 of Kruschke (2015; Doing
 Bayesian Data Analysis: A Tutorial with R, JAGS, and Stan. 2nd Edition).
+
+The above plot settings are incorporated into our function `figure_s1()` for
+reproducing Fig. S1.
 
 ## Longer chain of 32,000 MCMC samples for hake recruitment in 2021
 
@@ -156,7 +159,7 @@ plot(res_vec_long,
      xlim = c(0, 40),
      ylim = c(0, 0.11),
      interval_arrows = TRUE,
-     xlab = "Recruitment (billions of age-0 fish)",
+     xlab = "Recruitment (billions of fish)",
      arrowhead_gap = 0.1)
 # Density kernel is a bit smoother
 ```
@@ -222,7 +225,7 @@ The equivalent plot to our Fig. 1B for the calculated HDI is
 ```{r densityplot}
 plot(res_2021_density,
      xlim = c(0,40),
-     xlab = "Recruitment (billions of age-0 fish)")
+     xlab = "Recruitment (billions of fish)")
 ```
 in which we can see that the heights of the two endpoints are equal.
 
@@ -241,7 +244,7 @@ res_2021_n_512 <- create_intervals(rec_2021,
                                    n = 512)
 plot(res_2021_n_512,
      xlim = c(0, 40),
-     xlab = "Recruitment (billions of age-0 fish)")
+     xlab = "Recruitment (billions of fish)")
 ```
 
 We found that increasing `n` to 100,000 resolved this (this does not increase the wiggliness of the kernel density estimate,
@@ -482,7 +485,9 @@ and the number of upper endpoints above the true value is
 sum(ints_simulations_density_true$hdi_upper[-1] > ints_simulations_density_true$hdi_upper[1])
 ```
 
-So these values are quite a way off being the desired half (`r num_sims/2`). This convinced us to stick with the simpler no-density method.
+So these values are quite a way off being the desired half (`r
+num_sims/2`). This convinced us to stick with the simpler no-density
+moving-window method.
 
 ## Session information
 
