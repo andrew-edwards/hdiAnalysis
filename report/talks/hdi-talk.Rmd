@@ -1,0 +1,461 @@
+---
+title: "Using highest density intervals can reduce uncertainty in stock assessments by billions of fish"
+author: "Andrew Edwards and Marie Auger-Méthé"
+output:
+  beamer_presentation:
+    theme: Singapore
+    colortheme: orchid
+    # Second-level headings create new slide
+    slide_level: 2
+    toc: false
+    # fig_height: 5
+    # fig_width: 8
+    keep_tex: yes
+    includes:
+      in_header: latex-topmatter.tex
+    # toc_depth: 1
+    #  title_page_image: "../man/figures/logo.png"
+    #  title_page_image_height_in: 1
+    #  title_page_image_width_in: 2
+header-includes:
+    # - \titlegraphic{\includegraphics[width = 1cm]{"../man/figures/logo.png"}}
+  - \AtBeginSubsection{}
+  - \AtBeginSection{}
+  - \usepackage{colortbl}
+  - \usepackage{booktabs}
+  - \usepackage{multirow}
+classoption: "aspectratio=169"
+# This affects font sizes in figures also:
+fontsize: 12pt
+urlcolor: blue
+---
+
+<!-- To build:
+
+load_all()      # as necessary, then
+
+rmarkdown::render("hdi-talk.Rmd")
+
+or click the knit button in RStudio
+
+Note the first slide below creates the title slide (on page 2), from a
+   powerpoint slide saved as .png.
+
+See the long_talk = FALSE and other options in first chunk.
+
+When talk is finished save the .pdf with a new name
+(e.g. pacea-release-talk-dfo.pdf, pacea-release-talk-uvic.pdf) and commit the
+.pdf, so we can just keep the single set of .Rmd code. Also link the pdf talk
+from README.Rmd.
+-->
+
+<!-- trying different themes from https://mpetroff.net/files/beamer-theme-matrix/
+theme:
+Copenhagen - too much at bottom
+Frankfurt - shows progress bar at top (play with colours though), nothing at bottom.
+Luebeck - awful (lists sections vertically at the top)
+metropolis - too many borders
+Rochester - slide title is in top border, but that's really big
+Singapore - used for hake, slide title does take up a bit of room, looks good with lily
+
+colortheme:
+dolphin - black top bar for Frankfurt
+lily
+orchid
+-->
+
+<!-- Font size options, put any of these before text or chunk, then put
+     \normalsize afterwards to continue
+\tiny
+\scriptsize
+\footnotesize
+\small
+\normalsize
+\large
+\Large
+\LARGE
+\huge
+\Huge
+-->
+
+# Motivation
+
+```{r, setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "",
+  global.par = TRUE,  # set par values to be global (once changed)
+  fig.width = 8,
+  fig.height = 4,
+  fig.align = "center",
+  out.width = "90%",
+  #out.height = 400
+  cache = TRUE)
+
+# load_all()    # Do this the first time and if update the package while writing
+# the talk. Have commented as it reloads each time, which isn't necessary.
+library(dplyr)
+library(tibble)
+library(kableExtra)
+
+options(pillar.print_max = 6,   # number of rows to show for a tibble
+        pillar.print_min = 6)
+par("mai" = c(1.02, 0.82, 0.1, 0.42))   # default is 1.02 0.82 0.82 0.42
+
+# https://bookdown.org/yihui/rmarkdown-cookbook/font-color.html . For example:
+# `r colorize("hello", "blue")`
+colorize <- function(x, color){
+  if(knitr::is_latex_output()) {
+    sprintf("\\textcolor{%s}{%s}", color, x)
+  } else if(knitr::is_html_output()) {
+    sprintf("<span style='color: %s;'>%s</span>", color,
+      x)
+  } else x
+}
+```
+
+## Motivation
+
+- Stock assessments need to communicate uncertainty of estimated quantities
+
+- Often done through figures and tables depicting 95% credible or confidence
+intervals
+
+- Example: Pacific Hake assessment presents thousands of such intervals. Cannot
+  show full posterior distributions for everything.
+
+- We show that computing such intervals with the usual equal-tailed approach has
+undesirable consequences
+
+## Motivation
+
+Regarding recent assessment results, a fisherman remarked:
+
+\vspace{10mm}
+
+*No offence to anyone, but my granddaughter could provide that amount of uncertainty.*
+
+\vspace{10mm}
+
+Highlights the need to investigate ways to reduce
+uncertainty as much as possible.
+
+# ETI
+
+## Example model output
+
+As example, using  hake Markov chain Monte Carlo (MCMC) recruitment
+values for 2021.
+
+```{r vector}
+length(rec_2021)
+summary(rec_2021)
+rec_2021[1:20]
+```
+
+```{r calc, echo = FALSE}
+res_vec <- create_intervals(rec_2021)
+```
+
+## Equal-tailed intervals -- usual approach
+
+```{r eti1, echo = FALSE}
+plot(res_vec,
+     type = "eti",
+     xlim = c(0, 40),
+     ylim = c(0, 0.11),
+     interval_arrows = TRUE,
+     xlab = "Recruitment (billions of age-0 fish)",
+     arrowhead_gap = 0.1,
+	 show_a_b = FALSE)
+```
+
+## Equal-tailed intervals -- usual approach
+
+Values in range a are just as likely as values in range b.
+
+But a is outside the ETI yet b is inside it.
+```{r eti2, echo = FALSE}
+plot(res_vec,
+     type = "eti",
+     xlim = c(0, 40),
+     ylim = c(0, 0.11),
+     interval_arrows = TRUE,
+     xlab = "Recruitment (billions of age-0 fish)",
+     arrowhead_gap = 0.1)
+```
+
+## Equal-tailed intervals -- usual approach
+
+Values in range a are just as likely as values in range b.
+
+But a is outside the ETI yet b is inside it.
+```{r eti3, echo = FALSE}
+plot(res_vec,
+     type = "eti",
+     xlim = c(0, 40),
+     ylim = c(0, 0.11),
+     interval_arrows = TRUE,
+     xlab = "Recruitment (billions of age-0 fish)",
+     arrowhead_gap = 0.1,
+	 y_arrow = 2,
+	 explanatory_lines_a_b = TRUE)
+```
+
+## Equal-tailed intervals -- usual approach
+
+All values in range c are *more* likely than all in range d.
+
+But c is outside the ETI yet d is inside.
+
+This is "Intuitively undesirable" Kruschke (2015).
+```{r eti4, echo = FALSE}
+plot(res_vec,
+     type = "eti",
+     xlim = c(0, 40),
+     ylim = c(0, 0.11),
+     interval_arrows = TRUE,
+     xlab = "Recruitment (billions of age-0 fish)",
+     arrowhead_gap = 0.1,
+	 y_arrow = 2,
+	 show_a_b = FALSE,
+	 explanatory_lines_extra = TRUE)
+```
+
+# HDI
+
+## Highest density interval (HDI) -- alternative approach
+
+Horizontal line rising until area in blue is 95%. This is 99%:
+
+```{r hdi99, echo = FALSE}
+plot(create_intervals(rec_2021, credibility = 0.99),
+     type = "hdi",
+     xlim = c(0, 40),
+     ylim = c(0, 0.11),
+     interval_arrows = TRUE,
+     xlab = "Recruitment (billions of age-0 fish)",
+     arrowhead_gap = 0.1)
+```
+
+## Highest density interval (HDI) -- alternative approach
+
+Horizontal line rising until area in blue is 95%. This is 98%:
+
+```{r hdi98, echo = FALSE}
+plot(create_intervals(rec_2021, credibility = 0.98),
+     type = "hdi",
+     xlim = c(0, 40),
+     ylim = c(0, 0.11),
+     interval_arrows = TRUE,
+     xlab = "Recruitment (billions of age-0 fish)",
+     arrowhead_gap = 0.1)
+```
+
+## Highest density interval (HDI) -- alternative approach
+
+Horizontal line rising until area in blue is 95%. This is 97%:
+
+```{r hdi97, echo = FALSE}
+plot(create_intervals(rec_2021, credibility = 0.97),
+     type = "hdi",
+     xlim = c(0, 40),
+     ylim = c(0, 0.11),
+     interval_arrows = TRUE,
+     xlab = "Recruitment (billions of age-0 fish)",
+     arrowhead_gap = 0.1)
+```
+
+## Highest density interval (HDI) -- alternative approach
+
+Horizontal line rising until area in blue is 95%. This is 96%:
+
+```{r hdi96, echo = FALSE}
+plot(create_intervals(rec_2021, credibility = 0.96),
+     type = "hdi",
+     xlim = c(0, 40),
+     ylim = c(0, 0.11),
+     interval_arrows = TRUE,
+     xlab = "Recruitment (billions of age-0 fish)",
+     arrowhead_gap = 0.1)
+```
+
+## Highest density interval (HDI) -- alternative approach
+
+Horizontal line rising until area in blue is 95%. This is 95%:
+
+```{r hdi95, echo = FALSE}
+plot(res_vec,
+     type = "hdi",
+     xlim = c(0, 40),
+     ylim = c(0, 0.11),
+     interval_arrows = TRUE,
+     xlab = "Recruitment (billions of age-0 fish)",
+     arrowhead_gap = 0.1)
+```
+
+## Highest density interval (HDI) -- alternative approach
+
+All values within HDI are more likely than all those outside it.
+
+HDI is the shortest of all possible 95% credible intervals.
+
+```{r hdi3, echo = FALSE}
+plot(res_vec,
+     type = "hdi",
+     xlim = c(0, 40),
+     ylim = c(0, 0.11),
+     interval_arrows = TRUE,
+     xlab = "Recruitment (billions of age-0 fish)",
+     arrowhead_gap = 0.1)
+```
+
+# ETI & HDI
+
+## Comparing ETI and HDI
+
+```{r, both, echo=FALSE}
+par(mai = c(0.32, 0.3, 0.15, 0.12),
+    mfrow = c(2,1),
+    mgp = c(1.6,0.5,0),
+    cex = 0.6)
+
+plot(res_vec,
+     type = "eti",
+     xlim = c(0, 40),
+     ylim = c(0, 0.11),
+     interval_arrows = TRUE,
+     xlab = "Recruitment (billions of age-0 fish)",
+     arrowhead_gap = 0.1)
+
+mtext("A. Equal-tailed interval", side = 3, adj = 0, cex = 0.7,
+line = 0.3)
+
+plot(res_vec,
+     type = "hdi",
+     xlim = c(0, 40),
+     ylim = c(0, 0.11),
+     interval_arrows = TRUE,
+     xlab = "Recruitment (billions of age-0 fish)",
+     arrowhead_gap = 0.1)
+
+mtext("B. Highest density interval", side = 3, adj = 0, cex = 0.7,
+        line = 0.3)
+```
+
+## Comparing ETI and HDI
+
+| Type | Interval | Interval width |
+| :-------| -----:| -----:|
+| ETI     | 4.09 -- 29.50 | 25.41 |
+| HDI     | 2.80 -- 25.18 | 22.38 |
+
+So the HDI reduces uncertainty by 3 billion fish.
+
+
+## Estimated recruitment through time
+
+```{r, recyears, echo = FALSE}
+res_all_years <- create_intervals(dplyr::select(hake_recruitment_mcmc,
+                                                -"Virgin"))
+res_all_years_2 <- create_intervals(hake_relative_biomass_mcmc)
+
+# par("mai" = c(1.02, 0.82, 0.1, 0.42)) orig
+# par(mai = c(0.32, 0.3, 0.15, 0.12),  twopanel
+
+```
+
+Just plotting the 95% credible intervals (and medians) for each year:
+```{r, recyearsplot, fig.height = 4.5, echo = FALSE}
+plot(res_all_years,
+     xlab = "Year",
+     ylab = "Recruitment (billions of fish)")
+```
+
+## Estimated relative spawning biomass
+
+Relative spawning biomass for each year, 95% credible intervals:
+```{r biomassseries, fig.height = 4.5, echo = FALSE}
+plot(res_all_years_2,
+     xlim = c(2010, 2027),
+     ylim = c(0, 2.6),
+     add_line_at_0.4 = TRUE,
+     inc = 0.05,
+     leg_loc = "topleft",
+     xlab = "Year",
+     ylab = "Relative spawning biomass")
+```
+
+## Estimated relative spawning biomass
+
+Bonus: relative spawning biomass for each year, 50% credible intervals:
+```{r biomassseries50, fig.height = 4.5, echo = FALSE}
+res_all_years_3 <- create_intervals(hake_relative_biomass_mcmc, credibility = 0.5)
+
+plot(res_all_years_3,
+     xlim = c(2010, 2027),
+     ylim = c(0, 2.6),
+     add_line_at_0.4 = TRUE,
+     inc = 0.05,
+     leg_loc = "topleft",
+     xlab = "Year",
+     ylab = "Relative spawning biomass")
+```
+
+# Summary
+
+## Discussion
+
+Occasional uses of HDIs in marine ecology include:
+
+- estimates of global fisheries
+- analysis of salmon migration
+- development of stock assessment methods
+- summaries of biological and environmental data relating relating to Atlantic Cod
+- estimating population sizes of sharks and whales
+- one example in a fisheries stock assessment
+
+
+Advantages of HDIs over ETIs not investigated or discussed.
+
+
+## Discussion
+
+In general, ETI previously recommended because:
+
+(i) it has a direct interpretation as the 2.5% and 97.5% percentiles.
+
+\vspace{0.7mm}
+
+(ii) it is invariant to nonlinear transformations of the data.
+
+\vspace{0.7mm}
+
+(iii) it is easier to compute.
+
+## Discussion
+
+In general, ETI previously recommended because:
+
+(i) it has a direct interpretation as the 2.5% and 97.5% percentiles.
+
+**Yes, but simplicity had downsides as shown earlier**
+
+(ii) it is invariant to nonlinear transformations of the data.
+
+**Yes, but usually quantities are defined on the scale of interest**
+
+(iii) it is easier to compute.
+
+**Yes, but our new hdiAnalysis package helps, building upon HDInterval**
+
+Thus, we recommend investigating the use of HDIs in stock assessments.
+
+## Acknowledgments
+
+- Catarina Wor, Nick Fisch, Irene Andrushchenko, Paul van Dam-Bates, Matt
+Grinnell, Chris Grandin, and Kendra Holt for useful comments.
+
+- Funding (MAM): the Canada Research
+Chairs program, the BC Knowledge Development Fund program, Canada Foundation for
+Innovation, and the Natural Sciences and Engineering Research Council of Canada.

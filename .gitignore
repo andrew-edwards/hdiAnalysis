@@ -11,6 +11,8 @@ report/*.eps
 
 report/herring/herring_mcmc.rds
 report/herring/herring_recruitment_mcmc.rds
+report/talks/hdi-talk.tex
+report/talks/hdi-talk_cache/
 
 data/hake_recruitment_mcmc_14_long.rda
 
