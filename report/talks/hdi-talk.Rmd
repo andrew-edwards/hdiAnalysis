@@ -347,8 +347,8 @@ mtext("B. Highest density interval", side = 3, adj = 0, cex = 0.7,
 
 | Type | Interval | Interval width |
 | :-------| -----:| -----:|
-| ETI     | 4.09 -- 29.50 | 25.41 |
-| HDI     | 2.80 -- 25.18 | 22.38 |
+| ETI     | 4.1 -- 29.5 | 25.4 |
+| HDI     | 2.8 -- 25.2 | 22.4 |
 
 So the HDI reduces uncertainty by 3 billion fish.
 
