@@ -39,7 +39,7 @@ This package accompanies the manuscript:
   stock assessments by billions of fish*
 
 by Andrew M. Edwards and Marie Auger-Méthé, being submitted to
-*Nature Communications*.
+*Fisheries Research*.
 
 In the manuscript (available upon request) we show that using highest density
 intervals (HDIs) to characterise uncertainty is preferable to using the usual

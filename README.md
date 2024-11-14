@@ -27,8 +27,8 @@ This package accompanies the manuscript:
 *Using highest density intervals can reduce uncertainty in stock
 assessments by billions of fish*
 
-by Andrew M. Edwards and Marie Auger-Méthé, being submitted to *Nature
-Communications*.
+by Andrew M. Edwards and Marie Auger-Méthé, being submitted to
+*Fisheries Research*.
 
 In the manuscript (available upon request) we show that using highest
 density intervals (HDIs) to characterise uncertainty is preferable to
