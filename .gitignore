@@ -8,11 +8,13 @@ data-raw/hake-2024/*
 report/hake-lengths-wrangling-2.Rmd
 report/*.pdf
 report/*.eps
+report/*cache*
 
 report/herring/herring_mcmc.rds
 report/herring/herring_recruitment_mcmc.rds
 report/talks/hdi-talk.tex
 report/talks/hdi-talk_cache/
+report/petrale-sole/*
 
 data/hake_recruitment_mcmc_14_long.rda
 

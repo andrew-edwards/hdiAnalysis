@@ -1,0 +1,474 @@
+---
+title: "Results for Pacific Herring"
+author: "Andrew Edwards"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Results for Pacific Herring}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+date: "Last rendered on `r format(Sys.time(), '%d %B, %Y')`"
+---
+
+<!-- To build either run
+rmarkdown::render("results-herring.Rmd")
+ or click the knit button in RStudio -->
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  cache = TRUE,
+  cache_path = "herring-cache/",
+  fig.path = "herring-figs-cache/",
+  fig.width = 7,
+  fig.height = 6
+)
+```
+
+Using our results.Rmd vignette as a template to analyse Pacific Herring results,
+first for the Strait of Georgia. Cutting out the explanatory aspects to just
+concentrate on results. Also using hdiAnalysis-vignette-herring-sog.Rmd as a
+template for the data wrangling aspect (that was done in the summer before
+switching back to `density=FALSE`, hence starting again here and just using some
+of that where needed). Only currently intended to work locally (on Andy's
+machine), as MCMC values not being pushed.
+
+Set up:
+```{r setup}
+# library(hdiAnalysis)
+load_all()
+library(dplyr)
+```
+
+## Analyse a single vector of values
+
+This is for Strait of Georgia, and recruitments are age-2 in billions of fish.
+
+The herring Markov chain Monte Carlo (MCMC) recruitment
+values are saved as a list object (not saved in the pacakge), each object being
+the MCMC results. Which are the 4,000 MCMC values used in the assessment:
+
+DFO (2024) STOCK STATUS UPDATE WITH APPLICATION OF MANAGEMENT PROCEDURES
+FOR PACIFIC HERRING (CLUPEA PALLASII) IN BRITISH COLUMBIA: STATUS IN 2023 AND
+FORECAST FOR 2024. Science Response.
+
+Recruitment is shown in Figure 13 for the Strait of Georgia, which we'll look at
+here first. Columns are years.
+
+```{r loaddata}
+# All regions in a list
+herring_mcmc <-
+  readRDS("herring/herring_mcmc.rds")
+
+regions_all <- c("HG", "PRD", "CC", "SOG", "WCVI")
+
+region <- "SOG"
+i_region <- which(regions_all == region)
+```
+
+The MCMC samples of herring recruitment for each year are a tibble (choosing one
+region here), with each column corresponding to a year and each of the 4,000
+rows representing an MCMC sample:
+
+```{r rec}
+herring_recruitment_mcmc <- herring_mcmc[[i_region]]$recruitment
+sb_mcmc <- herring_mcmc[[i_region]]$spawning_biomass
+```
+
+
+Let's do 2021 for consistency with main hake analysis in manuscript. Remember these are age-2's, and we're doing 90% intervals.
+
+```{r rec1}
+cred = 0.90
+rec_2021 <- pull(herring_recruitment_mcmc, "2021")
+
+vec <- rec_2021
+summary(vec)
+length(vec)
+
+res_vec <- create_intervals(vec)
+res_vec
+```
+
+## Plot the distribution showing the ETI and HDI
+
+The ETI plot (Figure 1A) is:
+```{r plot, fig.height = 4}
+x_lim <- c(0, 2.5)
+y_lim = c(0, 1.8)
+x_lab = "Recruitment (billions of age-2 fish)"
+
+plot(res_vec,
+     type = "eti",
+     xlim = x_lim,
+     ylim = y_lim,
+     interval_arrows = TRUE,
+     xlab = x_lab,
+     y_arrow = 1.6,
+     arrowhead_gap = 0,
+     x_minor_ticks_by = 0.25,
+     y_minor_ticks_by = 0.1)
+```
+and the HDI plot is
+```{r plot2, fig.height = 4}
+plot(res_vec,
+     type = "hdi",
+     xlim = x_lim,
+     ylim = y_lim,
+     interval_arrows = TRUE,
+     xlab = x_lab,
+     y_arrow = 1.6,
+     arrowhead_gap = 0,
+     x_minor_ticks_by = 0.25,
+     y_minor_ticks_by = 0.1)
+```
+
+The main values of interest are simplified in our customised `summary_table()` function:
+```{r tab, results = "asis"}
+summary_table(res_vec)
+```
+
+So not really a huge change between the ETI and HDI in this case, with just a
+slight narrowing of the credible interval, because the distribution is fairly
+symmetric. Which is somewhat interesting in itself compared to hake (due to the priors?).
+
+
+The full results are
+```{r fullres}
+res_vec$intervals %>% a()       # a() is our shorthand function for as.data.frame()
+```
+for which definitions are given in the help file `?create_intervals`.
+
+## MCMC samples for multiple years
+
+We now present calculations for  multiple years
+of MCMC samples of herring recruitment.
+
+To create ETIs and HDIs for estimates of recruitment for each year:
+```{r hake_mcmc2}
+res_all_years <- create_intervals(herring_recruitment_mcmc,
+                                  credibility = cred)
+```
+This gives a list object, with element `res_all[[i]]` corresponding to column `i`
+of the data. Each `res_all[[i]]` element is itself a list, giving the same
+results as above for a single vector (and also with the `$name`
+element corresponding the column of the input, a year in this example). So the
+2021 results from above are:
+```{r hake_mcmc3}
+res_all_years$res_all[[69]]
+```
+
+For convenience, the intervals for all years are saved in a single tibble:
+```{r hake_mcmc4}
+res_all_years$intervals_all
+```
+The first column is called `quantity` for generalisability so the code can be
+applied to different types of data; in this example it represents the years
+
+To see the main values of interest, namely the ETIs and HDIs and the difference
+between their widths:
+```{r hake_mcmc5}
+summary_table(res_all_years)
+```
+
+The sum of the differences over all years between the width of the ETI and width
+of the HDI is:
+```{r hake_mcmc6}
+res_all_years$intervals_all %>%
+  dplyr::pull(width_diff) %>%
+  sum()
+```
+so despite apparent small differences, is still over 1.5 billion fish.
+
+To plot the time series:
+```{r hake_mcmc7}
+plot(res_all_years,
+     xlab = "Year",
+     ylab = x_lab)
+```
+
+TODO double check the ETIs match those shown in the herring stock assessment, then
+recomment this and say (values
+manually checked, code is below but not run or printed in vignette):
+```{r hake_mcmc8, eval = FALSE, echo = FALSE}
+res_all_years$intervals_all %>%
+  dplyr::select(eti_lower, eti_upper) %>%
+  a() %>%
+  round(3) * 1000
+```
+
+Change do not look as big as for hake, think because there is less contrast
+between high and low recruitment year (hake has some very low values), and the
+distributions are more symmetric being further away from 0.
+
+### Quickly do the total reduction in uncertainty calculation for each stock
+
+```{r eachstock}
+res_all_stocks <- list()
+sum_width_diff_all_stocks <- numeric()
+for(i in 1:length(regions_all)){
+  herring_recruitment_mcmc_this_stock <- herring_mcmc[[i]]$recruitment
+  res_all_years_this_stock <- create_intervals(herring_recruitment_mcmc_this_stock,
+                                               credibility = cred)
+
+  res_all_stocks[[i]] <- res_all_years_this_stock
+
+  sum_width_diff_all_stocks[i] <- sum(res_all_years_this_stock$intervals_all$width_diff)
+}
+
+regions_all
+sum_width_diff_all_stocks
+sum_width_diff_all_stocks %>% sum()
+
+# Check the SOG values match
+expect_equal(sum_width_diff_all_stocks[i_region],
+             sum(res_all_years$intervals_all$width_diff))
+```
+
+As might be expected, SOG has the highest recruitments and the highest sum of the
+differences between ETIs and HDIs. Although if the distributions are more
+symmetric because they further away from 0 than for other regions, this might
+not necessarily hold. Could have to look at all distributions for
+all stocks, beyond current scope. Total difference is in the realm of 'billions
+of fish'.
+
+```{r prd, echo = FALSE, eval = FALSE}
+res_all_stocks[[which(regions_all == "PRD")]]$intervals_all
+
+plot(res_all_stocks[[which(regions_all == "PRD")]] )
+```
+
+Would have to build full analysis for each stock to fully understand. Beyond the
+scope right now.
+
+## MCMC samples for multiple years -- relative spawning biomass
+
+Figure 16 of the 2024 herring SAR shows the estimated spawning biomass for 2024
+(assuming no fishing). Presumably shown as density kernel. Credible intervals
+are shown, clearly demonstrating differences in the probability density at each
+end of the ETI (like our Figure 1A for hake in the manuscript).
+
+Let's do all the calculations in one go, then plot just 2024 ETI and HDI for
+each region.
+
+```{r, biomassall}
+res_all_stocks_biomass <- list()
+sum_width_diff_all_stocks_biomass <- numeric()
+for(i in 1:length(regions_all)){
+  herring_biomass_mcmc_this_stock <- herring_mcmc[[i]]$spawning_biomass
+  res_all_years_this_stock_biomass <-
+    create_intervals(herring_biomass_mcmc_this_stock,
+                     credibility = cred)
+
+  res_all_stocks_biomass[[i]] <- res_all_years_this_stock_biomass
+
+  sum_width_diff_all_stocks_biomass[i] <- sum(res_all_years_this_stock_biomass$intervals_all$width_diff)
+}
+```
+
+`res_all_stocks_biomass[[1]]$res_all[[74]]` gives the usual class
+`intervals_density` results for stock 1 (HG) and quantity 74 which corresponds
+to year 2024.
+
+Do the ETI and HDI density plot for each region in turn, the ETI should match
+Figure 16 in the SAR. Axes change for each region, but want them consistent
+between the two plots, so keep redefining `x_lim` and `y_lim`.
+
+Haida Gwaii:
+```{r, hgbiomass, fig.height = 9}
+x_lab = "Projected spawning biomass in 2024 (thousands of tons)"
+x_lim <- c(0, 40)
+y_lim = c(0, 0.23)
+x_minor_ticks_by = 1
+y_minor_ticks_by = 0.025
+y_arrow = 0.2
+par(mfrow = c(2,1))
+
+plot(res_all_stocks_biomass[[1]]$res_all[[74]],
+     type = "eti",
+     xlim = x_lim,
+     ylim = y_lim,
+     interval_arrows = TRUE,
+     xlab = x_lab,
+     y_arrow = y_arrow,
+     arrowhead_gap = 0,
+     x_minor_ticks_by = x_minor_ticks_by,
+     y_minor_ticks_by = y_minor_ticks_by)
+
+plot(res_all_stocks_biomass[[1]]$res_all[[74]],
+     type = "hdi",
+     xlim = x_lim,
+     ylim = y_lim,
+     interval_arrows = TRUE,
+     xlab = x_lab,
+     y_arrow = y_arrow,
+     arrowhead_gap = 0,
+     x_minor_ticks_by = x_minor_ticks_by,
+     y_minor_ticks_by = y_minor_ticks_by)
+```
+
+Prince Rupert District:
+```{r, prdbiomass, fig.height = 9}
+x_lim <- c(0, 150)
+y_lim = c(0, 0.03)
+x_minor_ticks_by = 10
+y_minor_ticks_by = 0.001
+y_arrow = 0.028
+
+par(mfrow = c(2,1))
+plot(res_all_stocks_biomass[[2]]$res_all[[74]],
+     type = "eti",
+     xlim = x_lim,
+     ylim = y_lim,
+     interval_arrows = TRUE,
+     xlab = x_lab,
+     y_arrow = y_arrow,
+     arrowhead_gap = 0,
+     x_minor_ticks_by = x_minor_ticks_by,
+     y_minor_ticks_by = y_minor_ticks_by)
+
+plot(res_all_stocks_biomass[[2]]$res_all[[74]],
+     type = "hdi",
+     xlim = x_lim,
+     ylim = y_lim,
+     interval_arrows = TRUE,
+     xlab = x_lab,
+     y_arrow = y_arrow,
+     arrowhead_gap = 0,
+     x_minor_ticks_by = x_minor_ticks_by,
+     y_minor_ticks_by = y_minor_ticks_by)
+```
+
+Central Coast:
+```{r, ccbiomass, fig.height = 9}
+x_lim <- c(0, 80)
+y_lim = c(0, 0.08)
+x_minor_ticks_by = 5
+y_minor_ticks_by = 0.005
+y_arrow = 0.075
+
+par(mfrow = c(2,1))
+plot(res_all_stocks_biomass[[3]]$res_all[[74]],
+     type = "eti",
+     xlim = x_lim,
+     ylim = y_lim,
+     interval_arrows = TRUE,
+     xlab = x_lab,
+     y_arrow = y_arrow,
+     arrowhead_gap = 0,
+     x_minor_ticks_by = x_minor_ticks_by,
+     y_minor_ticks_by = y_minor_ticks_by)
+
+plot(res_all_stocks_biomass[[3]]$res_all[[74]],
+     type = "hdi",
+     xlim = x_lim,
+     ylim = y_lim,
+     interval_arrows = TRUE,
+     xlab = x_lab,
+     y_arrow = y_arrow,
+     arrowhead_gap = 0,
+     x_minor_ticks_by = x_minor_ticks_by,
+     y_minor_ticks_by = y_minor_ticks_by)
+```
+
+Strait of Georgia:
+```{r, sogbiomass, fig.height = 9}
+x_lim <- c(0, 300)
+y_lim = c(0, 0.018)
+x_minor_ticks_by = 50
+y_minor_ticks_by = 0.01
+y_arrow = 0.017
+
+par(mfrow = c(2,1))
+plot(res_all_stocks_biomass[[4]]$res_all[[74]],
+     type = "eti",
+     xlim = x_lim,
+     ylim = y_lim,
+     interval_arrows = TRUE,
+     xlab = x_lab,
+     y_arrow = y_arrow,
+     arrowhead_gap = 0,
+     x_minor_ticks_by = x_minor_ticks_by,
+     y_minor_ticks_by = y_minor_ticks_by)
+
+plot(res_all_stocks_biomass[[4]]$res_all[[74]],
+     type = "hdi",
+     xlim = x_lim,
+     ylim = y_lim,
+     interval_arrows = TRUE,
+     xlab = x_lab,
+     y_arrow = y_arrow,
+     arrowhead_gap = 0,
+     x_minor_ticks_by = x_minor_ticks_by,
+     y_minor_ticks_by = y_minor_ticks_by)
+```
+
+West Coast of Vancouver Island:
+```{r, wcvibiomass, fig.height = 9}
+x_lim <- c(0, 150)
+y_lim = c(0, 0.035)
+x_minor_ticks_by = 10
+y_minor_ticks_by = 0.01
+y_arrow = 0.033
+
+par(mfrow = c(2,1))
+plot(res_all_stocks_biomass[[5]]$res_all[[74]],
+     type = "eti",
+     xlim = x_lim,
+     ylim = y_lim,
+     interval_arrows = TRUE,
+     xlab = x_lab,
+     y_arrow = y_arrow,
+     arrowhead_gap = 0,
+     x_minor_ticks_by = x_minor_ticks_by,
+     y_minor_ticks_by = y_minor_ticks_by)
+
+plot(res_all_stocks_biomass[[5]]$res_all[[74]],
+     type = "hdi",
+     xlim = x_lim,
+     ylim = y_lim,
+     interval_arrows = TRUE,
+     xlab = x_lab,
+     y_arrow = y_arrow,
+     arrowhead_gap = 0,
+     x_minor_ticks_by = x_minor_ticks_by,
+     y_minor_ticks_by = y_minor_ticks_by)
+```
+
+Total reduction in estimates of spawning biomass (in 1000s of tons)
+over each region over all years (and then total sum of those):
+```{r totalsbreduction}
+regions_all
+sum_width_diff_all_stocks_biomass
+sum_width_diff_all_stocks_biomass %>% sum()
+```
+
+Might want to replicate hake Figure 2B, which includes the forecasts:
+```{r biomassseries, eval = FALSE, echo = FALSE}
+plot(res_all_years_2,
+     xlim = c(2010, 2027),
+     ylim = c(0, 2.6),
+     add_line_at_0.4 = TRUE,
+     inc = 0.05,
+     leg_loc = "topleft",
+     xlab = "Year",
+     ylab = "Relative spawning biomass")
+```
+
+<!-- Whether the relative spawning biomass is above or below the management reference point
+of 0.4 is key in forming stakeholders' perception of the health of the hake
+stock. As seen in the figure, in 2024 and 2025 the ETI does not dip below 0.4 but
+the HDI does. Thus, the perception of current and future stock status can depend upon the
+definition of credible intervals (ETI versus HDI). The specific years across the
+whole time series for which this happens are:
+-->
+
+```{r whichyears, echo = FALSE, eval = FALSE}
+dplyr::filter(res_all_years_2$intervals_all,
+              eti_lower > 0.4,
+              hdi_lower < 0.4)
+```
+
+Would be interesting to look at relative spawning biomass (like for hake),
+compared to the limit reference point of 0.3 B0.

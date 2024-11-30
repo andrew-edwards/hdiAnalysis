@@ -1,0 +1,478 @@
+---
+title: "Results for Petrale Sole"
+author: "Andrew Edwards"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Results for Petrale Sole}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+date: "Last rendered on `r format(Sys.time(), '%d %B, %Y')`"
+---
+
+```{r, include = FALSE, eval = FALSE}
+rmarkdown::render("results-petrale-sole.Rmd")
+```
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  cache = TRUE,
+  cache_path = "petrale-sole-cache/",
+  fig.path = "petrale-sole-figs-cache/",
+  fig.width = 7,
+  fig.height = 6
+)
+```
+
+Using `results-sog-herring.Rmd` as a template, which itself cut down to the
+basics from the `results.Rmd` vignette, to do a quick look at Petrale
+Sole. Analysing the MCMC results of the ratio of female spawning stock biomass
+to female spawning stock biomass at maximum sustainable yield ($B/B_{msy}$), as
+shown in Figure 39 of the working paper.
+
+Set up:
+```{r setup}
+# library(hdiAnalysis)
+load_all()
+library(dplyr)
+```
+
+## Wrangle the model outputs
+
+These are the full relative biomass values for all years.
+
+```{r loaddata}
+petrale_mcmc_raw <-
+  readRDS("petrale-sole/PetraleBBMSY.rds") %>%
+  tibble::as_tibble()
+petrale_mcmc_raw$"Year" <- as.numeric(petrale_mcmc_raw$"Year")
+petrale_mcmc_raw <- rename(petrale_mcmc_raw,
+                           year = Year)
+petrale_mcmc_raw
+summary(petrale_mcmc_raw)
+
+# Check all years are present:
+years <- unique(petrale_mcmc_raw$year)
+years
+num_years <- length(years)
+num_years
+range(years)
+range(diff(unique(petrale_mcmc_raw$year)))
+expect_equal(diff(range(years)) + 1, num_years)
+
+# However, years are not in order:
+unique(diff(petrale_mcmc_raw$year))
+sum(diff(petrale_mcmc_raw$year) < 0)  # twice
+resets <- which(diff(petrale_mcmc_raw$year) < 0)  # twice
+resets
+# resets gives the last index of each set of mcmc (because it's from a diff, so
+# one less than expected). Need to use later
+petrale_mcmc_raw[(resets[1] - 2):(resets[1] + 2), ]
+petrale_mcmc_raw[(resets[2] - 2):(resets[2] + 2), ]
+
+resets/num_years
+nrow(petrale_mcmc_raw)/num_years
+
+num_mcmc <- nrow(petrale_mcmc_raw)/num_years
+# Testing:
+#petrale_mcmc <- petrale_mcmc_raw[1:2, ]
+#petrale_mcmc <- mutate(petrale_mcmc,
+#                       sample = 1:2)
+```
+
+From Mackenzie: There should be 26,000 samples per year, since we used an
+ensemble model with a 50%/25%/25% weighting. To do that we combined the entire
+posterior of the medium M model (14,000 samples) and 50% of the posteriors for
+the low and high M models (7,000 samples each). The previous data I sent you is
+missing some samples. Use the attached data instead, which is 27,995 samples per
+year, still missing 5 samples, since it appears BMSY was not estimated for 5
+samples. The years start again because it’s the samples from the next model in
+the ensemble.
+
+Agrees with the 27,995 calculation above (number of rows divided by number of
+year). So just all the samples. Still need to add repeating sample numbers to
+then use `pivot_wider`.
+
+Wrangling:
+```{r wrangle}
+summary(as.factor(petrale_mcmc_raw$year))
+
+# Number of unique MCMC samples for each year, checking each year is the same
+expect_equal(num_mcmc,
+             unique(summary(as.factor(petrale_mcmc_raw$year))))
+
+expect_equal(nrow(petrale_mcmc_raw),
+             num_mcmc * num_years)
+
+#petrale_mcmc <-
+#  petrale_mcmc_raw[1:(resets[1]), ]
+
+# Rearrange in order of years, then assign sample numbers to then use pivot_wider:
+petrale_mcmc_raw_samples <- arrange(petrale_mcmc_raw,
+                                    year) %>%
+  mutate(sample = rep(1:num_mcmc,
+                      num_years)) %>%
+  arrange(sample, year)
+petrale_mcmc_raw_samples
+petrale_mcmc_raw_samples %>% tail()
+```
+
+Then get in desired format, with years as columns, and don't need sample number.
+```{r wrangle2}
+petrale_mcmc <- tidyr::pivot_wider(petrale_mcmc_raw_samples,
+                                   names_from = year,
+                                   values_from = Bratio) %>%
+  select(-"sample")         # since now just row number
+petrale_mcmc
+```
+
+## Analyse a single vector of values
+
+Let's first do just 2021 for consistency with main hake analysis in manuscript:
+```{r rec1}
+cred = 0.95
+vec <- pull(petrale_mcmc, "2021")
+
+summary(vec)
+length(vec)
+
+res_vec <- create_intervals(vec)
+```
+
+The ETI and HDI plots (Figure 1 in our manuscript) are:
+```{r plot, fig.height = 8, echo = FALSE}
+x_lim <- c(0, 7)
+y_lim = c(0, 0.6)
+y_arrow = 0.55
+x_lab = "Relative biomass"
+
+par(mfrow = c(2, 1))
+plot(res_vec,
+     type = "eti",
+     xlim = x_lim,
+     ylim = y_lim,
+     interval_arrows = TRUE,
+     xlab = x_lab,
+     y_arrow = y_arrow,
+     arrowhead_gap = 0,
+     x_minor_ticks_by = 0.25,
+     y_minor_ticks_by = 0.1)
+     # main = "Equal-tailed Interval")
+plot(res_vec,
+     type = "hdi",
+     xlim = x_lim,
+     ylim = y_lim,
+     interval_arrows = TRUE,
+     xlab = x_lab,
+     y_arrow = y_arrow,
+     arrowhead_gap = 0,
+     x_minor_ticks_by = 0.25,
+     y_minor_ticks_by = 0.1)
+     # main = "Highest Density Interval")
+```
+
+Interesting that you can't tell that the MCMC samples are combined from three
+models (there are not obvious humps).
+
+So a fair change between the ETI and HDI in this case.
+
+The main values of interest are simplified in our customised `summary_table()` function:
+```{r tab, results = "asis"}
+summary_table(res_vec)
+```
+
+The full results are
+```{r fullres}
+res_vec$intervals %>% a()       # a() is our shorthand function for as.data.frame()
+```
+for which definitions are given in the help file `?create_intervals`.
+
+## MCMC samples for multiple years
+
+We now present calculations for  multiple years
+of MCMC samples of relative biomass.
+
+To create ETIs and HDIs for estimates for each year:
+```{r hake_mcmc2}
+res_all_years <- create_intervals(petrale_mcmc,
+                                  credibility = cred)
+```
+This gives a list object -- see the rendered `results.html` vignette for
+details (such as the intervals for all years are convenienty saved in the single
+tibble `res_all_years$intervals_all`.
+
+Plot the full time series like in our manuscript figure:
+```{r hake_mcmc7, echo = FALSE}
+plot(res_all_years,
+     xlab = "Year",
+     ylab = x_lab,
+     ylim = c(0, 8))
+abline(h = 0.4, col = "red", lty = 2)
+abline(h = 0.8, col = "black", lty = 2)
+```
+
+Reproduce in the style of Figure 39 the Petrale Sole stock assessment (excluding 2024):
+```{r plotlikeassessment, fig.height = 10, echo = FALSE}
+to_plot <- res_all_years$intervals_all %>%
+  filter(quantity != 2024)
+par(mfrow = c(2,1))
+plot(to_plot$quantity,
+     to_plot$median,
+     type = "o",
+     pch = 16,
+     xlab = "Year",
+     ylab = x_lab,
+     ylim = c(0, 8),
+     main = "Equal-tailed Intervals")
+polygon(x = c(to_plot$quantity,
+              rev(to_plot$quantity)),
+        y = c(to_plot$eti_lower,
+              rev(to_plot$eti_upper)),
+        col = "lightblue",
+        border = NA)
+# Redo to be on top
+points(to_plot$quantity,
+       to_plot$median,
+       type = "o",
+       pch = 16)
+abline(h = 0.4, col = "red", lty = 2)
+abline(h = 0.8, col = "black", lty = 2)
+add_minor_tickmarks(y_tick_by = 1)
+
+plot(to_plot$quantity,
+     to_plot$median,
+     type = "o",
+     pch = 16,
+     xlab = "Year",
+     ylab = x_lab,
+     ylim = c(0, 8),
+     main = "Highest Density Intervals")
+polygon(x = c(to_plot$quantity,
+              rev(to_plot$quantity)),
+        y = c(to_plot$hdi_lower,
+              rev(to_plot$hdi_upper)),
+        col = "lightblue",
+        border = NA)
+# Redo to be on top
+points(to_plot$quantity,
+       to_plot$median,
+       type = "o",
+       pch = 16)
+abline(h = 0.4, col = "red", lty = 2)
+abline(h = 0.8, col = "black", lty = 2)
+add_minor_tickmarks(y_tick_by = 1)
+```
+
+Adapted from hake vignette: whether the relative spawning biomass is above or below the management reference points
+of 0.4 and 0.8 is key in forming stakeholders' perception of the health of the hake
+stock.
+
+Years for which ETI is above 0.4 but HDI is below:
+```{r whichyears}
+dplyr::filter(res_all_years$intervals_all,
+              eti_lower > 0.4,
+              hdi_lower < 0.4) %>%
+  select(quantity,
+         eti_lower,
+         hdi_lower)
+```
+Thus, the perception of stock status can depend upon the
+definition of credible intervals (ETI versus HDI).
+
+
+Only one year for which lower end of ETI is above 0.8 but HDI is below (the
+stock is increasing fairly quickly around this time):
+```{r whichyearsusr}
+dplyr::filter(res_all_years$intervals_all,
+              eti_lower > 0.8,
+              hdi_lower < 0.8) %>%
+  select(quantity,
+         eti_lower,
+         hdi_lower)
+```
+
+Can see from the time series that upper end of both intervals are always above
+0.8.
+
+From the time series figure, there looks to be quite a difference between
+intervals in the 1960s and 1970s. Plotting, say, 1969:
+```{r petrale_1969, fig.height = 8, echo = FALSE}
+ind_1969 <- which(years == 1969)
+x_lim <- c(0, 2)
+y_lim = c(0, 5)
+y_arrow = 4.3
+
+par(mfrow = c(2, 1))
+plot(res_all_years$res_all[[ind_1969]],
+     type = "eti",
+     xlim = x_lim,
+     ylim = y_lim,
+     interval_arrows = TRUE,
+     xlab = x_lab,
+     y_arrow = y_arrow,
+     arrowhead_gap = 0,
+     x_minor_ticks_by = 0.25,
+     y_minor_ticks_by = 0.5)
+     # main = "Equal-tailed Interval")
+plot(res_all_years$res_all[[ind_1969]],
+     type = "hdi",
+     xlim = x_lim,
+     ylim = y_lim,
+     interval_arrows = TRUE,
+     xlab = x_lab,
+     y_arrow = y_arrow,
+     arrowhead_gap = 0,
+     x_minor_ticks_by = 0.25,
+     y_minor_ticks_by = 0.5)
+     # main = "Highest Density Interval")
+```
+
+And also plot the same for 1979:
+```{r petrale_1979, fig.height = 8, echo = FALSE}
+ind_1979 <- which(years == 1979)
+x_lim <- c(0, 2.5)
+y_lim = c(0, 5)
+y_arrow = 4.3
+
+par(mfrow = c(2, 1))
+plot(res_all_years$res_all[[ind_1979]],
+     type = "eti",
+     xlim = x_lim,
+     ylim = y_lim,
+     interval_arrows = TRUE,
+     xlab = x_lab,
+     y_arrow = y_arrow,
+     arrowhead_gap = 0,
+     x_minor_ticks_by = 0.25,
+     y_minor_ticks_by = 0.5)
+     # main = "Equal-tailed Interval")
+plot(res_all_years$res_all[[ind_1979]],
+     type = "hdi",
+     xlim = x_lim,
+     ylim = y_lim,
+     interval_arrows = TRUE,
+     xlab = x_lab,
+     y_arrow = y_arrow,
+     arrowhead_gap = 0,
+     x_minor_ticks_by = 0.25,
+     y_minor_ticks_by = 0.5)
+     # main = "Highest Density Interval")
+```
+
+
+
+To see the main values of interest, namely the ETIs and HDIs and the difference
+between their widths:
+```{r hake_mcmc5}
+summary_table(res_all_years)
+```
+
+The sum of the differences over all years between the width of the ETI and width
+of the HDI is:
+```{r hake_mcmc6}
+res_all_years$intervals_all %>%
+  dplyr::pull(width_diff) %>%
+  sum()
+```
+although relative biomass is probably not really a quantity that should be summed.
+
+## 50% credible intervals
+
+How about 50% credible intervals like I did quickly for hake (for which results
+were very surpising):
+```{r int50}
+res_all_years_50 <- create_intervals(petrale_mcmc,
+                                     credibility = 0.5)
+```
+
+```{r int50plot, echo = FALSE}
+plot(res_all_years_50,
+     xlab = "Year",
+     ylab = x_lab,
+     ylim = c(0, 4))
+abline(h = 0.4, col = "red", lty = 2)
+abline(h = 0.8, col = "black", lty = 2)
+```
+
+## 90% credible intervals
+
+How about 90% credible intervals:
+```{r int90}
+res_all_years_90 <- create_intervals(petrale_mcmc,
+                                     credibility = 0.9)
+```
+
+```{r int90plot, echo = FALSE}
+plot(res_all_years_90,
+     xlab = "Year",
+     ylab = x_lab,
+     ylim = c(0, 8))
+abline(h = 0.4, col = "red", lty = 2)
+abline(h = 0.8, col = "black", lty = 2)
+```
+
+## Original 95% ETI compared to 90% HDI
+
+How about comparing original 95% ETI, with new 90% HDI:
+```{r plotlikeassessment2, fig.height = 10, echo = FALSE}
+to_plot <- res_all_years$intervals_all %>%
+  filter(quantity != 2024)
+par(mfrow = c(2,1))
+plot(to_plot$quantity,
+     to_plot$median,
+     type = "o",
+     pch = 16,
+     xlab = "Year",
+     ylab = x_lab,
+     ylim = c(0, 8),
+     main = "Original Equal-tailed Intervals, 95%")
+polygon(x = c(to_plot$quantity,
+              rev(to_plot$quantity)),
+        y = c(to_plot$eti_lower,
+              rev(to_plot$eti_upper)),
+        col = "lightblue",
+        border = NA)
+# Redo to be on top
+points(to_plot$quantity,
+       to_plot$median,
+       type = "o",
+       pch = 16)
+abline(h = 0.4, col = "red", lty = 2)
+abline(h = 0.8, col = "black", lty = 2)
+add_minor_tickmarks(y_tick_by = 1)
+
+to_plot <- res_all_years_90$intervals_all %>%
+  filter(quantity != 2024)
+plot(to_plot$quantity,
+     to_plot$median,
+     type = "o",
+     pch = 16,
+     xlab = "Year",
+     ylab = x_lab,
+     ylim = c(0, 8),
+     main = "Highest Density Intervals but 90%")
+polygon(x = c(to_plot$quantity,
+              rev(to_plot$quantity)),
+        y = c(to_plot$hdi_lower,
+              rev(to_plot$hdi_upper)),
+        col = "lightblue",
+        border = NA)
+# Redo to be on top
+points(to_plot$quantity,
+       to_plot$median,
+       type = "o",
+       pch = 16)
+abline(h = 0.4, col = "red", lty = 2)
+abline(h = 0.8, col = "black", lty = 2)
+add_minor_tickmarks(y_tick_by = 1)
+```
+
+```{r hake_mcmc8, eval = FALSE, echo = FALSE}
+# To see all the ETIs and medians (useful for checking with any published tables)
+res_all_years$intervals_all %>%
+  dplyr::select(quantity, eti_lower, median, eti_upper) %>%
+  a() %>%
+  round(2)
+```
