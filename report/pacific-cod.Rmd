@@ -1,0 +1,462 @@
+---
+title: "Results for Pacific Cod"
+author: "Andrew Edwards"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Results for Pacific Cod}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+date: "Last rendered on `r format(Sys.time(), '%d %B, %Y')`"
+---
+
+```{r, include = FALSE, eval = FALSE}
+rmarkdown::render("pacific-cod.Rmd")
+```
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  cache = TRUE,
+  cache_path = "pacific-cod-cache/",
+  fig.path = "pacific-cod-figs-cache/",
+  fig.width = 7,
+  fig.height = 6
+)
+```
+
+Using `petrale-sole.Rmd` as a template, which used herring which cut down to the
+basics from the `results.Rmd` vignette, to look at Pacific Cod results (for Area
+3CD from the 2024 SAR).
+
+Have to work out the reference points explicitly, and define them from the
+SAR. Do recruitments first. There are seven model runs which are combined as an
+ensemble to give the advice. Need to do the ensembling here, plus exclude the first 1000
+MCMC samples from each file.
+
+Set up:
+```{r setup, cache = FALSE}
+# library(hdiAnalysis)
+load_all()
+library(dplyr)
+```
+
+## Wrangle the model outputs
+
+Want to do recruitments (units are 1000s) and spawning biomass. Need to:
+
+- load samples for each model
+- remove first 1000 from each
+- combine them
+- convert recruitment from thousands to millions
+- convert biomass from tonnes to 1000 tonnes
+- calculate biomass reference points
+
+Also, biomass can be thought of as spawning biomass, with the assumption of
+knife-edged selectivity and maturity.
+
+```{r loaddata}
+seven_models <- dir("pacific-cod/pacific-cod-2024")
+cod_rec_mcmc <- tibble()
+cod_biomass_mcmc <- tibble()
+
+for(i in 1:length(seven_models)){
+  # i <- 1  # for testing
+
+  # Spawning biomass
+  biomass_this_model <- read.csv(paste0("pacific-cod/pacific-cod-2024/",
+                                        seven_models[i],
+                                        "/iscam_sbt_mcmc.csv")) %>%
+    tibble::as_tibble()
+
+  expect_equal(dim(biomass_this_model),
+               c(2000, 68))
+  # Remove first 1000 and convert units from tonnes to thousand tonnes
+  biomass_this_model <- (biomass_this_model[-(1:1000), ] / 1000) %>%
+    as_tibble()
+
+  names(biomass_this_model) <- stringr::str_replace(names(biomass_this_model),
+                                                    "sbt1_",
+                                                    "")
+  cod_biomass_mcmc <- rbind(cod_biomass_mcmc,
+                            biomass_this_model)
+
+  # Recruitment
+  rec_this_model <- read.csv(paste0("pacific-cod/pacific-cod-2024/",
+                                    seven_models[i],
+                                    "/iscam_rt_mcmc.csv")) %>%
+    tibble::as_tibble()
+
+  expect_equal(dim(rec_this_model),
+               c(2000, 65))
+  # Remove first 1000 and convert units from thousands to millions:
+  rec_this_model <- (rec_this_model[-(1:1000), ] / 1000) %>%
+    as_tibble()
+
+  names(rec_this_model) <- stringr::str_replace(names(rec_this_model),
+                                                "rt1_",
+                                                "")
+  cod_rec_mcmc <- rbind(cod_rec_mcmc,
+                        rec_this_model)
+}
+
+cod_biomass_mcmc
+cod_rec_mcmc
+```
+
+Reference points are:
+
+- The Upper Stock Reference (USR) is the mean of the biomass estimates from 1956–2004;
+- The Lower Reference Point (LRP) is the lowest estimated biomass agreed upon as
+  an undesirable state to be avoided. For Area 3CD this is the estimated biomass in 1986.
+
+Scale biomass by the reference points, have to do each separately due to
+definitions, and do calculations for each MCMC sample and then summarise.
+
+The USR:
+```{r scaleusr}
+usr_mcmc <- select(cod_biomass_mcmc,
+                   `1956`:`2004`)
+biomass_with_usr <- mutate(cod_biomass_mcmc,
+                           usr = rowMeans(select(cod_biomass_mcmc,
+                                                 `1956`:`2004`)))
+biomass_over_usr <- (biomass_with_usr / biomass_with_usr$"usr") %>%
+  as_tibble() %>%
+  select(-"usr")       # Had checked and they were all 1
+```
+
+The LRP:
+```{r scalelrp}
+biomass_over_lrp <- (cod_biomass_mcmc / cod_biomass_mcmc$`1986`) %>%
+  as_tibble()
+expect_equal(range(summary(biomass_over_lrp$`1986`)),
+             c(1, 1))
+```
+
+
+## Analyse a single vector of values
+
+Let's first do just 2021 for consistency with main hake analysis in
+manuscript. Do absolute biomass (as shown in Figure 11 of SAR):
+```{r rec1}
+cred = 0.95
+vec <- pull(cod_biomass_mcmc, "2021")
+
+summary(vec)
+length(vec)
+
+res_vec <- create_intervals(vec)
+summary_table(res_vec)
+```
+
+The ETI and HDI plots (Figure 1 in our manuscript) are:
+```{r plot, fig.height = 8, echo = FALSE}
+x_lim <- c(0, 35)
+y_lim = c(0, 0.18)
+y_arrow = 0.16
+x_lab = "Spawning biomass (1000 t)"
+
+par(mfrow = c(2, 1))
+plot(res_vec,
+     type = "eti",
+     xlim = x_lim,
+     ylim = y_lim,
+     interval_arrows = TRUE,
+     xlab = x_lab,
+     y_arrow = y_arrow,
+     arrowhead_gap = 0,
+     x_minor_ticks_by = 0.25,
+     y_minor_ticks_by = 0.1)
+     # main = "Equal-tailed Interval")
+plot(res_vec,
+     type = "hdi",
+     xlim = x_lim,
+     ylim = y_lim,
+     interval_arrows = TRUE,
+     xlab = x_lab,
+     y_arrow = y_arrow,
+     arrowhead_gap = 0,
+     x_minor_ticks_by = 0.25,
+     y_minor_ticks_by = 0.1)
+     # main = "Highest Density Interval")
+```
+
+You can see some humps which look almost multimodal (meaning multiple local
+peaks), presumably arising from the combining of posteriors from seven models.
+
+So a fair change between the ETI and HDI in this case.
+
+The full results are
+```{r fullres}
+res_vec$intervals %>% a()       # a() is our shorthand function for as.data.frame()
+```
+for which definitions are given in the help file `?create_intervals`.
+
+## MCMC samples for multiple years
+
+We now present calculations for  multiple years
+of MCMC samples of various quantities.
+
+### Absolute spawning biomass
+
+To create ETIs and HDIs for estimates for each year:
+```{r hake_mcmc2}
+res_all_years <- create_intervals(cod_biomass_mcmc,
+                                  credibility = cred)
+```
+This gives a list object -- see the rendered `results.html` vignette for
+details (such as the intervals for all years are convenienty saved in the single
+tibble `res_all_years$intervals_all`).
+
+Plot the full time series like in our manuscript figure:
+```{r hake_mcmc7, echo = FALSE}
+plot(res_all_years,
+     xlab = "Year",
+     ylab = x_lab,
+     ylim = c(0, 200),
+     y_tick_by = 10)
+# abline(h = 0.4, col = "red", lty = 2)
+# abline(h = 0.8, col = "black", lty = 2)
+```
+
+So it pulls down the biomass a bit.
+
+Separate panels:
+```{r hake_mcmc7_separate, echo = FALSE, fig.height = 12}
+plot(res_all_years,
+     type = "separate",
+     xlab = "Year",
+     ylab = x_lab,
+     ylim = c(0, 200),
+     y_tick_by = 10)
+# abline(h = 0.4, col = "red", lty = 2)
+# abline(h = 0.8, col = "black", lty = 2)
+```
+
+
+### Spawning biomass relative to USR
+
+To create ETIs and HDIs for estimates for each year:
+```{r, usr}
+res_all_years_rel_usr <- create_intervals(biomass_over_usr,
+                                          credibility = cred)
+```
+
+TODO check out the warnings.
+
+Plot the full time series like in our manuscript figure:
+```{r, plotusr, echo = FALSE}
+plot(res_all_years_rel_usr,
+     xlab = "Year",
+     ylab = "Spawning biomass relative to USR",
+     ylim = c(0, 3.25),
+     y_tick_by = 0.25,
+     add_line = 1,
+     add_line_col = "green")
+```
+
+Separate panels:
+```{r, plotusr2, echo = FALSE, fig.height = 12}
+plot(res_all_years_rel_usr,
+     type = "separate",
+     xlab = "Year",
+     ylab = "Spawning biomass relative to USR",
+     ylim = c(0, 3.25),
+     y_tick_by = 0.25,
+     add_line = 1,
+     add_line_col = "green")
+```
+
+### Spawning biomass relative to LRP
+
+To create ETIs and HDIs for estimates for each year, have to remove 1986 since
+all MCMC ratios are 1 (since they are scaled by themselves):
+```{r, lrp}
+res_all_years_rel_lrp <- create_intervals(select(biomass_over_lrp,
+                                                 -"1986"),
+                                                 credibility = cred)
+```
+
+TODO check out the two warnings. Could be distinct HDIs.
+
+Plot the full time series like in our manuscript figure (just leave out 1986 for
+now, could manually add it in) TODO
+```{r, plotlpr, echo = FALSE}
+plot(res_all_years_rel_lrp,
+     xlab = "Year",
+     ylab = "Spawning biomass relative to LRP",
+     ylim = c(0, 12),
+     y_tick_by = 0.5,
+     add_line = 1,
+     add_line_col = "red")
+```
+Again look fairly symmetric and so not a huge difference between interval types.
+
+Two panels:
+```{r, plotlpr2, echo = FALSE, fig.height = 12}
+plot(res_all_years_rel_lrp,
+     type = "separate",
+     xlab = "Year",
+     ylab = "Spawning biomass relative to LRP",
+     ylim = c(0, 12),
+     y_tick_by = 0.5,
+     add_line = 1,
+     add_line_col = "red")
+```
+
+
+### Recruitment
+
+To create ETIs and HDIs for estimates for each year:
+```{r, recruitment}
+res_all_years_rec <- create_intervals(cod_rec_mcmc,
+                                      credibility = cred)
+```
+
+No warnings.
+
+Plot the full time series like in our manuscript figure:
+```{r, plotrec, echo = FALSE}
+plot(res_all_years_rec,
+     xlab = "Year",
+     ylab = "Recruitment (millions of fish)",
+     ylim = c(0, 160),
+     y_tick_by = 10,
+     add_line = 0,
+     add_line_col = "grey",
+     add_line_lty = 1)
+```
+
+Some pulling down of intervals, particularly 2009, 2013, and 2022.Again look fairly symmetric and so not a huge difference between interval types.
+
+Plot in two separate panels to compare (you would only have one in the assessment
+document, not the combined plot above)
+```{r, plotrec2, echo = FALSE, fig.height = 12}
+plot(res_all_years_rec,
+     type = "separate",
+     xlab = "Year",
+     ylab = "Recruitment (millions of fish)",
+     ylim = c(0, 160),
+     y_tick_by = 10,
+     add_line = 0,
+     add_line_col = "grey",
+     add_line_lty = 1)
+```
+
+
+```{r, knitexit, cache = FALSE}
+knitr::knit_exit()
+```
+
+HERE - it's started ignoring the knit_exit since I did the new line options for
+figures. Made these all echo eq FALSE.
+
+Reproduce in the style of Figure 39 the Petrale Sole stock assessment (excluding 2024):
+```{r plotlikeassessment, fig.height = 10, echo = FALSE}
+to_plot <- res_all_years$intervals_all %>%
+  filter(quantity != 2024)
+par(mfrow = c(2,1))
+plot(to_plot$quantity,
+     to_plot$median,
+     type = "o",
+     pch = 16,
+     xlab = "Year",
+     ylab = x_lab,
+     ylim = c(0, 8),
+     main = "Equal-tailed Intervals")
+polygon(x = c(to_plot$quantity,
+              rev(to_plot$quantity)),
+        y = c(to_plot$eti_lower,
+              rev(to_plot$eti_upper)),
+        col = "lightblue",
+        border = NA)
+# Redo to be on top
+points(to_plot$quantity,
+       to_plot$median,
+       type = "o",
+       pch = 16)
+abline(h = 0.4, col = "red", lty = 2)
+abline(h = 0.8, col = "black", lty = 2)
+add_minor_tickmarks(y_tick_by = 1)
+
+plot(to_plot$quantity,
+     to_plot$median,
+     type = "o",
+     pch = 16,
+     xlab = "Year",
+     ylab = x_lab,
+     ylim = c(0, 8),
+     main = "Highest Density Intervals")
+polygon(x = c(to_plot$quantity,
+              rev(to_plot$quantity)),
+        y = c(to_plot$hdi_lower,
+              rev(to_plot$hdi_upper)),
+        col = "lightblue",
+        border = NA)
+# Redo to be on top
+points(to_plot$quantity,
+       to_plot$median,
+       type = "o",
+       pch = 16)
+abline(h = 0.4, col = "red", lty = 2)
+abline(h = 0.8, col = "black", lty = 2)
+add_minor_tickmarks(y_tick_by = 1)
+```
+
+Adapted from hake vignette: whether the relative spawning biomass is above or below the management reference points
+of 0.4 and 0.8 is key in forming stakeholders' perception of the health of the hake
+stock.
+
+Years for which ETI is above 0.4 but HDI is below:
+```{r whichyears, eval = FALSE}
+dplyr::filter(res_all_years$intervals_all,
+              eti_lower > 0.4,
+              hdi_lower < 0.4) %>%
+  select(quantity,
+         eti_lower,
+         hdi_lower)
+```
+Thus, the perception of stock status can depend upon the
+definition of credible intervals (ETI versus HDI).
+
+
+Only one year for which lower end of ETI is above 0.8 but HDI is below (the
+stock is increasing fairly quickly around this time):
+```{r whichyearsusr, eval = FALSE}
+dplyr::filter(res_all_years$intervals_all,
+              eti_lower > 0.8,
+              hdi_lower < 0.8) %>%
+  select(quantity,
+         eti_lower,
+         hdi_lower)
+```
+
+Can see from the time series that upper end of both intervals are always above
+0.8.
+
+## 50% credible intervals
+
+How about 50% credible intervals like I did quickly for hake (for which results
+were very surpising):
+```{r int50, eval = FALSE}
+res_all_years_50 <- create_intervals(petrale_mcmc,
+                                     credibility = 0.5)
+```
+
+```{r int50plot, echo = FALSE, eval = FALSE}
+plot(res_all_years_50,
+     xlab = "Year",
+     ylab = x_lab,
+     ylim = c(0, 4))
+abline(h = 0.4, col = "red", lty = 2)
+abline(h = 0.8, col = "black", lty = 2)
+```
+
+## 90% credible intervals
+
+How about 90% credible intervals:
+```{r int90, eval = FALSE}
+res_all_years_90 <- create_intervals(petrale_mcmc,
+                                     credibility = 0.9)
+```
