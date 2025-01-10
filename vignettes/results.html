@@ -340,13 +340,10 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Results</h1>
 <h4 class="author">Andrew Edwards</h4>
-<h4 class="date">Last rendered on 02 October, 2024</h4>
+<h4 class="date">Last rendered on 09 January, 2025</h4>
 
 
 
-<!-- To build either run
-rmarkdown::render("results.Rmd")
- or click the knit button in RStudio -->
 <p>This vignette for our <a href="https://github.com/andrew-edwards/hdiAnalysis?tab=readme-ov-file#hdianalysis">hdiAnalysis R package</a> reproduces the main results in the manuscript, and can easily be used as a template for users to apply to their own data or model outputs. The longer <a href="http://htmlpreview.github.io/?https://github.com/andrew-edwards/hdiAnalysis/blob/main/vignettes/results-extra.html">results-extra.html</a> vignette gives more details of outputs and further examples of plotting features.</p>
 <p>Set up:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(hdiAnalysis)</span>
@@ -2423,25 +2420,25 @@ manually checked, code is below but not run or printed in vignette): -->
 <span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; other attached packages:</span></span>
-<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] hdiAnalysis_1.0.0 dplyr_1.1.4       testthat_3.2.1    devtools_2.4.5   </span></span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] dplyr_1.1.4       hdiAnalysis_1.0.0 testthat_3.2.1    devtools_2.4.5   </span></span>
 <span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [5] usethis_2.2.2    </span></span>
 <span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
 <span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] sass_0.4.8        utf8_1.2.4        generics_0.1.3    shape_1.4.6      </span></span>
-<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [5] stringi_1.8.3     HDInterval_0.2.4  digest_0.6.33     magrittr_2.0.3   </span></span>
-<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [9] evaluate_0.23     pkgload_1.3.3     fastmap_1.1.1     rprojroot_2.0.4  </span></span>
-<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [13] jsonlite_1.8.8    pkgbuild_1.4.3    sessioninfo_1.2.2 brio_1.1.4       </span></span>
+<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [5] stringi_1.8.3     digest_0.6.33     magrittr_2.0.3    HDInterval_0.2.4 </span></span>
+<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [9] evaluate_0.23     pkgload_1.3.3     fastmap_1.1.1     jsonlite_1.8.8   </span></span>
+<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [13] rprojroot_2.0.4   pkgbuild_1.4.3    sessioninfo_1.2.2 brio_1.1.4       </span></span>
 <span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [17] urlchecker_1.0.1  promises_1.2.1    purrr_1.0.2       fansi_1.0.6      </span></span>
-<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [21] jquerylib_0.1.4   cli_3.6.2         shiny_1.8.0       rlang_1.1.2      </span></span>
-<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [25] ellipsis_0.3.2    withr_2.5.2       remotes_2.4.2.1   cachem_1.0.8     </span></span>
-<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [29] yaml_2.3.8        tools_4.3.2       memoise_2.0.1     httpuv_1.6.13    </span></span>
-<span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [33] vctrs_0.6.5       R6_2.5.1          mime_0.12         lifecycle_1.0.4  </span></span>
-<span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [37] stringr_1.5.1     fs_1.6.3          htmlwidgets_1.6.4 miniUI_0.1.1.1   </span></span>
-<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [41] desc_1.4.3        pkgconfig_2.0.3   bslib_0.6.1       pillar_1.9.0     </span></span>
-<span id="cb23-38"><a href="#cb23-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [45] later_1.3.2       glue_1.6.2        profvis_0.3.8     Rcpp_1.0.11      </span></span>
-<span id="cb23-39"><a href="#cb23-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [49] highr_0.10        tidyselect_1.2.0  tibble_3.2.1      xfun_0.41        </span></span>
-<span id="cb23-40"><a href="#cb23-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [53] rstudioapi_0.15.0 knitr_1.45        xtable_1.8-4      htmltools_0.5.7  </span></span>
-<span id="cb23-41"><a href="#cb23-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [57] rmarkdown_2.25    compiler_4.3.2</span></span></code></pre></div>
+<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [21] codetools_0.2-19  jquerylib_0.1.4   cli_3.6.2         shiny_1.8.0      </span></span>
+<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [25] rlang_1.1.2       ellipsis_0.3.2    yaml_2.3.8        remotes_2.4.2.1  </span></span>
+<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [29] withr_2.5.2       cachem_1.0.8      tools_4.3.2       memoise_2.0.1    </span></span>
+<span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [33] httpuv_1.6.13     vctrs_0.6.5       R6_2.5.1          mime_0.12        </span></span>
+<span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [37] lifecycle_1.0.4   stringr_1.5.1     fs_1.6.3          htmlwidgets_1.6.4</span></span>
+<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [41] miniUI_0.1.1.1    pkgconfig_2.0.3   desc_1.4.3        bslib_0.6.1      </span></span>
+<span id="cb23-38"><a href="#cb23-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [45] pillar_1.9.0      later_1.3.2       glue_1.6.2        profvis_0.3.8    </span></span>
+<span id="cb23-39"><a href="#cb23-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [49] Rcpp_1.0.11       highr_0.10        xfun_0.41         tibble_3.2.1     </span></span>
+<span id="cb23-40"><a href="#cb23-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [53] tidyselect_1.2.0  knitr_1.45        rstudioapi_0.15.0 xtable_1.8-4     </span></span>
+<span id="cb23-41"><a href="#cb23-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [57] htmltools_0.5.7   rmarkdown_2.25    compiler_4.3.2</span></span></code></pre></div>
 </div>
 
 

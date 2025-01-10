@@ -9,15 +9,18 @@ vignette: >
 date: "Last rendered on `r format(Sys.time(), '%d %B, %Y')`"
 ---
 
-<!-- To build either run
+```{r, rendering, echo = FALSE, eval = FALSE}
 rmarkdown::render("results.Rmd")
- or click the knit button in RStudio -->
+# to build, or click the knit button in RStudio
+```
 
-
-```{r, include = FALSE}
+```{r, options, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
+  cache = TRUE,
+  cache_path = "results-cache/",
+  fig.path = "results-figs-cache/",
   fig.width = 7,
   fig.height = 6
 )
@@ -31,7 +34,7 @@ used as a template for users to apply to their own data or model outputs. The lo
 vignette gives more details of outputs and further examples of plotting features.
 
 Set up:
-```{r setup}
+```{r, setup}
 library(hdiAnalysis)
 library(dplyr)
 ```

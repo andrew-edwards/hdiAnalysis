@@ -9,15 +9,18 @@ vignette: >
 date: "Last rendered on `r format(Sys.time(), '%d %B, %Y')`"
 ---
 
-<!-- To build either run
+```{r, rendering, echo = FALSE, eval = FALSE}
 rmarkdown::render("results-extra.Rmd")
- or click the knit button in RStudio -->
-
+# to build, or click the knit button in RStudio
+```
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
+  cache = TRUE,
+  cache_path = "results-extra-cache/",
+  fig.path = "results-extra-figs-cache/",
   fig.width = 7,
   fig.height = 6
 )
@@ -488,6 +491,129 @@ sum(ints_simulations_density_true$hdi_upper[-1] > ints_simulations_density_true$
 So these values are quite a way off being the desired half (`r
 num_sims/2`). This convinced us to stick with the simpler no-density
 moving-window method.
+
+## Multimodal distributions
+
+Multimodal distributions of MCMC output can occur from the underlying
+stochasticity of MCMC results, and also from ensemble approaches whereby results
+from multiple models are combined to provide model-averaged result. To
+investigate the associated intervals, we first create a
+simple bimodal distribution of simulated data and calculate the a `quasi-HDI' using the moving-window approach:
+
+```{r bimodal}
+set.seed(42)
+bimodal_sim <- c(rlnorm(n/2,
+                        2.2,
+                        sd_log/4),
+                 rlnorm(n/2,
+                        3.5,
+                        sd_log/2))
+bimodal_res <- create_intervals(bimodal_sim)
+```
+
+```{r bimodalres, results = "asis"}
+summary_table(bimodal_res)
+```
+
+```{r bimodalfigs}
+# Equal-tailed interval:
+
+plot(bimodal_res,
+     type = "eti",
+     xlim = c(0, 70),
+     ylim = c(0, 0.08),
+     interval_arrows = TRUE,
+     xlab = "Simulated data",
+     y_arrow = 0.078,
+     y_minor_ticks_by = 0.01,
+     arrowhead_gap = 0.05)
+
+# Highest density interval using moving-window approach
+plot(bimodal_res,
+     type = "hdi",
+     xlim = c(0, 70),
+     ylim = c(0, 0.08),
+     interval_arrows = TRUE,
+     xlab = "Simulated data",
+     y_arrow = 0.078,
+     y_minor_ticks_by = 0.01,
+     arrowhead_gap = 0.05)
+```
+
+As can be seen in this example, there is a region (around 17) within the HDI but
+with a low density (hence we call it a quasi-HDI), and the difference between the densities at the endpoints of
+the interval is quite different (though still less so than for the ETI). Thus, this is not strictly an HDI, but is still a valid credible
+interval. This is using the default
+moving-window approach.
+
+To obtain disjoint intervals (and therefore highest density regions, not intervals) requires
+using the density approach. This can be done using the original
+`HDInterval::hdi()` function (because our `create_intervals()` is set up to only
+deal with single intervals),
+and allowing split (disjoint) intervals:
+```{r region}
+bimodal_region <- HDInterval::hdi(bimodal_res$density,  # Use already-calculated density
+                                  allowSplit = TRUE)
+bimodal_region
+```
+The results show two intervals that make up the highest density region.
+We can manually create a figure, showing the highest density region in blue:
+```{r regionfig}
+dens <- bimodal_res$density
+
+plot(bimodal_res,
+     type = "eti",
+     col_tail = "blue",
+     xlim = c(0, 70),
+     ylim = c(0, 0.09),
+     interval_arrows = FALSE,
+     xlab = "Simulated data",
+     y_minor_ticks_by = 0.01)
+
+# Lower left tail
+polygon(c(dens$x[dens$x <= bimodal_region[1, "begin"]],
+          bimodal_region[1, "begin"],
+          bimodal_region[1, "begin"]),
+        c(dens$y[dens$x <= bimodal_region[1, "begin"]],
+          attr(bimodal_region, "height"),
+          0),
+        col = "red",
+        border = "red",
+        lwd = 0.4,
+        main = "")
+# Middle interval that is outside of highest density region
+polygon(c(dens$x[dens$x >= bimodal_region[1, "end"] & dens$x <= bimodal_region[2, "begin"]],
+          bimodal_region[2, "begin"],
+          bimodal_region[2, "begin"],
+          bimodal_region[1, "end"]),
+        c(dens$y[dens$x >= bimodal_region[1, "end"] & dens$x <= bimodal_region[2, "begin"]],
+          attr(bimodal_region, "height"),
+          0,
+          0),
+        col = "red",
+        border = "red",
+        lwd = 0.4,
+        main = "")
+
+# Upper right left tail
+polygon(c(bimodal_region[2, "end"],
+          dens$x[dens$x >= bimodal_region[2, "end"]],
+          bimodal_region[2, "end"]),
+        c(attr(bimodal_region, "height"),
+          dens$y[dens$x >= bimodal_region[2, "end"]],
+          0),
+        col = "red",
+        border = "red",
+        lwd = 0.4,
+        main = "")
+```
+
+Thus, there are two disjoint intervals that make up the highest density region.
+For stock assessments, it is unlikely
+to be helpful to report such disjoint intervals for giving advice, and so we would
+not recommend using them. Furthermore, in the simulations above we found the
+density approach to not be accurate (for the sample size we tested). Therefore we
+recommend investigating the use of quasi-HDIs or ETIs. TODO mention cod if include.
 
 ## Session information
 
