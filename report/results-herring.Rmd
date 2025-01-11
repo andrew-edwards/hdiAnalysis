@@ -9,10 +9,10 @@ vignette: >
 date: "Last rendered on `r format(Sys.time(), '%d %B, %Y')`"
 ---
 
-<!-- To build either run
+```{r, build, echo = FALSE, eval = FALSE}
 rmarkdown::render("results-herring.Rmd")
- or click the knit button in RStudio -->
-
+# to build or click the knit button in RStudio
+```
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -35,7 +35,7 @@ of that where needed). Only currently intended to work locally (on Andy's
 machine), as MCMC values not being pushed.
 
 Set up:
-```{r setup}
+```{r setup, cache = FALSE}
 # library(hdiAnalysis)
 load_all()
 library(dplyr)
@@ -46,7 +46,8 @@ library(dplyr)
 This is for Strait of Georgia, and recruitments are age-2 in billions of fish.
 
 The herring Markov chain Monte Carlo (MCMC) recruitment
-values are saved as a list object (not saved in the pacakge), each object being
+values are saved as a list object (not saved in the package, but the derived
+values shown in Supplementary Material are), each object being
 the MCMC results. Which are the 4,000 MCMC values used in the assessment:
 
 DFO (2024) STOCK STATUS UPDATE WITH APPLICATION OF MANAGEMENT PROCEDURES
@@ -471,4 +472,23 @@ dplyr::filter(res_all_years_2$intervals_all,
 ```
 
 Would be interesting to look at relative spawning biomass (like for hake),
-compared to the limit reference point of 0.3 B0.
+compared to the limit reference point of 0.3 B0. Doing that in vignette, saving
+the data objects here just for Strait of Georgia.
+
+```{r saving}
+region <- "SOG"
+i_sog_region <- which(regions_all == "SOG")
+
+herring_recruitment_sog_mcmc <- herring_mcmc[[i_sog_region]]$recruitment
+herring_biomass_sog_mcmc <- herring_mcmc[[i_sog_region]]$spawning_biomass
+herring_unfished_biomass_sog_mcmc <- herring_mcmc[[i_sog_region]]$unfished_spawning_biomass
+
+usethis::use_data(herring_recruitment_sog_mcmc,
+                  overwrite = TRUE)
+
+usethis::use_data(herring_biomass_sog_mcmc,
+                  overwrite = TRUE)
+
+usethis::use_data(herring_unfished_biomass_sog_mcmc,
+                  overwrite = TRUE)
+```

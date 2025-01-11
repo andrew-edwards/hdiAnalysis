@@ -36,6 +36,15 @@ create_herring_object_hdi <- function(assess_yr,    # nocov start
                                         # Checked HG 2023
                                         # matches Table 19 ETI
 
+  # Manually checked what we want for SB0, then using here. There are three sets
+  # saved, but they are all the same:
+  unfished_spawning_biomass <- model$mcmccalcs$r.dat$sbo
+  # un2 <- model$mcmccalcs$p.dat$sbo
+  # un3 <- model$mcmccalcs$p.dat.log$sbo
+  # expect_equal(unfished_spawning_biomass, un2)  # passes for SoG
+  # expect_equal(unfished_spawning_biomass, un3)  # passes for SoG
+
   return(list(recruitment = recruitment,
-              spawning_biomass = raw_spawning_biomass_mcmc))
+              spawning_biomass = raw_spawning_biomass_mcmc,
+              unfished_spawning_biomass = unfished_spawning_biomass))
 }                                    # nocovend

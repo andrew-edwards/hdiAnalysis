@@ -36,6 +36,14 @@ Supplementary Material. We keep this code short -- for further investigations
 see the code in the respective species-specific code in `report/` or use further
 code in the other vignettes.
 
+## Pacific Herring
+
+Using results for the Strait of Georgia stock from Fisheries and Ocean Canada's
+[Stock status update with application of management procedures for Pacific Herring (*Clupea pallasii*) in British Columbia: status in 2023 and
+forecast for 2024](https://publications.gc.ca/collections/collection_2024/mpo-dfo/fs70-7/Fs70-7-2024-001-eng.pdf).
+
+HERE - use herring results as tempalte, simplifying down like below.
+
 ## Pacific Cod
 
 Using results for Area 3CD from Fisheries and Ocean Canada's [Status update of
@@ -48,7 +56,7 @@ with MCMC results provided by Robyn Forrest.
 To create ETIs and HDIs for estimates for each year:
 ```{r, recruitment}
 credibility_cod <- 0.95
-res_all_years_cod_rec <- create_intervals(cod_recruitment_mcmc,
+res_all_years_cod_rec <- create_intervals(cod_rec_mcmc,
                                           credibility = credibility_cod)
 ```
 
