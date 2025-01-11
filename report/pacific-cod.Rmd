@@ -28,7 +28,8 @@ knitr::opts_chunk$set(
 
 Using `petrale-sole.Rmd` as a template, which used herring which cut down to the
 basics from the `results.Rmd` vignette, to look at Pacific Cod results (for Area
-3CD from the 2024 SAR).
+3CD from the 2024 SAR). Also saves the wrangled values as data objects into the
+package. See vignette for streamlined code for creating the intervals.
 
 Have to work out the reference points explicitly, and define them from the
 SAR. Do recruitments first. There are seven model runs which are combined as an
@@ -121,16 +122,16 @@ usr_mcmc <- select(cod_biomass_mcmc,
 biomass_with_usr <- mutate(cod_biomass_mcmc,
                            usr = rowMeans(select(cod_biomass_mcmc,
                                                  `1956`:`2004`)))
-biomass_over_usr <- (biomass_with_usr / biomass_with_usr$"usr") %>%
+cod_biomass_over_usr <- (biomass_with_usr / biomass_with_usr$"usr") %>%
   as_tibble() %>%
   select(-"usr")       # Had checked and they were all 1
 ```
 
 The LRP:
 ```{r scalelrp}
-biomass_over_lrp <- (cod_biomass_mcmc / cod_biomass_mcmc$`1986`) %>%
+cod_biomass_over_lrp <- (cod_biomass_mcmc / cod_biomass_mcmc$`1986`) %>%
   as_tibble()
-expect_equal(range(summary(biomass_over_lrp$`1986`)),
+expect_equal(range(summary(cod_biomass_over_lrp$`1986`)),
              c(1, 1))
 ```
 
@@ -140,13 +141,16 @@ expect_equal(range(summary(biomass_over_lrp$`1986`)),
 Let's first do just 2021 for consistency with main hake analysis in
 manuscript. Do absolute biomass (as shown in Figure 11 of SAR):
 ```{r rec1}
-cred = 0.95
+cred <- 0.95
 vec <- pull(cod_biomass_mcmc, "2021")
 
 summary(vec)
 length(vec)
 
 res_vec <- create_intervals(vec)
+```
+
+```{r restab, results = "asis"}
 summary_table(res_vec)
 ```
 
@@ -239,11 +243,11 @@ plot(res_all_years,
 
 To create ETIs and HDIs for estimates for each year:
 ```{r, usr}
-res_all_years_rel_usr <- create_intervals(biomass_over_usr,
+res_all_years_rel_usr <- create_intervals(cod_biomass_over_usr,
                                           credibility = cred)
 ```
 
-TODO check out the warnings.
+Warnings are due to not being able to compute lower end of interval a.
 
 Plot the full time series like in our manuscript figure:
 ```{r, plotusr, echo = FALSE}
@@ -273,12 +277,11 @@ plot(res_all_years_rel_usr,
 To create ETIs and HDIs for estimates for each year, have to remove 1986 since
 all MCMC ratios are 1 (since they are scaled by themselves):
 ```{r, lrp}
-res_all_years_rel_lrp <- create_intervals(select(biomass_over_lrp,
+res_all_years_rel_lrp <- create_intervals(select(cod_biomass_over_lrp,
                                                  -"1986"),
                                                  credibility = cred)
 ```
-
-TODO check out the two warnings. Could be distinct HDIs.
+Warnings are same as earlier.
 
 Plot the full time series like in our manuscript figure (just leave out 1986 for
 now, could manually add it in) TODO
@@ -328,7 +331,8 @@ plot(res_all_years_rec,
      add_line_lty = 1)
 ```
 
-Some pulling down of intervals, particularly 2009, 2013, and 2022.Again look fairly symmetric and so not a huge difference between interval types.
+Some pulling down of intervals, particularly 2009, 2013, 2022 and earlier
+years.
 
 Plot in two separate panels to compare (you would only have one in the assessment
 document, not the combined plot above)
@@ -344,119 +348,18 @@ plot(res_all_years_rec,
      add_line_lty = 1)
 ```
 
+## Save data into package
 
-```{r, knitexit, cache = FALSE}
-knitr::knit_exit()
-```
+```{r savedata}
+usethis::use_data(cod_rec_mcmc,
+                  overwrite = TRUE)
 
-HERE - it's started ignoring the knit_exit since I did the new line options for
-figures. Made these all echo eq FALSE.
+usethis::use_data(cod_biomass_mcmc,
+                  overwrite = TRUE)
 
-Reproduce in the style of Figure 39 the Petrale Sole stock assessment (excluding 2024):
-```{r plotlikeassessment, fig.height = 10, echo = FALSE}
-to_plot <- res_all_years$intervals_all %>%
-  filter(quantity != 2024)
-par(mfrow = c(2,1))
-plot(to_plot$quantity,
-     to_plot$median,
-     type = "o",
-     pch = 16,
-     xlab = "Year",
-     ylab = x_lab,
-     ylim = c(0, 8),
-     main = "Equal-tailed Intervals")
-polygon(x = c(to_plot$quantity,
-              rev(to_plot$quantity)),
-        y = c(to_plot$eti_lower,
-              rev(to_plot$eti_upper)),
-        col = "lightblue",
-        border = NA)
-# Redo to be on top
-points(to_plot$quantity,
-       to_plot$median,
-       type = "o",
-       pch = 16)
-abline(h = 0.4, col = "red", lty = 2)
-abline(h = 0.8, col = "black", lty = 2)
-add_minor_tickmarks(y_tick_by = 1)
+usethis::use_data(cod_biomass_over_usr,
+                  overwrite = TRUE)
 
-plot(to_plot$quantity,
-     to_plot$median,
-     type = "o",
-     pch = 16,
-     xlab = "Year",
-     ylab = x_lab,
-     ylim = c(0, 8),
-     main = "Highest Density Intervals")
-polygon(x = c(to_plot$quantity,
-              rev(to_plot$quantity)),
-        y = c(to_plot$hdi_lower,
-              rev(to_plot$hdi_upper)),
-        col = "lightblue",
-        border = NA)
-# Redo to be on top
-points(to_plot$quantity,
-       to_plot$median,
-       type = "o",
-       pch = 16)
-abline(h = 0.4, col = "red", lty = 2)
-abline(h = 0.8, col = "black", lty = 2)
-add_minor_tickmarks(y_tick_by = 1)
-```
-
-Adapted from hake vignette: whether the relative spawning biomass is above or below the management reference points
-of 0.4 and 0.8 is key in forming stakeholders' perception of the health of the hake
-stock.
-
-Years for which ETI is above 0.4 but HDI is below:
-```{r whichyears, eval = FALSE}
-dplyr::filter(res_all_years$intervals_all,
-              eti_lower > 0.4,
-              hdi_lower < 0.4) %>%
-  select(quantity,
-         eti_lower,
-         hdi_lower)
-```
-Thus, the perception of stock status can depend upon the
-definition of credible intervals (ETI versus HDI).
-
-
-Only one year for which lower end of ETI is above 0.8 but HDI is below (the
-stock is increasing fairly quickly around this time):
-```{r whichyearsusr, eval = FALSE}
-dplyr::filter(res_all_years$intervals_all,
-              eti_lower > 0.8,
-              hdi_lower < 0.8) %>%
-  select(quantity,
-         eti_lower,
-         hdi_lower)
-```
-
-Can see from the time series that upper end of both intervals are always above
-0.8.
-
-## 50% credible intervals
-
-How about 50% credible intervals like I did quickly for hake (for which results
-were very surpising):
-```{r int50, eval = FALSE}
-res_all_years_50 <- create_intervals(petrale_mcmc,
-                                     credibility = 0.5)
-```
-
-```{r int50plot, echo = FALSE, eval = FALSE}
-plot(res_all_years_50,
-     xlab = "Year",
-     ylab = x_lab,
-     ylim = c(0, 4))
-abline(h = 0.4, col = "red", lty = 2)
-abline(h = 0.8, col = "black", lty = 2)
-```
-
-## 90% credible intervals
-
-How about 90% credible intervals:
-```{r int90, eval = FALSE}
-res_all_years_90 <- create_intervals(petrale_mcmc,
-                                     credibility = 0.9)
+usethis::use_data(cod_biomass_over_lrp,
+                  overwrite = TRUE)
 ```

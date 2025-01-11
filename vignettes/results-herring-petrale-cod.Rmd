@@ -1,0 +1,171 @@
+---
+title: "Results for Pacific Herring, Petrale Sole, and Pacific Cod"
+author: "Andrew Edwards"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Results for Pacific Herring, Petrale Sole, and Pacific Cod}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+date: "Last rendered on `r format(Sys.time(), '%d %B, %Y')`"
+---
+
+```{r, rendering, echo = FALSE, eval = FALSE}
+rmarkdown::render("results-herring-petrale-cod.Rmd")
+# to build, or click the knit button in RStudio
+```
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  cache = TRUE,
+  cache_path = "results-herring-petrale-cod-cache/",
+  fig.path = "results-herring-petrale-cod-figs-cache/",
+  fig.width = 7,
+  fig.height = 6
+)
+```
+
+Set up:
+```{r setup}
+library(hdiAnalysis)
+```
+
+We generate plots for three further stocks here, as documented in the
+Supplementary Material. We keep this code short -- for further investigations
+see the code in the respective species-specific code in `report/` or use further
+code in the other vignettes.
+
+## Pacific Cod
+
+Using results for Area 3CD from Fisheries and Ocean Canada's [Status update of
+Pacific Cod (*Gadus Macrocephalus*) off the west coast of Vancouver Island in
+2023](https://publications.gc.ca/collections/collection_2024/mpo-dfo/fs70-7/Fs70-7-2024-003-eng.pdf),
+with MCMC results provided by Robyn Forrest.
+
+### Recruitment
+
+To create ETIs and HDIs for estimates for each year:
+```{r, recruitment}
+credibility_cod <- 0.95
+res_all_years_cod_rec <- create_intervals(cod_recruitment_mcmc,
+                                          credibility = credibility_cod)
+```
+
+Full time series of recruitments using both types of intervals:
+```{r, plotrec}
+plot(res_all_years_cod_rec,
+     xlab = "Year",
+     ylab = "Recruitment (millions of fish)",
+     ylim = c(0, 160),
+     y_tick_by = 10,
+     add_line = 0,
+     add_line_col = "grey",
+     add_line_lty = 1)
+```
+
+Some pulling down of HDIs compared to ETIs, particularly 2009, 2013, 2022 and earlier
+years. To see the density plot for each year (not run here):
+
+```{r codallhdi, fig.height = 88, eval = FALSE}
+plot(res_all_years_cod_rec,
+     type = "hdi",
+     xlim = c(0, 120),
+     xlab = "Recruitment (millions of fish)",
+     mfrow = c(33, 2))  # 65 default
+```
+
+The sum of the differences over all years between the width of the ETI and width
+of the HDI is (in millions of fish)
+```{r coddiffs}
+res_all_years_cod_rec$intervals_all %>%
+  dplyr::pull(width_diff) %>%
+  sum()
+```
+so smaller than for hake, as expected due to the smaller stock size.
+
+### Spawning biomass relative to reference points
+
+Relative to the upper stock reference point, above which the stock is considered
+to be healthy, the intervals of relative biomass for all years are calculated with:
+```{r calcusr}
+res_all_years_rel_usr <- create_intervals(cod_biomass_over_usr,
+                                          credibility = credibility_cod)
+```
+
+(The Warnings are due to not being able to compute lower end of interval a).
+
+Plot the full time series like in our manuscript figure:
+```{r, plotusr}
+plot(res_all_years_rel_usr,
+     xlab = "Year",
+     ylab = "Spawning biomass relative to USR",
+     ylim = c(0, 3.25),
+     y_tick_by = 0.25,
+     add_line = 1,
+     add_line_col = "green")
+```
+So there are only relatively minor changes, with only one year for which the
+interval overlapping or not overlapping the critical value of 1 changes with the
+definition of interval:
+```{r codusroverlap}
+dplyr::filter(res_all_years_rel_usr$intervals_all,
+              eti_lower > 1,
+              hdi_lower < 1)
+dplyr::filter(res_all_years_rel_usr$intervals_all,
+              eti_upper > 1,
+              hdi_upper < 1)
+```
+So in the case the perception of stock status does not really change when using
+HDI instead of ETI, presumably because the distributions look somewhat symmetric
+(at least the median is roughly in the middle of the intervals).
+
+Relative to the lower reference point, below which the stock is considered
+to be in a critical zone, the intervals of relative biomass for all years are
+calculated here. The lower reference point for this stock is defined as the
+biomass in 1986 (the lowest estimated biomass agreed upon as
+an undesirable state to be avoided), and so this year is removed from the
+interval calculations because the relative biomass values would
+be 1 for each MCMC sample in 1986 (since the biomass would be scaled by
+itself, by definition the stock is at the reference point in 1986):
+```{r, lrp}
+res_all_years_rel_lrp <- create_intervals(dplyr::select(cod_biomass_over_lrp,
+                                                        -"1986"),
+                                          credibility = credibility_cod)
+```
+(Warnings are same as earlier.)
+
+Plot the full time series like in our manuscript figure:
+```{r, plotlpr, echo = FALSE}
+plot(res_all_years_rel_lrp,
+     xlab = "Year",
+     ylab = "Spawning biomass relative to LRP",
+     ylim = c(0, 12),
+     y_tick_by = 0.5,
+     add_line = 1,
+     add_line_col = "red")
+```
+Again, the intervals do not change greatly between the ETIs and HDIs due to
+apparent symmetry.
+
+## Absolute spawning biomass
+
+Given the symmetry noted above for relative biomass, it is slightly surprising
+that the intervals do change somewhat when looking at absolute spawning biomass:
+
+```{r resallyearsabsbiomass}
+res_all_years_cod_biomass <- create_intervals(cod_biomass_mcmc,
+                                              credibility = credibility_cod)
+plot(res_all_years_cod_biomass,
+     xlab = "Year",
+     ylab = "Spawning biomass (1000 t)",
+     ylim = c(0, 200),
+     y_tick_by = 10)
+```
+
+
+## Session information
+
+```{r sessioninfo}
+sessionInfo()
+```
