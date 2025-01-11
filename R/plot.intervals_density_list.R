@@ -20,7 +20,8 @@
 ##' @param eti_bar_col colour used to plot the ETIs in comparison plot
 ##' @param hdi_bar_col colour used to plot the HDIs in comparison plot
 ##' @param add_line_at_0.4 logical whether to add a line at 0.4, specifically
-##'   for Figure 2B, also adds the 'Now' and 'Projections' text
+##'   for Figure 2B, also adds the 'Now' and 'Projections' text, so use
+##'   `add_line` if do not want those
 ##' @param add_line_at_0.4_col colour for 0.4 line
 ##' @param add_line_at_0.4_lty linetype for 0.4 line
 ##' @param add_line numeric value at which to add a specific line at

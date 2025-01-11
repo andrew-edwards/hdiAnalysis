@@ -105,7 +105,7 @@ plot(res_all_years_herring_relative_biomass,
      ylim = c(0, 1),
      y_tick_by = 0.1,
      add_line = 0.3,
-     add_line_col = "grey",
+     add_line_col = "darkred",
      leg_loc = "topleft")
 ```
 We can see visually that there are no years for which the ETIs and HDIs differ
@@ -120,6 +120,115 @@ HDIs versus ETIs, the different intervals would not change the results of using
 this specific clearly laid out management objective because it relies directly
 on probabilities.
 
+## Petrale Sole
+
+We use results from a stock assessment for the
+coastwide stock off British Columbia, Canada, of Petrale Sole (*Eopsetta
+jordani*), a flatfish.
+A two-sex statistical catch-at-age model developed with Stock Synthesis was
+used, with MCMC samples calculated using the ‘No U-Turn Sampling’
+procedure. Natural mortality was fixed, and results for advice to management
+used an ensemble model that combined three different models that assumed
+different values of natural mortality (with 50% of total samples coming from one
+model and 25% from each of the other two).
+
+Here we analyse relative spawning biomass, defined as the ratio of female spawning stock biomass
+to female spawning stock biomass at maximum sustainable yield ($B/B_{msy}$),
+using MCMC results provided by MacKenzie Mazur, from the Assessment of Petrale
+Sole in British Columbia in 2024 (in press) by Mackenzie Mazur, Kendra Holt,
+Nick Fisch, and Philina English. The ensemble model contains 27,995 values of
+$B/B_{msy}$ (which is 5 short of the expected total because $B_{msy}$ was not
+estimated for 5 samples), and 95% credible intervals were used. The limit
+reference point is when $B/B_{msy} = 0.4$.
+
+### Relative spawning biomass
+
+```{r, petralerelbiomass}
+credibility_petrale <- 0.95
+res_all_years_petrale_relative_biomass <- create_intervals(petrale_relative_biomass_mcmc,
+                                                           credibility = credibility_petrale)
+```
+Plotting the ETIs and HDIs:
+```{r petraleplot1}
+plot(res_all_years_petrale_relative_biomass,
+     xlab = "Year",
+     ylab = "Relative spawning biomass",
+     ylim = c(0, 8),
+     leg_loc = "topleft",
+     add_line = 0.4,
+     add_line_col = "darkred")
+```
+At the low end of the intervals there are some years for which the ETI does not
+dip below the limit reference point at 0.4 (dashed dark red horizontal line) but the HDI does, namely
+```{r whichyearspetrale}
+dplyr::filter(res_all_years_petrale_relative_biomass$intervals_all,
+              eti_lower > 0.4,
+              hdi_lower < 0.4) %>%
+  dplyr::select(quantity,
+                eti_lower,
+                hdi_lower)
+```
+At the high end of the intervals, the ETIs extend much higher than the HDIs --
+the HDIs reduce the perception of how large the stock might be.
+
+The upper
+stock reference point of 0.8, above which the stock is considered healthy, is
+added as a dashed green horizontal line in the next two plots, which are in the
+style of that used in the stock assessment (code hidden here):
+```{r plotlikeassessmentpetrale, fig.height = 10, echo = FALSE}
+to_plot <- res_all_years_petrale_relative_biomass$intervals_all
+par(mfrow = c(2,1))
+plot(to_plot$quantity,
+     to_plot$median,
+     type = "o",
+     pch = 16,
+     xlab = "Year",
+     ylab = "Relative spawning biomass",
+     ylim = c(0, 8),
+     main = "Equal-tailed Intervals")
+polygon(x = c(to_plot$quantity,
+              rev(to_plot$quantity)),
+        y = c(to_plot$eti_lower,
+              rev(to_plot$eti_upper)),
+        col = "lightblue",
+        border = NA)
+# Redo to be on top
+points(to_plot$quantity,
+       to_plot$median,
+       type = "o",
+       pch = 16)
+abline(h = 0.4, col = "darkred", lty = 2)
+abline(h = 0.8, col = "darkgreen", lty = 2)
+add_minor_tickmarks(y_tick_by = 1)
+
+plot(to_plot$quantity,
+     to_plot$median,
+     type = "o",
+     pch = 16,
+     xlab = "Year",
+     ylab = "Relative spawning biomass",
+     ylim = c(0, 8),
+     main = "Highest Density Intervals")
+polygon(x = c(to_plot$quantity,
+              rev(to_plot$quantity)),
+        y = c(to_plot$hdi_lower,
+              rev(to_plot$hdi_upper)),
+        col = "lightblue",
+        border = NA)
+# Redo to be on top
+points(to_plot$quantity,
+       to_plot$median,
+       type = "o",
+       pch = 16)
+abline(h = 0.4, col = "darkred", lty = 2)
+abline(h = 0.8, col = "darkgreen", lty = 2)
+add_minor_tickmarks(y_tick_by = 1)
+```
+In the 1970s the median is in the critical zone (below 0.4) but the intervals
+extend into the healthy zone (above 0.8), but somewhat less so when using HDIs
+compared to the ETIs. From 2014 to 2019 the ETIs are almost fully in the healthy
+zone, but the HDI extend somehat into it, giving a less healthy perception of
+stock recovery.
 
 ## Pacific Cod
 
@@ -188,7 +297,7 @@ plot(res_all_years_rel_usr,
      ylim = c(0, 3.25),
      y_tick_by = 0.25,
      add_line = 1,
-     add_line_col = "green")
+     add_line_col = "darkgreen")
 ```
 So there are only relatively minor changes, with only one year for which the
 interval overlapping or not overlapping the critical value of 1 changes with the
@@ -228,7 +337,7 @@ plot(res_all_years_rel_lrp,
      ylim = c(0, 12),
      y_tick_by = 0.5,
      add_line = 1,
-     add_line_col = "red")
+     add_line_col = "darkred")
 ```
 Again, the intervals do not change greatly between the ETIs and HDIs due to
 apparent symmetry.

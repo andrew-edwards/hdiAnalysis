@@ -476,3 +476,13 @@ res_all_years$intervals_all %>%
   a() %>%
   round(2)
 ```
+
+## Save data into package
+
+Figure 39 of the working paper excluded 2024 values, as we have partly done
+above, so for the package we will exclude them before saving.
+```{r savedata}
+petrale_relative_biomass_mcmc <- dplyr::select(petrale_mcmc, -`2024`)
+usethis::use_data(petrale_relative_biomass_mcmc,
+                  overwrite = TRUE)
+```
