@@ -24,6 +24,7 @@ vignettes/populations.Rmd
 report/hake_natage_mcmc_list.rds
 report/hake_natage_res_list.rds
 report/natage_mcmc.rds
+report/pacific-cod/
 
 vignettes/vignettes-old/
 
@@ -32,3 +33,5 @@ vignettes/results-extra_cache/
 vignettes/results-extra_files/
 vignettes/results-figs-cache/
 vignettes/results_cache/
+vignettes/results-herring-petrale-cod-figs-cache/
+vignettes/results-herring-petrale-cod_cache/
