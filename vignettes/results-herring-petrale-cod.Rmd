@@ -53,23 +53,26 @@ To create ETIs and HDIs for estimates for each year:
 ```{r herringrec}
 credibility_herring <- 0.90
 res_all_years_herring_rec <- create_intervals(herring_recruitment_sog_mcmc,
-                                  credibility = credibility_herring)
+                                              credibility = credibility_herring)
 ```
 
 Full time series of recruitments using both types of intervals:
-```{r, plotrec}
+```{r, plotherringrec}
 plot(res_all_years_herring_rec,
      xlab = "Year",
-     ylab = "Recruitment (billions of age-2 fish)")
+     ylab = "Recruitment (billions of age-2 fish)",
+     leg_loc = "topleft")
 ```
 There is a slight lowering of the HDIs compared to the ETIs. The sum of the differences over all years between the width of the ETI and width
 of the HDI is (in billions of fish)
-```{r coddiffs}
+```{r herringdiffs}
 res_all_years_herring_rec$intervals_all %>%
   dplyr::pull(width_diff) %>%
   sum()
 ```
-Thus a difference over a billion fish. Over all five Pacific Herring major stocks
+Thus a difference over a billion fish.
+
+Across all five Pacific Herring major stocks
 the difference totals over 4.6 billion fish (using code in results/report-herring.Rmd). The area covered by these stocks is
 smaller than the area inhabited by Pacific Hake, and given also that herring
 recruitment is measured in terms of age-2 fish, this is a noteworthy reduction
@@ -78,10 +81,10 @@ in the perception of uncertainty of herring recruitment.
 ### Relative spawning biomass
 
 For Pacific Herring, the limit reference point (below which the stock is declared to be in the
-critical zone) is defined as when the spawning biomass is 30% of the unfished spawning biomass. For consistency with our hake
+critical zone) is defined as the spawning biomass being 30% of the unfished spawning biomass. For consistency with our hake
 analysis plot we show the relative biomass (spawning biomass over unfished
 spawning biomass, calculated for each MCMC sample) with a line at 0.3
-representing the reference point.
+representing this reference point.
 
 ```{r calcherringrelbiomass}
 herring_relative_biomass_sog <- herring_biomass_sog_mcmc /
@@ -102,18 +105,21 @@ plot(res_all_years_herring_relative_biomass,
      ylim = c(0, 1),
      y_tick_by = 0.1,
      add_line = 0.3,
-     add_line_col = "grey")
+     add_line_col = "grey",
+     leg_loc = "topleft")
 ```
 We can see visually that there are no years for which the ETIs and HDIs differ
 in whether they include the critical value of 0.3 (unlike for our hake
 example), although the final-year biomass does dip down somewhat further for the
-HDI than for the ETI. Note that for Pacific Herring one of the management
-objectives is specifically to be above the limit reference point with at least 75%
-probability over three generations. So although perceptions might change with if using
-HDIs versus ETIs, the different intervals would not change the results of using
-this specific clearly laid out management objective.
+HDI than for the ETI.
 
-HERE - re-run and read through.
+Note that for Pacific Herring one of the management
+objectives is specifically to be above the limit reference point with at least 75%
+probability over three generations. So although perceptions of stock health might change when using
+HDIs versus ETIs, the different intervals would not change the results of using
+this specific clearly laid out management objective because it relies directly
+on probabilities.
+
 
 ## Pacific Cod
 

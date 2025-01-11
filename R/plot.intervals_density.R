@@ -8,6 +8,10 @@
 ##' the basic figure works okay. Please make an Issue on GitHub if you would
 ##' find it helpful for this to be fixed (it just seemed a low priority).
 ##'
+##' See `plot.intervals_density_list()` when applying to output from
+##'   `create_intervals()` applied to a data frame (e.g. multiple years of
+##'   recruitment).
+##'
 ##' @param ints_dens object of class `intervals_density`, resulting from running
 ##'   `create_intervals()` on a vector of values.
 ##' @param type type of intervals: either `hdi` or `equal`
