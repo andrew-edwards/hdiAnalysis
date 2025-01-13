@@ -34,7 +34,8 @@ library(hdiAnalysis)
 We generate plots for three further stocks here, as documented in the
 Supplementary Material. We keep this code short -- for further investigations
 see the code in the respective species-specific code in `report/` or use further
-code in the other vignettes.
+code in the other vignettes. Code to plot pdf version of the figures for each
+species is included here but hidden in the .html.
 
 ## Pacific Herring
 
@@ -61,7 +62,8 @@ Full time series of recruitments using both types of intervals:
 plot(res_all_years_herring_rec,
      xlab = "Year",
      ylab = "Recruitment (billions of age-2 fish)",
-     leg_loc = "topleft")
+     leg_loc = "topleft",
+     y_tick_by = 0.5)
 ```
 There is a slight lowering of the HDIs compared to the ETIs. The sum of the differences over all years between the width of the ETI and width
 of the HDI is (in billions of fish)
@@ -119,6 +121,51 @@ probability over three generations. So although perceptions of stock health migh
 HDIs versus ETIs, the different intervals would not change the results of using
 this specific clearly laid out management objective because it relies directly
 on probabilities.
+
+```{r, herringpdfs, echo = FALSE}
+# Create pdf for herring results, based on figure-2.R code.
+pdf_height = 4
+pdf_width = 114/25.4
+
+pdf(file = "figure-herring.pdf",
+    height = pdf_height,
+    width = pdf_width,
+    paper="special")
+
+par(mai = c(0.32, 0.3, 0.15, 0.12),
+    mfrow = c(2,1),
+    mgp = c(1.6,0.5,0),
+    cex = 0.6)
+
+plot(res_all_years_herring_rec,
+     xlab = "Year",
+     ylab = "Recruitment (billions of age-2 fish)",
+     leg_loc = "topleft",
+     y_tick_by = 0.5)
+
+mtext("A. Pacific Herring age-2 recruitment",
+      side = 3,
+      adj = 0,
+      cex = 0.7,
+      line = 0.3)
+
+plot(res_all_years_herring_relative_biomass,
+     xlab = "Year",
+     ylab = "Relative spawning biomass",
+     ylim = c(0, 1),
+     y_tick_by = 0.1,
+     add_line = 0.3,
+     add_line_col = "darkred",
+     leg_loc = "topleft")
+
+mtext("B. Pacific Herring relative spawning biomass",
+      side = 3,
+      adj = 0,
+      cex = 0.7,
+      line = 0.3)
+
+dev.off()
+```
 
 ## Petrale Sole
 
@@ -229,6 +276,106 @@ extend into the healthy zone (above 0.8), but somewhat less so when using HDIs
 compared to the ETIs. From 2014 to 2019 the ETIs are almost fully in the healthy
 zone, but the HDI extend somehat into it, giving a less healthy perception of
 stock recovery.
+
+```{r, petralepdfs, echo = FALSE}
+# Create pdfs for petrale results, based on figure-2.R code.
+# Just rel spawning biomass:
+pdf(file = "figure-petrale-rel-biomass.pdf",
+    height = pdf_height/2,
+    width = pdf_width,
+    paper = "special")
+
+par(mai = c(0.32, 0.3, 0.15, 0.12),
+    # mfrow = c(2,1),
+    mgp = c(1.6,0.5,0),
+    cex = 0.6)
+
+plot(res_all_years_petrale_relative_biomass,
+     xlab = "Year",
+     ylab = "Relative spawning biomass",
+     ylim = c(0, 8),
+     leg_loc = "topleft",
+     add_line = 0.4,
+     add_line_col = "darkred")
+
+mtext("Petrale Sole relative spawning biomass",
+      side = 3,
+      adj = 0,
+      cex = 0.7,
+      line = 0.3)
+dev.off()
+
+# Relative spawning biomass in the style used in the assessment:
+pdf(file = "figure-petrale-assessment-style.pdf",
+    height = pdf_height,
+    width = pdf_width,
+    paper="special")
+
+par(mai = c(0.32, 0.3, 0.15, 0.12),
+    mfrow = c(2,1),
+    mgp = c(1.6,0.5,0),
+    cex = 0.6)
+
+plot(to_plot$quantity,
+     to_plot$median,
+     type = "o",
+     pch = 16,
+     xlab = "Year",
+     ylab = "Relative spawning biomass",
+     ylim = c(0, 4))
+
+polygon(x = c(to_plot$quantity,
+              rev(to_plot$quantity)),
+        y = c(to_plot$eti_lower,
+              rev(to_plot$eti_upper)),
+        col = "lightblue",
+        border = NA)
+# Redo to be on top
+points(to_plot$quantity,
+       to_plot$median,
+       type = "o",
+       pch = 16)
+abline(h = 0.4, col = "darkred", lty = 2)
+abline(h = 0.8, col = "darkgreen", lty = 2)
+add_minor_tickmarks(y_tick_by = 1)
+
+mtext("A. Petrale Sole using equal-tailed intervals",
+      side = 3,
+      adj = 0,
+      cex = 0.7,
+      line = 0.3)
+
+plot(to_plot$quantity,
+     to_plot$median,
+     type = "o",
+     pch = 16,
+     xlab = "Year",
+     ylab = "Relative spawning biomass",
+     ylim = c(0, 4))
+
+polygon(x = c(to_plot$quantity,
+              rev(to_plot$quantity)),
+        y = c(to_plot$hdi_lower,
+              rev(to_plot$hdi_upper)),
+        col = "lightblue",
+        border = NA)
+# Redo to be on top
+points(to_plot$quantity,
+       to_plot$median,
+       type = "o",
+       pch = 16)
+abline(h = 0.4, col = "darkred", lty = 2)
+abline(h = 0.8, col = "darkgreen", lty = 2)
+add_minor_tickmarks(y_tick_by = 1)
+
+mtext("B. Petrale Sole using highest density intervals",
+      side = 3,
+      adj = 0,
+      cex = 0.7,
+      line = 0.3)
+
+dev.off()
+```
 
 ## Pacific Cod
 
@@ -357,6 +504,100 @@ plot(res_all_years_cod_biomass,
      y_tick_by = 10)
 ```
 
+```{r, codpdfs, echo = FALSE}
+# Create pdfs for cod results, based on figure-2.R code.
+# Just recruitment:
+pdf(file = "figure-cod-recruitment.pdf",
+    height = pdf_height/2,
+    width = pdf_width,
+    paper = "special")
+
+par(mai = c(0.32, 0.3, 0.15, 0.12),
+    # mfrow = c(2,1),
+    mgp = c(1.6,0.5,0),
+    cex = 0.6)
+
+plot(res_all_years_cod_rec,
+     xlab = "Year",
+     ylab = "Recruitment (millions of fish)",
+     ylim = c(0, 160),
+     y_tick_by = 10,
+     add_line = 0,
+     add_line_col = "grey",
+     add_line_lty = 1)
+
+mtext("Pacific Cod recruitment",
+      side = 3,
+      adj = 0,
+      cex = 0.7,
+      line = 0.3)
+dev.off()
+
+# Relative spawning biomass and two reference points:
+pdf(file = "figure-cod-relative-biomss.pdf",
+    height = pdf_height,
+    width = pdf_width,
+    paper="special")
+
+par(mai = c(0.32, 0.3, 0.15, 0.12),
+    mfrow = c(2,1),
+    mgp = c(1.6,0.5,0),
+    cex = 0.6)
+
+plot(res_all_years_rel_usr,
+     xlab = "Year",
+     ylab = "Spawning biomass relative to USR",
+     ylim = c(0, 3.25),
+     y_tick_by = 0.25,
+     add_line = 1,
+     add_line_col = "darkgreen")
+
+mtext("A. Pacific Cod spawning biomass relative to upper stock reference point",
+      side = 3,
+      adj = 0,
+      cex = 0.7,
+      line = 0.3)
+
+plot(res_all_years_rel_lrp,
+     xlab = "Year",
+     ylab = "Spawning biomass relative to LRP",
+     ylim = c(0, 12),
+     y_tick_by = 0.5,
+     add_line = 1,
+     add_line_col = "darkred")
+
+mtext("B. Pacific Cod spawning biomass relative to lower stock reference point",
+      side = 3,
+      adj = 0,
+      cex = 0.7,
+      line = 0.3)
+
+dev.off()
+
+# Absolute spawning biomass
+pdf(file = "figure-cod-spawning-biomass.pdf",
+    height = pdf_height/2,
+    width = pdf_width,
+    paper = "special")
+
+par(mai = c(0.32, 0.3, 0.15, 0.12),
+    # mfrow = c(2,1),
+    mgp = c(1.6,0.5,0),
+    cex = 0.6)
+
+plot(res_all_years_cod_biomass,
+     xlab = "Year",
+     ylab = "Spawning biomass (1000 t)",
+     ylim = c(0, 200),
+     y_tick_by = 10)
+
+mtext("Pacific Cod absolute spawning biomass",
+      side = 3,
+      adj = 0,
+      cex = 0.7,
+      line = 0.3)
+dev.off()
+```
 
 ## Session information
 
