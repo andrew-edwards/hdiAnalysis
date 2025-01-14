@@ -78,7 +78,7 @@ Across all five Pacific Herring major stocks
 the difference totals over 4.6 billion fish (using code in results/report-herring.Rmd). The area covered by these stocks is
 smaller than the area inhabited by Pacific Hake, and given also that herring
 recruitment is measured in terms of age-2 fish, this is a noteworthy reduction
-in the perception of uncertainty of herring recruitment.
+in the characterization of uncertainty of herring recruitment.
 
 ### Relative spawning biomass
 
@@ -271,10 +271,9 @@ abline(h = 0.4, col = "darkred", lty = 2)
 abline(h = 0.8, col = "darkgreen", lty = 2)
 add_minor_tickmarks(y_tick_by = 1)
 ```
-In the 1970s the median is in the critical zone (below 0.4) but the intervals
-extend into the healthy zone (above 0.8), but somewhat less so when using HDIs
-compared to the ETIs. From 2014 to 2019 the ETIs are almost fully in the healthy
-zone, but the HDI extend somehat into it, giving a less healthy perception of
+In the 1960s the medians are in the critical zone (below 0.4) yet the ETIs
+extend way into the healthy zone (above 0.8), but somewhat less far when using HDIs. From 2014 to 2019 the ETIs are almost fully in the healthy
+zone (above 0.8), but the HDIs extend below 0.8, giving a less healthy perception of
 stock recovery.
 
 ```{r, petralepdfs, echo = FALSE}
@@ -382,7 +381,12 @@ dev.off()
 Using results for Area 3CD from Fisheries and Ocean Canada's [Status update of
 Pacific Cod (*Gadus Macrocephalus*) off the west coast of Vancouver Island in
 2023](https://publications.gc.ca/collections/collection_2024/mpo-dfo/fs70-7/Fs70-7-2024-003-eng.pdf),
-with MCMC results provided by Robyn Forrest.
+with MCMC results provided by Robyn Forrest. A Bayesian delay-difference model was fit to survey
+indices, commercial catch-per-unit-effort indices, commercial catch data, and a
+commercial mean weight index. Results from seven models (with slightly different
+parameter settings) were combined, with each model
+contributing 1,000 MCMC samples to the resulting model-averaged posteriors,
+yielding 7,000 MCMC samples for providing advice to managers.
 
 ### Recruitment
 
@@ -427,6 +431,13 @@ so smaller than for hake, as expected due to the smaller stock size.
 
 ### Spawning biomass relative to reference points
 
+The upper stock reference point is the mean of the biomass estimates from
+1956–2004, and the lower reference point is the lowest estimated biomass agreed
+upon as an undesirable state to be avoided, defined as the estimated biomass in
+1986 for this stock. The biomass needs to be scaled by each reference point for
+every MCMC sample. Due to the different scales of the reference points, the calculations
+and resulting plots need to be done separately.
+
 Relative to the upper stock reference point, above which the stock is considered
 to be healthy, the intervals of relative biomass for all years are calculated with:
 ```{r calcusr}
@@ -457,8 +468,8 @@ dplyr::filter(res_all_years_rel_usr$intervals_all,
               eti_upper > 1,
               hdi_upper < 1)
 ```
-So in the case the perception of stock status does not really change when using
-HDI instead of ETI, presumably because the distributions look somewhat symmetric
+So in this case the perception of stock status does not really change when using
+HDIs instead of ETIs, presumably because the distributions look somewhat symmetric
 (at least the median is roughly in the middle of the intervals).
 
 Relative to the lower reference point, below which the stock is considered
@@ -534,7 +545,7 @@ mtext("Pacific Cod recruitment",
 dev.off()
 
 # Relative spawning biomass and two reference points:
-pdf(file = "figure-cod-relative-biomss.pdf",
+pdf(file = "figure-cod-relative-biomass.pdf",
     height = pdf_height,
     width = pdf_width,
     paper="special")
