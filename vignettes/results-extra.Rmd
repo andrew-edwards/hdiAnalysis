@@ -498,7 +498,7 @@ Multimodal distributions of MCMC output can occur from the underlying
 stochasticity of MCMC results, and also from ensemble approaches whereby results
 from multiple models are combined to provide model-averaged result. To
 investigate the associated intervals, we first create a
-simple bimodal distribution of simulated data and calculate the a `quasi-HDI' using the moving-window approach:
+simple bimodal distribution of simulated data and calculate an HDI using the moving-window approach:
 
 ```{r bimodal}
 set.seed(42)
@@ -517,34 +517,88 @@ summary_table(bimodal_res)
 
 ```{r bimodalfigs}
 # Equal-tailed interval:
-
 plot(bimodal_res,
      type = "eti",
      xlim = c(0, 70),
-     ylim = c(0, 0.08),
+     ylim = c(0, 0.1),
      interval_arrows = TRUE,
      xlab = "Simulated data",
-     y_arrow = 0.078,
+     y_arrow = 0.09,
      y_minor_ticks_by = 0.01,
-     arrowhead_gap = 0.05)
+     arrowhead_gap = 0.05,
+     show_a_b = FALSE)
 
 # Highest density interval using moving-window approach
 plot(bimodal_res,
      type = "hdi",
      xlim = c(0, 70),
-     ylim = c(0, 0.08),
+     ylim = c(0, 0.1),
      interval_arrows = TRUE,
      xlab = "Simulated data",
-     y_arrow = 0.078,
+     y_arrow = 0.09,
      y_minor_ticks_by = 0.01,
      arrowhead_gap = 0.05)
 ```
 
 As can be seen in this example, there is a region (around 17) within the HDI but
-with a low density (hence we call it a quasi-HDI), and the difference between the densities at the endpoints of
+with a low density, and the difference between the densities at the endpoints of
 the interval is quite different (though still less so than for the ETI). Thus, this is not strictly an HDI, but is still a valid credible
 interval. This is using the default
-moving-window approach.
+moving-window approach. (Code to create the figure for the Supplementary
+Material is next in this .Rmd but not shown in the rendered .html file).
+
+```{r, figurebimodal, echo = FALSE}
+# Create pdf for bimodal distribution
+pdf_height = 4
+pdf_width = 114/25.4
+
+pdf(file = "figure-bimodal.pdf",
+    height = pdf_height,
+    width = pdf_width,
+    paper="special")
+
+par(mai = c(0.32, 0.3, 0.15, 0.12),
+    mfrow = c(2,1),
+    mgp = c(1.6,0.5,0),
+    cex = 0.6)
+
+# ETI:
+plot(bimodal_res,
+     type = "eti",
+     xlim = c(0, 70),
+     ylim = c(0, 0.1),
+     interval_arrows = TRUE,
+     xlab = "Simulated data",
+     y_arrow = 0.09,
+     y_minor_ticks_by = 0.01,
+     arrowhead_gap = 0.05,
+     show_a_b = FALSE)
+mtext("A. Equal-tailed interval",
+      side = 3,
+      adj = 0,
+      cex = 0.7,
+      line = 0.3)
+
+# HDI using moving-window approach
+plot(bimodal_res,
+     type = "hdi",
+     xlim = c(0, 70),
+     ylim = c(0, 0.1),
+     interval_arrows = TRUE,
+     xlab = "Simulated data",
+     y_arrow = 0.09,
+     y_minor_ticks_by = 0.01,
+     arrowhead_gap = 0.05)
+
+mtext("B. Highest density interval",
+      side = 3,
+      adj = 0,
+      cex = 0.7,
+      line = 0.3)
+
+dev.off()
+```
+
 
 To obtain disjoint intervals (and therefore highest density regions, not intervals) requires
 using the density approach. This can be done using the original
@@ -613,7 +667,8 @@ For stock assessments, it is unlikely
 to be helpful to report such disjoint intervals for giving advice, and so we would
 not recommend using them. Furthermore, in the simulations above we found the
 density approach to not be accurate (for the sample size we tested). Therefore we
-recommend investigating the use of quasi-HDIs or ETIs. TODO mention cod if include.
+recommend investigating the use of HDIs or ETIs, noting that such HDIs are
+still valid credible intervals and will be shorter than the corresponding ETIs.
 
 ## Session information
 
