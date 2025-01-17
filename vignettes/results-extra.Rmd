@@ -34,6 +34,8 @@ vignette for our [hdiAnalysis R package](https://github.com/andrew-edwards/hdiAn
  (specifically all years of recruitment shown in Figure 2A).
 - details of plotting Fig. S.1, demonstrating of how ranges a and b (Fig. 1B)
   and ranges c and d are defined
+- exploration of differences between ETIs and HDIs for hake TODO when using 90%,
+  80%, 66% and 50% credible intervals (95% was used for the main results).
 - calculation on a longer MCMC chain for the hake assessment results.
 - exporation of additional options for calculating HDIs, based on the kernel
 density estimate of the MCMC sample.
@@ -141,6 +143,331 @@ Bayesian Data Analysis: A Tutorial with R, JAGS, and Stan. 2nd Edition).
 
 The above plot settings are incorporated into our function `figure_s1()` for
 reproducing Fig. S1.
+
+## Exploration of alternative levels of confidence
+
+Here we repeat Fig.TODO for TODO (depends on whether go with recruitment or rel
+biomass) but for alternative levels of confidence to the 95% used in the hake
+assessment. We repeat Fig. 2B using 90%, 80%, 66% and 50% credible intervals.
+
+```{r relbiomassalt}
+res_all_years_rec_95 <- res_all_years
+
+res_all_years_rec_90 <- create_intervals(dplyr::select(hake_recruitment_mcmc,
+                                                       -"Virgin"),
+                                         credibility = 0.90)
+
+res_all_years_rec_80 <- create_intervals(dplyr::select(hake_recruitment_mcmc,
+                                                       -"Virgin"),
+                                         credibility = 0.80)
+
+res_all_years_rec_66 <- create_intervals(dplyr::select(hake_recruitment_mcmc,
+                                                       -"Virgin"),
+                                         credibility = 0.66)
+
+res_all_years_rec_50 <- create_intervals(dplyr::select(hake_recruitment_mcmc,
+                                                       -"Virgin"),
+                                         credibility = 0.50)
+
+res_all_years_rel_biomass_95 <- create_intervals(hake_relative_biomass_mcmc,
+                                                 credibility = 0.95)
+
+res_all_years_rel_biomass_90 <- create_intervals(hake_relative_biomass_mcmc,
+                                                 credibility = 0.90)
+
+res_all_years_rel_biomass_80 <- create_intervals(hake_relative_biomass_mcmc,
+                                                 credibility = 0.80)
+
+res_all_years_rel_biomass_66 <- create_intervals(hake_relative_biomass_mcmc,
+                                                 credibility = 0.66)
+
+res_all_years_rel_biomass_50 <- create_intervals(hake_relative_biomass_mcmc,
+                                                 credibility = 0.50)
+```
+
+The figures for each credibility in turn are (plotting code is hidden) for
+recruitments, including the 95% plot from Fig. 2A):
+```{r recruitmentcredsplot, echo = FALSE, fig.height = 20}
+par(mfrow = c(5, 1))
+plot(res_all_years_rec_95,
+     ylim = c(0, 32),
+     xlab = "Year",
+     ylab = "Recruitment (billions of fish)")
+mtext("Credibility = 95%",
+      side = 3,
+      adj = 0,
+      cex = 0.7,
+      line = 0.3)
+
+plot(res_all_years_rec_90,
+     ylim = c(0, 32),
+     xlab = "Year",
+     ylab = "Recruitment (billions of fish)")
+mtext("Credibility = 90%",
+      side = 3,
+      adj = 0,
+      cex = 0.7,
+      line = 0.3)
+
+plot(res_all_years_rec_80,
+     ylim = c(0, 32),
+     xlab = "Year",
+     ylab = "Recruitment (billions of fish)")
+mtext("Credibility = 80%",
+      side = 3,
+      adj = 0,
+      cex = 0.7,
+      line = 0.3)
+
+plot(res_all_years_rec_66,
+     ylim = c(0, 32),
+     xlab = "Year",
+     ylab = "Recruitment (billions of fish)")
+mtext("Credibility = 66%",
+      side = 3,
+      adj = 0,
+      cex = 0.7,
+      line = 0.3)
+
+plot(res_all_years_rec_50,
+     ylim = c(0, 32),
+     xlab = "Year",
+     ylab = "Recruitment (billions of fish)")
+mtext("Credibility = 50%",
+      side = 3,
+      adj = 0,
+      cex = 0.7,
+      line = 0.3)
+```
+
+And for relative spawning biomass:
+```{r relbiomasscredsplot, echo = FALSE, fig.height = 20}
+par(mfrow = c(5, 1))
+plot(res_all_years_rel_biomass_95,
+     xlim = c(2010, 2027),
+     ylim = c(0, 2.6),
+     add_line_at_0.4 = TRUE,
+     inc = 0.05,
+     leg_loc = "topleft",
+     xlab = "Year",
+     ylab = "Relative spawning biomass")
+mtext("Credibility = 95%",
+      side = 3,
+      adj = 0,
+      cex = 0.7,
+      line = 0.3)
+
+plot(res_all_years_rel_biomass_90,
+     xlim = c(2010, 2027),
+     ylim = c(0, 2.6),
+     add_line_at_0.4 = TRUE,
+     inc = 0.05,
+     leg_loc = "topleft",
+     xlab = "Year",
+     ylab = "Relative spawning biomass")
+mtext("Credibility = 90%",
+      side = 3,
+      adj = 0,
+      cex = 0.7,
+      line = 0.3)
+
+plot(res_all_years_rel_biomass_80,
+     xlim = c(2010, 2027),
+     ylim = c(0, 2.6),
+     add_line_at_0.4 = TRUE,
+     inc = 0.05,
+     leg_loc = "topleft",
+     xlab = "Year",
+     ylab = "Relative spawning biomass")
+mtext("Credibility = 80%",
+      side = 3,
+      adj = 0,
+      cex = 0.7,
+      line = 0.3)
+
+plot(res_all_years_rel_biomass_66,
+     xlim = c(2010, 2027),
+     ylim = c(0, 2.6),
+     add_line_at_0.4 = TRUE,
+     inc = 0.05,
+     leg_loc = "topleft",
+     xlab = "Year",
+     ylab = "Relative spawning biomass")
+mtext("Credibility = 66%",
+      side = 3,
+      adj = 0,
+      cex = 0.7,
+      line = 0.3)
+
+plot(res_all_years_rel_biomass_50,
+     xlim = c(2010, 2027),
+     ylim = c(0, 2.6),
+     add_line_at_0.4 = TRUE,
+     inc = 0.05,
+     leg_loc = "topleft",
+     xlab = "Year",
+     ylab = "Relative spawning biomass")
+mtext("Credibility = 50%",
+      side = 3,
+      adj = 0,
+      cex = 0.7,
+      line = 0.3)
+```
+
+TODO comment.
+
+```{r, reccredspdfs, echo = FALSE}
+# Create pdf for recruitment plots, copying the above code to here:
+pdf_height = 8
+pdf_width = 114/25.4
+
+pdf(file = "figure-recruitment-credibilities.pdf",
+    height = pdf_height,
+    width = pdf_width,
+    paper="special")
+
+par(mai = c(0.32, 0.35, 0.15, 0.12),
+    mfrow = c(5,1),
+    mgp = c(1.6,0.5,0),
+    cex = 0.6)
+
+plot(res_all_years_rec_95,
+     ylim = c(0, 32),
+     xlab = "Year",
+     ylab = "Recruitment (billions of fish)")
+mtext("Credibility = 95%",
+      side = 3,
+      adj = 0,
+      cex = 0.7,
+      line = 0.3)
+
+plot(res_all_years_rec_90,
+     ylim = c(0, 32),
+     xlab = "Year",
+     ylab = "Recruitment (billions of fish)")
+mtext("Credibility = 90%",
+      side = 3,
+      adj = 0,
+      cex = 0.7,
+      line = 0.3)
+
+plot(res_all_years_rec_80,
+     ylim = c(0, 32),
+     xlab = "Year",
+     ylab = "Recruitment (billions of fish)")
+mtext("Credibility = 80%",
+      side = 3,
+      adj = 0,
+      cex = 0.7,
+      line = 0.3)
+
+plot(res_all_years_rec_66,
+     ylim = c(0, 32),
+     xlab = "Year",
+     ylab = "Recruitment (billions of fish)")
+mtext("Credibility = 66%",
+      side = 3,
+      adj = 0,
+      cex = 0.7,
+      line = 0.3)
+
+plot(res_all_years_rec_50,
+     ylim = c(0, 32),
+     xlab = "Year",
+     ylab = "Recruitment (billions of fish)")
+mtext("Credibility = 50%",
+      side = 3,
+      adj = 0,
+      cex = 0.7,
+      line = 0.3)
+
+dev.off()
+```
+
+```{r, relbiomasscredspdfs, echo = FALSE}
+# Create pdf for relative biomass plots, copying the above code to here:
+pdf(file = "figure-relative-biomass-credibilities.pdf",
+    height = pdf_height,
+    width = pdf_width,
+    paper="special")
+
+par(mai = c(0.32, 0.35, 0.15, 0.12),
+    mfrow = c(5,1),
+    mgp = c(1.6,0.5,0),
+    cex = 0.6)
+
+plot(res_all_years_rel_biomass_95,
+     xlim = c(2010, 2027),
+     ylim = c(0, 2.6),
+     add_line_at_0.4 = TRUE,
+     inc = 0.05,
+     leg_loc = "topleft",
+     xlab = "Year",
+     ylab = "Relative spawning biomass")
+mtext("Credibility = 95%",
+      side = 3,
+      adj = 0,
+      cex = 0.7,
+      line = 0.3)
+
+plot(res_all_years_rel_biomass_90,
+     xlim = c(2010, 2027),
+     ylim = c(0, 2.6),
+     add_line_at_0.4 = TRUE,
+     inc = 0.05,
+     leg_loc = "topleft",
+     xlab = "Year",
+     ylab = "Relative spawning biomass")
+mtext("Credibility = 90%",
+      side = 3,
+      adj = 0,
+      cex = 0.7,
+      line = 0.3)
+
+plot(res_all_years_rel_biomass_80,
+     xlim = c(2010, 2027),
+     ylim = c(0, 2.6),
+     add_line_at_0.4 = TRUE,
+     inc = 0.05,
+     leg_loc = "topleft",
+     xlab = "Year",
+     ylab = "Relative spawning biomass")
+mtext("Credibility = 80%",
+      side = 3,
+      adj = 0,
+      cex = 0.7,
+      line = 0.3)
+
+plot(res_all_years_rel_biomass_66,
+     xlim = c(2010, 2027),
+     ylim = c(0, 2.6),
+     add_line_at_0.4 = TRUE,
+     inc = 0.05,
+     leg_loc = "topleft",
+     xlab = "Year",
+     ylab = "Relative spawning biomass")
+mtext("Credibility = 66%",
+      side = 3,
+      adj = 0,
+      cex = 0.7,
+      line = 0.3)
+
+plot(res_all_years_rel_biomass_50,
+     xlim = c(2010, 2027),
+     ylim = c(0, 2.6),
+     add_line_at_0.4 = TRUE,
+     inc = 0.05,
+     leg_loc = "topleft",
+     xlab = "Year",
+     ylab = "Relative spawning biomass")
+mtext("Credibility = 50%",
+      side = 3,
+      adj = 0,
+      cex = 0.7,
+      line = 0.3)
+dev.off()
+```
+
 
 ## Longer chain of 32,000 MCMC samples for hake recruitment in 2021
 
