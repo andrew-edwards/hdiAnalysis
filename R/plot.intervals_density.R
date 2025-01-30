@@ -145,6 +145,7 @@ plot.intervals_density <- function(ints_dens,
        main = "",
        col = NULL,
        zero.line = FALSE,
+       ylab = "Probability density",
        # las = 1,
        ...)
 
