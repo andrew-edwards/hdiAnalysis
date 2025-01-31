@@ -13,7 +13,7 @@ Authors@R: c(
 URL: https://github.com/andrew-edwards/HDIanalysis
 BugReports: https://github.com/andrew-edwards/HDIanalysis/issues
 Maintainer: Andrew Edwards <andrew.edwards@dfo-mpo.gc.ca>
-Date: 2024-09-05
+Date: 2025-01-30
 Description: This package provides functionality to calculate, understand, and plot highest density intervals. In our manuscript 'Reducing uncertainty in stock assessments by billions of fish' we show that using highest density intervals to characterise uncertainty is preferable to using the usual equal-tailed intervals. This was for a specific fisheries stock assessment, but the lessons are more generally applicable. See the manuscript and GitHub site (particularly vignettes) for details.
 License: MIT + file LICENSE
 Encoding: UTF-8
