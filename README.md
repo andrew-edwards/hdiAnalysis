@@ -24,42 +24,49 @@ An R package for calculating and plotting highest density intervals
 
 This package accompanies the manuscript:
 
-*Using highest density intervals can reduce uncertainty in stock
-assessments by billions of fish*
+*Using highest density intervals can reduce perceived uncertainty in
+stock assessments by billions of fish*
 
 by Andrew M. Edwards and Marie Auger-Méthé, being submitted to
 *Fisheries Research*.
 
 In the manuscript (available upon request) we show that using highest
-density intervals (HDIs) to characterise uncertainty is preferable to
-using the usual equal-tailed intervals. The HDIs are shorter (less
-uncertainty) and also lead to unanticipated conservation implications in
-our example application.
+density intervals (HDIs) to characterise uncertainty can be preferable
+to using the usual equal-tailed intervals. The HDIs are shorter (less
+uncertainty) and can also lead to unanticipated conservation
+implications by changing perceptions of stock status.
 
 This package provides functionality to calculate, understand, and plot
 highest density intervals. The manuscript should be read first to
-understand the potential of the package. Two rendered vignettes are
+understand the potential of the package. Three rendered vignettes are
 designed to help users investigate highest density intervals for their
 own applications. The vignettes include examples of our simple plotting
 functions to help understand and check calculated HDIs, plus code to
 streamline the calculation of HDIs for time series of (Markov chain
 Monte Carlo) MCMC values and to produce simple summary tables of
-results.
+results. All results in the manuscript are reproducible in the
+vignettes.
 
-The two vignettes are rendered and viewable on the GitHub site, and are:
+The three vignettes are rendered and viewable on the GitHub site, and
+are:
 
 -   [results.html](http://htmlpreview.github.io/?https://github.com/andrew-edwards/hdiAnalysis/blob/main/vignettes/results.html)
     – Designed as a template for users to analyse their own data, by
-    reproducing the results in the manuscript as an example.
+    reproducing the main Pacific Hake results in the manuscript as an
+    example.
 -   [results-extra.html](http://htmlpreview.github.io/?https://github.com/andrew-edwards/hdiAnalysis/blob/main/vignettes/results-extra.html)
     – Includes further results, calculations, explanations, and figure
     options.
+-   [results-herring-petrale-cod.html](http://htmlpreview.github.io/?https://github.com/andrew-edwards/hdiAnalysis/blob/main/vignettes/results-herring-petrale-cod.html)
+    – Calculations for three further stocks, Pacific Herring, Petrale
+    Sole, and Pacific Cod.
 
 To run and adapt the code yourself, simply download the raw R Markdown
 files from
-[results.Rmd](https://github.com/andrew-edwards/hdiAnalysis/blob/main/vignettes/results.Rmd)
+[results.Rmd](https://github.com/andrew-edwards/hdiAnalysis/blob/main/vignettes/results.Rmd),
+[results-extra.Rmd](https://github.com/andrew-edwards/hdiAnalysis/blob/main/vignettes/results-extra.Rmd),
 or
-[results-extra.Rmd](https://github.com/andrew-edwards/hdiAnalysis/blob/main/vignettes/results-extra.Rmd).
+[results-herring-petrale-cod.Rmd](https://github.com/andrew-edwards/hdiAnalysis/blob/main/vignettes/results-herring-petrale-cod.Rmd).
 Run the file locally, and then adapt it for your own data.
 
 ## Installation
