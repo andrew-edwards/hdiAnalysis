@@ -90,6 +90,27 @@ and then try and install again. If you get a different error then post
 an Issue or contact
 <a href="mailto:andrew.edwards@dfo-mpo.gc.ca">Andy</a> for help.
 
+## Citation
+
+If you use `hdiAnalysis` in your work then please cite the manuscript,
+and also the package as:
+
+Edwards, A.M. and Auger-Méthé, M. (2025). hdiAnalysis: An R package for
+calculating and plotting highest density intervals. R package version
+1.0.0, <https://github.com/andrew-edwards/HDIanalysis>.
+
+This will give us motivation for updating and maintaining it in the
+future. `citation("hdiAnalysis")` to get a version for LaTeX and R
+Markdown bibliographies. We will add a DOI if the manuscript is
+accepted.
+<!-- Although the DOI badge at the top of this page ends in ...805,
+the ...804 DOI is preferable because that will not change with any future
+updates to the GitHub tag. So ...804 seems simpler and more consistent to use -->
+<!-- (thanks!). -->
+
+Also let us know of any applications. This will help us devote effort
+into maintaining `hdiAnalysis`.
+
 The `report` folder contains early exploratory investigations and
 analyses for other examples not included in the manuscript, and are not
 intended for packages users (all the data are not pushed to GitHub so
