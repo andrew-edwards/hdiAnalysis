@@ -38,7 +38,7 @@ vignette for our [hdiAnalysis R package](https://github.com/andrew-edwards/hdiAn
   recruitment when using 90%,
   80%, 66% and 50% credible intervals (95% was used for the main results).
 - calculation on a longer MCMC chain for the hake assessment results.
-- exporation of additional options for calculating HDIs, based on the kernel
+- exploration of additional options for calculating HDIs, based on the kernel
 density estimate of the MCMC sample.
 - session information (documenting R and package version numbers).
 
@@ -144,6 +144,30 @@ Bayesian Data Analysis: A Tutorial with R, JAGS, and Stan. 2nd Edition).
 
 The above plot settings are incorporated into our function `figure_s1()` for
 reproducing Fig. S1.
+
+## Calculations of probability density
+
+Here are the calculations for the numbers on page 23 of the Supplementary
+Material, regarding comparing probabilities of 'about' 4 billion fish with
+'about' 20 billion fish and 'about' 30 billion fish (see text for details).
+
+Defining 'about' as +/- 0.5, using our integration function:
+```{r probdens1}
+integrate_simpsons(res_vec$density, domain = c(3.5, 4.5))
+
+integrate_simpsons(res_vec$density, domain = c(19.5, 20.5))
+
+integrate_simpsons(res_vec$density, domain = c(29.5, 30.5))
+```
+
+And defining 'about' as +/- 5%:
+```{r probdens2}
+integrate_simpsons(res_vec$density, domain = c(3.8, 4.2))
+
+integrate_simpsons(res_vec$density, domain = c(19, 21))
+
+integrate_simpsons(res_vec$density, domain = c(28.5, 31.5))
+```
 
 ## Exploration of alternative levels of confidence
 

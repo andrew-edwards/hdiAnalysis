@@ -25,10 +25,10 @@ An R package for calculating and plotting highest density intervals
 This package accompanies the manuscript:
 
 *Using highest density intervals can reduce perceived uncertainty in
-stock assessments by billions of fish*
+stock assessments*
 
-by Andrew M. Edwards and Marie Auger-Méthé, being submitted to
-*Fisheries Research*.
+by Andrew M. Edwards and Marie Auger-Méthé, submitted to *Fisheries
+Research*.
 
 In the manuscript (available upon request) we show that using highest
 density intervals (HDIs) to characterise uncertainty can be preferable
