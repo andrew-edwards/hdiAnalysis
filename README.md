@@ -17,6 +17,7 @@ save figures.
 [![R-CMD-check](https://github.com/andrew-edwards/hdiAnalysis/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/andrew-edwards/hdiAnalysis/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/andrew-edwards/hdiAnalysis/branch/main/graph/badge.svg)](https://app.codecov.io/gh/andrew-edwards/hdiAnalysis?branch=main)
+[![DOI](https://zenodo.org/badge/781686083.svg)](https://doi.org/10.5281/zenodo.14969069)
 ![Visitors](https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fgithub.com%2Fandrew-edwards%2FhdiAnalysis&label=VISITORS&countColor=%23263759&style=flat&labelStyle=lower)
 <!-- badges: end -->
 
