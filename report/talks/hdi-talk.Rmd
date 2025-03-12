@@ -1,5 +1,5 @@
 ---
-title: "Using highest density intervals can reduce uncertainty in stock assessments by billions of fish"
+title: "Using highest density intervals can reduce perceived uncertainty in stock assessments by billions of fish"
 author: "Andrew Edwards and Marie Auger-Méthé"
 output:
   beamer_presentation:
@@ -38,15 +38,11 @@ rmarkdown::render("hdi-talk.Rmd")
 
 or click the knit button in RStudio
 
+Saving as .pdf for specific talks.
+
 Note the first slide below creates the title slide (on page 2), from a
-   powerpoint slide saved as .png.
+   powerpoint slide saved as .png (not yet).
 
-See the long_talk = FALSE and other options in first chunk.
-
-When talk is finished save the .pdf with a new name
-(e.g. pacea-release-talk-dfo.pdf, pacea-release-talk-uvic.pdf) and commit the
-.pdf, so we can just keep the single set of .Rmd code. Also link the pdf talk
-from README.Rmd.
 -->
 
 <!-- trying different themes from https://mpetroff.net/files/beamer-theme-matrix/
@@ -155,6 +151,30 @@ rec_2021[1:20]
 
 ```{r calc, echo = FALSE}
 res_vec <- create_intervals(rec_2021)
+
+set.seed(42)
+vec_sub <- sample(rec_2021, 200)    # then can easily see the 5 at each end
+res_sub <- create_intervals(vec_sub)
+```
+
+## Equal-tailed intervals -- usual approach
+
+```{r eti1d, echo = FALSE}
+plot_pointwise_intervals(vec_sub,
+                         res_sub,
+                         jitter_amount = 0.0001,
+                         xlim = c(0, 42),
+                         xlab = "Recruitment (billions of fish)")
+```
+
+## Equal-tailed intervals -- usual approach
+
+```{r eti1d2, echo = FALSE}
+plot_pointwise_intervals(rec_2021,
+                         res_vec,
+                         jitter_amount = 0.01,
+                         xlim = c(0, 42),
+                         xlab = "Recruitment (billions of fish)")
 ```
 
 ## Equal-tailed intervals -- usual approach
@@ -310,6 +330,8 @@ plot(res_vec,
      arrowhead_gap = 0.1)
 ```
 
+
+
 # ETI & HDI
 
 ## Comparing ETI and HDI
@@ -402,6 +424,131 @@ plot(res_all_years_3,
      ylab = "Relative spawning biomass")
 ```
 
+# Moving window
+
+## Highest density interval (HDI) -- moving window approach
+
+```{r hdimw2, echo = FALSE}
+plot_pointwise_intervals(vec_sub,
+                         res_sub,
+                         jitter_amount = 0.0001,
+                         xlim = c(0, 42),
+                         xlab = "Recruitment (billions of fish)",
+                         type = "moving_window",
+                         moving_window_start = 2)
+```
+
+## Highest density interval (HDI) -- moving window approach
+
+```{r hdimw3, echo = FALSE}
+plot_pointwise_intervals(vec_sub,
+                         res_sub,
+                         jitter_amount = 0.0001,
+                         xlim = c(0, 42),
+                         xlab = "Recruitment (billions of fish)",
+                         type = "moving_window",
+                         moving_window_start = 3)
+```
+
+## Highest density interval (HDI) -- moving window approach
+
+```{r hdimw4, echo = FALSE}
+plot_pointwise_intervals(vec_sub,
+                         res_sub,
+                         jitter_amount = 0.0001,
+                         xlim = c(0, 42),
+                         xlab = "Recruitment (billions of fish)",
+                         type = "moving_window",
+                         moving_window_start = 4)
+```
+
+## Highest density interval (HDI) -- moving window approach
+
+```{r hdimw5, echo = FALSE}
+plot_pointwise_intervals(vec_sub,
+                         res_sub,
+                         jitter_amount = 0.0001,
+                         xlim = c(0, 42),
+                         xlab = "Recruitment (billions of fish)",
+                         type = "moving_window",
+                         moving_window_start = 5)
+```
+
+## Highest density interval (HDI) -- moving window approach
+
+```{r hdimw6, echo = FALSE}
+plot_pointwise_intervals(vec_sub,
+                         res_sub,
+                         jitter_amount = 0.0001,
+                         xlim = c(0, 42),
+                         xlab = "Recruitment (billions of fish)",
+                         type = "moving_window",
+                         moving_window_start = 6)
+```
+
+## Highest density interval (HDI) -- moving window approach
+
+```{r hdimw7, echo = FALSE}
+plot_pointwise_intervals(vec_sub,
+                         res_sub,
+                         jitter_amount = 0.0001,
+                         xlim = c(0, 42),
+                         xlab = "Recruitment (billions of fish)",
+                         type = "moving_window",
+                         moving_window_start = 7)
+```
+
+## Highest density interval (HDI) -- moving window approach
+
+```{r hdimw8, echo = FALSE}
+plot_pointwise_intervals(vec_sub,
+                         res_sub,
+                         jitter_amount = 0.0001,
+                         xlim = c(0, 42),
+                         xlab = "Recruitment (billions of fish)",
+                         type = "moving_window",
+                         moving_window_start = 8)
+```
+
+## Highest density interval (HDI) -- moving window approach
+
+```{r hdimw9, echo = FALSE}
+plot_pointwise_intervals(vec_sub,
+                         res_sub,
+                         jitter_amount = 0.0001,
+                         xlim = c(0, 42),
+                         xlab = "Recruitment (billions of fish)",
+                         type = "moving_window",
+                         moving_window_start = 9)
+```
+
+## Highest density interval (HDI) -- moving window approach
+
+```{r hdimw10, echo = FALSE}
+plot_pointwise_intervals(vec_sub,
+                         res_sub,
+                         jitter_amount = 0.0001,
+                         xlim = c(0, 42),
+                         xlab = "Recruitment (billions of fish)",
+                         type = "moving_window",
+                         moving_window_start = 10)
+```
+
+## Highest density interval (HDI) -- alternative approach
+
+Horizontal line rising until area in blue is 95%. This is 95%:
+
+```{r hdi95repeated, echo = FALSE}
+plot(res_vec,
+     type = "hdi",
+     xlim = c(0, 40),
+     ylim = c(0, 0.11),
+     interval_arrows = TRUE,
+     xlab = "Recruitment (billions of age-0 fish)",
+     arrowhead_gap = 0.1)
+```
+
+
 # Summary
 
 ## Discussion
@@ -423,13 +570,15 @@ Advantages of HDIs over ETIs not investigated or discussed.
 
 In general, ETI previously recommended because:
 
+\medskip
+
 (i) it has a direct interpretation as the 2.5% and 97.5% percentiles.
 
-\vspace{0.7mm}
+\medskip
 
 (ii) it is invariant to nonlinear transformations of the data.
 
-\vspace{0.7mm}
+\medskip
 
 (iii) it is easier to compute.
 
@@ -437,13 +586,23 @@ In general, ETI previously recommended because:
 
 In general, ETI previously recommended because:
 
+\medskip
+
 (i) it has a direct interpretation as the 2.5% and 97.5% percentiles.
 
-**Yes, but simplicity had downsides as shown earlier**
+**Yes, but simplicity has downsides as shown earlier**
+
+\medskip
+
+\pause
 
 (ii) it is invariant to nonlinear transformations of the data.
 
 **Yes, but usually quantities are defined on the scale of interest**
+
+\medskip
+
+\pause
 
 (iii) it is easier to compute.
 

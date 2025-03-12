@@ -10,23 +10,12 @@
 ##' @author Andrew Edwards
 ##' @examples
 ##' \dontrun{
-##' TODO move into talk
-##' set.seed(42)
-##' vec_sub <- sample(vec, 200)    # then can easily see the 5 at each end
-##' res_sub <- create_intervals(vec_sub)
-##' plot_pointwise_intervals(vec_sub, res_sub, jitter_amount = 0.0001,
-##'   xlim = c(0, 42), xlab = "Recruitment (billions of fish)")
-##'
-##' # full amount
-##' plot_pointwise_intervals(vec, res_vec, jitter_amount = 0.01, xlim = c(0, 42), xlab = "Recruitment (billions of fish)")
+##' # see hdi-talk.Rmd
 ##' }
 plot_pointwise_intervals <- function(values,
                                      ints_dens,
-                                     type = "eti",   # type of plot to do
-                                     # subsample = 1000,  # doesn't give exact
-                                        # results since ETI is based on full
-                                        # sample, so don't make too small, so do
-                                     # outside of this
+                                     type = "eti",   # type of plot to do, can
+                                        # be "moving_window" also
                                      col_main = "blue",
                                      col_main_text = NULL,
                                      col_tail = "red",
@@ -36,6 +25,8 @@ plot_pointwise_intervals <- function(values,
                                      arrowhead_length = 0.2,
                                      y_lim = c(0.95, 1.05),
                                      y_arrow = 1.02,
+                                     moving_window_start = 2,  # index to start
+                                        # the interval
                                      ...){
   vals <- values
   n <- length(vals)
@@ -55,9 +46,16 @@ plot_pointwise_intervals <- function(values,
   if(type == "eti"){
     interval_low <- ints$eti_lower
     interval_high <- ints$eti_upper
-  } else { # type == "hdi"
-    interval_low <- ints$hdi_lower
-    interval_high <- ints$hdi_upper
+  } else {          # type == "moving_window"
+    interval_low <- sort(vals)[moving_window_start]  # first point in interval
+    points_in_interval <- credibility * n
+    interval_high <- sort(vals)[moving_window_start + points_in_interval - 1] # last
+                                        # point in interval
+
+    # Prob won't actually need the HDI for this plot, just show moving windows
+    #  as example.
+    # interval_low <- ints$hdi_lower
+    # interval_high <- ints$hdi_upper
   }
 
   red_points <- c(which(vals < interval_low),
@@ -126,7 +124,17 @@ plot_pointwise_intervals <- function(values,
     }
   }
 
-  mtext(paste0("Equal-tailed interval based on ", n, " samples"),
-        side = 3, adj = 0, cex = 1.5,
-        line = 0.3)
+  if(type == "eti"){
+    mtext(paste0("Equal-tailed interval based on ", n, " samples"),
+          side = 3, adj = 0, cex = 1.5,
+          line = 0.3)
+  }
+
+  if(type == "moving_window"){
+    mtext(paste0("Moving window interval starting with ordered sample ", moving_window_start),
+          side = 3, adj = 0, cex = 1.5,
+          line = 0.3)
+  }
+
+
 }
