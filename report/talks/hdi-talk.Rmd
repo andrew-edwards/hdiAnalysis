@@ -141,6 +141,12 @@ Regarding recent assessment results, a fisherman remarked:
 Highlights the need to investigate ways to reduce
 uncertainty as much as possible.
 
+## Outline
+
+```{r fishpics, echo=FALSE, out.width = "80%"}
+knitr::include_graphics(paste0(here::here(),
+                               "/report/talks/fish-pics.png"))
+```
 
 # ETI
 
@@ -900,7 +906,7 @@ In general, ETI previously recommended because:
 
 (iii) it is easier to compute.
 
-**Yes, but our new hdiAnalysis package helps, building upon HDInterval**
+**Yes, but our new hdiAnalysis package helps, building upon HDInterval package**
 
 Thus, we recommend investigating the use of HDIs in stock assessments.
 
@@ -910,9 +916,14 @@ Thus, we recommend investigating the use of HDIs in stock assessments.
 
 - consquences are stock-specific
 
+\pause
+
 - fundamentally, 95% HDI gives the `r colorize("95\\% most likely values")`
 rather than `r colorize("middle 95\\%")` from ETI
-- former seems intuitively desirable, as well as reducing perceived uncertainty
+
+- former seems intuitively desirable, as does reducing perceived uncertainty
+
+\pause
 
 - presenting HDIs or ETIs may come down to a case-specific
 choice
