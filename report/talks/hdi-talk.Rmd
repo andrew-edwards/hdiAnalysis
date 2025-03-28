@@ -74,8 +74,6 @@ orchid
 \Huge
 -->
 
-# Motivation
-
 ```{r, setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -109,6 +107,13 @@ colorize <- function(x, color = "red"){
   } else x
 }
 ```
+
+```{r coverpage, echo=FALSE, out.width = "100%"}
+knitr::include_graphics(paste0(here::here(),
+                               "/report/talks/hdi-title-slide-bio-2025.png"))
+```
+
+# Motivation
 
 ## Motivation
 
@@ -160,14 +165,18 @@ knitr::include_graphics(paste0(here::here(),
                                "report/talks/hake-25-fig-46.png"))
 ```
 
+## Using 2001 recruitment as example
 
-# temp
+- estimate of number of age-0 fish in 2001
+- based on the 8000 MCMC samples
 
 ```{r vector}
 length(rec_2021)
 summary(rec_2021)
 rec_2021[1:20]
 ```
+
+## Equal-tailed intervals for 2021 recruitment -- usual approach
 
 ```{r calc, echo = FALSE}
 res_vec <- create_intervals(rec_2021)
@@ -176,8 +185,6 @@ set.seed(42)
 vec_sub <- sample(rec_2021, 200)    # then can easily see the 5 at each end
 res_sub <- create_intervals(vec_sub)
 ```
-
-## Equal-tailed intervals for 2021 recruitment -- usual approach
 
 ```{r eti1d2, echo = FALSE}
 plot_pointwise_intervals(rec_2021,
