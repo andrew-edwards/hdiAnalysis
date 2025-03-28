@@ -129,6 +129,7 @@ Regarding recent assessment results, a fisherman remarked:
 
 \vspace{10mm}
 
+\centering
 *No offence to anyone, but my granddaughter could provide that amount of uncertainty.*
 
 \vspace{10mm}
@@ -136,12 +137,45 @@ Regarding recent assessment results, a fisherman remarked:
 Highlights the need to investigate ways to reduce
 uncertainty as much as possible.
 
+
+
+
+# temp
+Pacific Hake assessment from 2023, estimate the historical population size:
+```
+
+```{r hakeintro, echo = FALSE}
+# plot(hake_biomass,
+#     y_max = 3.5)
+```
+
+
+
+
 # ETI
 
-## Example model output
+## Example output from Pacific Hake stock assessment
 
-As example, using  hake Markov chain Monte Carlo (MCMC) recruitment
-values for 2021.
+- Biennial joint Canada/US coastwide survey (California to Haida Gwaii)
+
+- Statistical catch-at-age model conducted in a Bayesian setting
+
+\pause
+
+- Marginal posterior distributions for numerous quantities
+
+- Need to summarise these -- done using 95% credible intervals from  8000 Markov chain Monte Carlo samples
+
+
+## Example plot that contains 305 credible intervals
+
+```{r motivation, echo=FALSE, out.width = "80%"}
+knitr::include_graphics(paste0(here::here(),
+                               "report/talks/hake-25-fig-46.png"))
+```
+
+
+# temp
 
 ```{r vector}
 length(rec_2021)
@@ -157,17 +191,7 @@ vec_sub <- sample(rec_2021, 200)    # then can easily see the 5 at each end
 res_sub <- create_intervals(vec_sub)
 ```
 
-## Equal-tailed intervals -- usual approach
-
-```{r eti1d, echo = FALSE}
-plot_pointwise_intervals(vec_sub,
-                         res_sub,
-                         jitter_amount = 0.0001,
-                         xlim = c(0, 42),
-                         xlab = "Recruitment (billions of fish)")
-```
-
-## Equal-tailed intervals -- usual approach
+## Equal-tailed intervals for 2021 recruitment -- usual approach
 
 ```{r eti1d2, echo = FALSE}
 plot_pointwise_intervals(rec_2021,
@@ -426,6 +450,19 @@ plot(res_all_years_3,
 
 # Moving window
 
+## Equal-tailed intervals -- usual approach
+
+```{r eti1d, echo = FALSE}
+plot_pointwise_intervals(vec_sub,
+                         res_sub,
+                         jitter_amount = 0.0001,
+                         xlim = c(0, 42),
+                         xlab = "Recruitment (billions of fish)")
+```
+
+
+
+
 ## Highest density interval (HDI) -- moving window approach
 
 ```{r hdimw2, echo = FALSE}
@@ -618,3 +655,17 @@ Grinnell, Chris Grandin, and Kendra Holt for useful comments.
 - Funding (MAM): the Canada Research
 Chairs program, the BC Knowledge Development Fund program, Canada Foundation for
 Innovation, and the Natural Sciences and Engineering Research Council of Canada.
+
+# Move later
+
+<!-- Advice often in the form of 'decision tables' that indicate probabilities of future events given
+different catches:
+
+| Catch (t) in 2023 | Probability spawning biomass declines from 2023 to 2024 | Probability spawning biomass in 2024 falls below 40% of unfished biomass |
+| ----------------: | ------------------------------------------------------: | -----------------------------------------------------------------------: |
+| 0 | 50% | 2% |
+| 180,000 | 72% | 3% |
+| 225,000 | 75% | 3% |
+| 320,000 | 78% | 3% |
+| 430,000 | 85% | 5% |
+-->
