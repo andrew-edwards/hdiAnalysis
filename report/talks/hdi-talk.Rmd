@@ -100,7 +100,7 @@ par("mai" = c(1.02, 0.82, 0.1, 0.42))   # default is 1.02 0.82 0.82 0.42
 
 # https://bookdown.org/yihui/rmarkdown-cookbook/font-color.html . For example:
 # `r colorize("hello", "blue")`
-colorize <- function(x, color){
+colorize <- function(x, color = "red"){
   if(knitr::is_latex_output()) {
     sprintf("\\textcolor{%s}{%s}", color, x)
   } else if(knitr::is_html_output()) {
@@ -155,7 +155,7 @@ uncertainty as much as possible.
 
 ## Example plot that contains 305 credible intervals
 
-```{r motivation, echo=FALSE, out.width = "80%"}
+```{r motivation, echo=FALSE, out.width = "70%"}
 knitr::include_graphics(paste0(here::here(),
                                "report/talks/hake-25-fig-46.png"))
 ```
@@ -326,9 +326,9 @@ plot(res_vec,
 
 ## Highest density interval (HDI) -- alternative approach
 
-All values within HDI are more likely than all those outside it.
+All values within HDI are `r colorize("more likely than all those outside it")`.
 
-HDI is the shortest of all possible 95% credible intervals.
+HDI is the `r colorize("shortest")` of all possible 95% credible intervals.
 
 ```{r hdi3, echo = FALSE}
 plot(res_vec,
@@ -406,7 +406,8 @@ plot(res_all_years,
 
 ## Estimated relative spawning biomass
 
-Relative spawning biomass for each year, 95% credible intervals:
+Relative spawning biomass for each year, 95% credible intervals
+>0.4 is healthy zone:
 ```{r biomassseries, fig.height = 4.5, echo = FALSE}
 plot(res_all_years_2,
      xlim = c(2010, 2027),
@@ -420,7 +421,7 @@ plot(res_all_years_2,
 
 ## Estimated relative spawning biomass
 
-Bonus: relative spawning biomass for each year, 50% credible intervals:
+Relative spawning biomass for each year, 50% credible intervals:
 ```{r biomassseries50, fig.height = 4.5, echo = FALSE}
 res_all_years_3 <- create_intervals(hake_relative_biomass_mcmc, credibility = 0.5)
 
@@ -434,9 +435,24 @@ plot(res_all_years_3,
      ylab = "Relative spawning biomass")
 ```
 
+## Decision tables
+
+Advice is also in the form of 'decision tables' that indicate probabilities of future events given
+different catches. Simplified example:
+
+| Catch (t) in 2024 | Probability spawning biomass declines from 2023 to 2024 | Probability spawning biomass in 2024 falls below 40% of unfished biomass |
+| ----------------: | ------------------------------------------------------: | -----------------------------------------------------------------------: |
+| 0 | 50% | 2% |
+| 180,000 | 72% | 3% |
+| 225,000 | 75% | 3% |
+| 320,000 | 78% | 3% |
+| 430,000 | 85% | 5% |
+
+`r colorize("Unaffected by choice of interval")`
+
 # Moving window
 
-## Equal-tailed intervals -- usual approach
+## Equal-tailed intervals -- calculation for usual approach
 
 ```{r eti1d, echo = FALSE}
 plot_pointwise_intervals(vec_sub,
