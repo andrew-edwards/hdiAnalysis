@@ -138,20 +138,6 @@ Highlights the need to investigate ways to reduce
 uncertainty as much as possible.
 
 
-
-
-# temp
-Pacific Hake assessment from 2023, estimate the historical population size:
-```
-
-```{r hakeintro, echo = FALSE}
-# plot(hake_biomass,
-#     y_max = 3.5)
-```
-
-
-
-
 # ETI
 
 ## Example output from Pacific Hake stock assessment
@@ -655,17 +641,3 @@ Grinnell, Chris Grandin, and Kendra Holt for useful comments.
 - Funding (MAM): the Canada Research
 Chairs program, the BC Knowledge Development Fund program, Canada Foundation for
 Innovation, and the Natural Sciences and Engineering Research Council of Canada.
-
-# Move later
-
-<!-- Advice often in the form of 'decision tables' that indicate probabilities of future events given
-different catches:
-
-| Catch (t) in 2023 | Probability spawning biomass declines from 2023 to 2024 | Probability spawning biomass in 2024 falls below 40% of unfished biomass |
-| ----------------: | ------------------------------------------------------: | -----------------------------------------------------------------------: |
-| 0 | 50% | 2% |
-| 180,000 | 72% | 3% |
-| 225,000 | 75% | 3% |
-| 320,000 | 78% | 3% |
-| 430,000 | 85% | 5% |
--->
