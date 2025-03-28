@@ -448,7 +448,9 @@ different catches. Simplified example:
 | 320,000 | 78% | 3% |
 | 430,000 | 85% | 5% |
 
-`r colorize("Unaffected by choice of interval")`
+`r
+colorize("Unaffected by choice of interval, but we don't generally give
+probabilities for previous years")`
 
 # Other species
 
@@ -591,6 +593,88 @@ mtext("HDIs",
       adj = 0,
       cex = 0.7,
       line = 0.3)
+```
+
+## Pacific Cod (Area 3CD stock, west coast of Vancouver Island)
+
+- Bayesian delay-difference model
+- results from seven models (different
+parameter settings) were combined, 1,000 MCMC samples from each, yielding 7,000
+MCMC samples
+- 95% credible intervals
+- upper stock reference point: the mean of the biomass estimates from
+1956–2004
+- lower reference point: lowest estimated biomass agreed
+upon as an undesirable state to be avoided, defined as estimated biomass in
+1986
+
+## Pacific Cod - recruitment
+
+```{r, recruitment, echo = FALSE}
+credibility_cod <- 0.95
+res_all_years_cod_rec <- create_intervals(cod_rec_mcmc,
+                                          credibility = credibility_cod)
+```
+
+```{r, plotrec, echo = FALSE}
+plot(res_all_years_cod_rec,
+     xlab = "Year",
+     ylab = "Recruitment (millions of fish)",
+     ylim = c(0, 160),
+     y_tick_by = 10,
+     add_line = 0,
+     add_line_col = "grey",
+     add_line_lty = 1)
+```
+
+## Pacific Cod - spawning biomass relative to USR
+
+```{r calcusr, echo = FALSE, warning = FALSE}
+res_all_years_rel_usr <- create_intervals(cod_biomass_over_usr,
+                                          credibility = credibility_cod)
+```
+
+```{r, plotusr, echo = FALSE}
+plot(res_all_years_rel_usr,
+     xlab = "Year",
+     ylab = "Spawning biomass relative to USR",
+     ylim = c(0, 3.25),
+     y_tick_by = 0.25,
+     add_line = 1,
+     add_line_col = "darkgreen")
+```
+
+## Pacific Cod - spawning biomass relative to LRP
+
+```{r, lrp, echo = FALSE, warning = FALSE}
+res_all_years_rel_lrp <- create_intervals(dplyr::select(cod_biomass_over_lrp,
+                                                        -"1986"),
+                                          credibility = credibility_cod)
+```
+
+```{r, plotlpr, echo = FALSE}
+plot(res_all_years_rel_lrp,
+     xlab = "Year",
+     ylab = "Spawning biomass relative to LRP",
+     ylim = c(0, 12),
+     y_tick_by = 0.5,
+     add_line = 1,
+     add_line_col = "darkred")
+```
+
+## Pacific Cod - absolute spawning biomass
+
+Given the symmetry for relative biomass, slightly surprising
+that the intervals do change when looking at `r colorize("absolute")` spawning biomass:
+
+```{r resallyearsabsbiomass, echo = FALSE}
+res_all_years_cod_biomass <- create_intervals(cod_biomass_mcmc,
+                                              credibility = credibility_cod)
+plot(res_all_years_cod_biomass,
+     xlab = "Year",
+     ylab = "Spawning biomass (1000 t)",
+     ylim = c(0, 200),
+     y_tick_by = 10)
 ```
 
 # Moving window
