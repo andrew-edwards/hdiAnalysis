@@ -500,6 +500,99 @@ plot(res_all_years_herring_relative_biomass,
      leg_loc = "topleft")
 ```
 
+## Petrale Sole
+
+- Bayesian delay-difference model
+- combines three different models that assumed different values of natural mortality (with 50% of total samples coming from one
+model and 25% from each of the other two)
+- relative spawning biomass is $B/B_{msy}$
+- critical zone is $B/B_{msy} < 0.4$
+- 95% credible intervals
+
+## Petrale Sole -- relative spawning biomass
+
+```{r, petralerelbiomass, echo = FALSE}
+credibility_petrale <- 0.95
+res_all_years_petrale_relative_biomass <- create_intervals(petrale_relative_biomass_mcmc,
+                                                           credibility = credibility_petrale)
+```
+
+```{r petraleplot1, echo = FALSE}
+plot(res_all_years_petrale_relative_biomass,
+     xlab = "Year",
+     ylab = "Relative spawning biomass",
+     ylim = c(0, 8),
+     leg_loc = "topleft",
+     add_line = 0.4,
+     add_line_col = "darkred")
+```
+
+## Petrale Sole -- relative spawning biomass
+
+```{r plotlikeassessmentpetrale, echo = FALSE}
+to_plot <- res_all_years_petrale_relative_biomass$intervals_all
+
+par(mai = c(0.32, 0.3, 0.15, 0.12),
+    mfrow = c(2,1),
+    mgp = c(1.6,0.5,0),
+    cex = 1)
+
+plot(to_plot$quantity,
+     to_plot$median,
+     type = "o",
+     pch = 16,
+     xlab = "Year",
+     ylab = "", #"Relative spawning biomass",
+     ylim = c(0, 4))
+polygon(x = c(to_plot$quantity,
+              rev(to_plot$quantity)),
+        y = c(to_plot$eti_lower,
+              rev(to_plot$eti_upper)),
+        col = "lightblue",
+        border = NA)
+# Redo to be on top
+points(to_plot$quantity,
+       to_plot$median,
+       type = "o",
+       pch = 16)
+abline(h = 0.4, col = "darkred", lty = 2)
+abline(h = 0.8, col = "darkgreen", lty = 2)
+add_minor_tickmarks(y_tick_by = 1)
+mtext("ETIs",
+      side = 3,
+      adj = 0,
+      cex = 0.7,
+      line = 0.3)
+
+
+plot(to_plot$quantity,
+     to_plot$median,
+     type = "o",
+     pch = 16,
+     xlab = "Year",
+     ylab = "", #"Relative spawning biomass",
+     ylim = c(0, 4))
+polygon(x = c(to_plot$quantity,
+              rev(to_plot$quantity)),
+        y = c(to_plot$hdi_lower,
+              rev(to_plot$hdi_upper)),
+        col = "lightblue",
+        border = NA)
+# Redo to be on top
+points(to_plot$quantity,
+       to_plot$median,
+       type = "o",
+       pch = 16)
+abline(h = 0.4, col = "darkred", lty = 2)
+abline(h = 0.8, col = "darkgreen", lty = 2)
+add_minor_tickmarks(y_tick_by = 1)
+mtext("HDIs",
+      side = 3,
+      adj = 0,
+      cex = 0.7,
+      line = 0.3)
+```
+
 # Moving window
 
 ## Equal-tailed intervals -- calculation for usual approach
