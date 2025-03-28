@@ -117,13 +117,12 @@ knitr::include_graphics(paste0(here::here(),
 
 ## Motivation
 
-- Stock assessments need to communicate uncertainty of estimated quantities
+- Stock assessments need to `r colorize("communicate uncertainty")` of estimated quantities
 
-- Often done through figures and tables depicting 95% credible or confidence
-intervals
+- Often done through figures and tables depicting `r colorize("95\\% credible or confidence intervals")`
 
-- Example: Pacific Hake assessment presents thousands of such intervals. Cannot
-  show full posterior distributions for everything.
+<!-- - Example: Pacific Hake assessment presents thousands of such intervals. Cannot
+  show full estimated distributions for everything. -->
 
 - We show that computing such intervals with the usual equal-tailed approach has
 undesirable consequences
@@ -145,9 +144,18 @@ uncertainty as much as possible.
 
 # ETI
 
-## Example output from Pacific Hake stock assessment
+## Pacific Hake
+
+```{r hakemap, echo=FALSE, out.width = "30%"}
+knitr::include_graphics(paste0(here::here(),
+                               "/report/talks/hake-25-survey-cropped.png"))
+```
+
+## Pacific Hake stock assessment
 
 - Biennial joint Canada/US coastwide survey (California to Haida Gwaii)
+
+- Assessed, reviewed, and managed jointly with US NOAA colleagues
 
 - Statistical catch-at-age model conducted in a Bayesian setting
 
