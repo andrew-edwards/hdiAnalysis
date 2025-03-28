@@ -448,11 +448,17 @@ different catches. Simplified example:
 | 320,000 | 78% | 3% |
 | 430,000 | 85% | 5% |
 
-`r
-colorize("Unaffected by choice of interval, but we don't generally give
-probabilities for previous years")`
+`r colorize("Unaffected by choice of interval, but we don't generally give probabilities for previous years")`
 
 # Other species
+
+## Pacific Herring Strait of Georgia stock
+
+- Bayesian statistical catch-at-age model
+- relative spawning biomass is $B/B_0$
+- recruitment is for `r colorize("age-2 herring")`
+- critical zone is relative spawning biomass < 0.3
+- `r colorize("90\\%")` credible intervals
 
 ## Pacific Herring Strait of Georgia stock -- recruitment
 
@@ -470,7 +476,7 @@ plot(res_all_years_herring_rec,
 
 ## Pacific Herring Strait of Georgia stock -- recruitment
 
-- 90% intervals for age-2 herring
+
 
 - Slight lowering of the HDIs compared to the usual ETIs.
 
@@ -564,7 +570,7 @@ mtext("ETIs",
       side = 3,
       adj = 0,
       cex = 0.7,
-      line = 0.3)
+      line = 0.1)
 
 
 plot(to_plot$quantity,
@@ -592,7 +598,7 @@ mtext("HDIs",
       side = 3,
       adj = 0,
       cex = 0.7,
-      line = 0.3)
+      line = 0.1)
 ```
 
 ## Pacific Cod (Area 3CD stock, west coast of Vancouver Island)
@@ -601,12 +607,12 @@ mtext("HDIs",
 - results from seven models (different
 parameter settings) were combined, 1,000 MCMC samples from each, yielding 7,000
 MCMC samples
-- 95% credible intervals
 - upper stock reference point: the mean of the biomass estimates from
 1956–2004
 - lower reference point: lowest estimated biomass agreed
 upon as an undesirable state to be avoided, defined as estimated biomass in
 1986
+- 95% credible intervals
 
 ## Pacific Cod - recruitment
 
