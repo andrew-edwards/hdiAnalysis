@@ -160,6 +160,15 @@ knitr::include_graphics(paste0(here::here(),
                                "report/talks/hake-25-fig-46.png"))
 ```
 
+
+# temp
+
+```{r vector}
+length(rec_2021)
+summary(rec_2021)
+rec_2021[1:20]
+```
+
 ```{r calc, echo = FALSE}
 res_vec <- create_intervals(rec_2021)
 
@@ -193,9 +202,9 @@ plot(res_vec,
 
 ## Equal-tailed intervals -- usual approach
 
-Values in range a are `r colorize("just as likely")` as values in range b.
+Values in range a are just as likely as values in range b.
 
-But a is `r colorize("outside")` the ETI yet b is `r colorize("inside")` it.
+But a is outside the ETI yet b is inside it.
 ```{r eti2, echo = FALSE}
 plot(res_vec,
      type = "eti",
@@ -208,9 +217,9 @@ plot(res_vec,
 
 ## Equal-tailed intervals -- usual approach
 
-Values in range a are `r colorize("just as likely")` as values in range b.
+Values in range a are just as likely as values in range b.
 
-But a is `r colorize("outside")` the ETI yet b is `r colorize("inside")` it.
+But a is outside the ETI yet b is inside it.
 ```{r eti3, echo = FALSE}
 plot(res_vec,
      type = "eti",
@@ -225,11 +234,11 @@ plot(res_vec,
 
 ## Equal-tailed intervals -- usual approach
 
-All values in range c are `r colorize("more")` likely than all in range d.
+All values in range c are *more* likely than all in range d.
 
 But c is outside the ETI yet d is inside.
 
-This is "Intuitively undesirable" (Kruschke, 2015).
+This is "Intuitively undesirable" Kruschke (2015).
 ```{r eti4, echo = FALSE}
 plot(res_vec,
      type = "eti",
