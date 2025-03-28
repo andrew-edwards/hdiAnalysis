@@ -153,9 +153,9 @@ knitr::include_graphics(paste0(here::here(),
 
 ## Pacific Hake stock assessment
 
-- Biennial joint Canada/US coastwide survey (California to Haida Gwaii)
+- Ecological and economic importance in Canada and US
 
-- Assessed, reviewed, and managed jointly with US NOAA colleagues
+- Surveyed, assessed, reviewed, and managed jointly with US NOAA colleagues
 
 - Statistical catch-at-age model conducted in a Bayesian setting
 
@@ -178,9 +178,11 @@ knitr::include_graphics(paste0(here::here(),
 - estimate of number of age-0 fish in 2001
 - based on the 8000 MCMC samples
 
-```{r vector}
+```{r vector, size = "Large"}
 length(rec_2021)
+
 summary(rec_2021)
+
 rec_2021[1:20]
 ```
 
@@ -418,6 +420,11 @@ plot(res_all_years,
      xlab = "Year",
      ylab = "Recruitment (billions of fish)")
 ```
+
+## Estimated recruitment through time
+
+Total reduction in perceived uncertainty across all years (except 2023 and 2024)
+is `r colorize(">30 billion fish")`.
 
 ## Estimated relative spawning biomass
 
@@ -845,9 +852,9 @@ Occasional uses of HDIs in marine ecology include:
 - estimates of global fisheries
 - analysis of salmon migration
 - development of stock assessment methods
-- summaries of biological and environmental data relating relating to Atlantic Cod
+- summaries of biological and environmental data relating to Atlantic Cod
 - estimating population sizes of sharks and whales
-- one example in a fisheries stock assessment
+- `r colorize("one example")` in a fisheries stock assessment
 
 
 Advantages of HDIs over ETIs not investigated or discussed.
@@ -897,10 +904,40 @@ In general, ETI previously recommended because:
 
 Thus, we recommend investigating the use of HDIs in stock assessments.
 
+## Summary
+
+- results show expected narrower HDIs compared to ETIs
+
+- consquences are stock-specific
+
+- fundamentally, 95% HDI gives the `r colorize("95\\% most likely values")`
+rather than `r colorize("middle 95\\%")` from ETI
+- former seems intuitively desirable, as well as reducing perceived uncertainty
+
+- presenting HDIs or ETIs may come down to a case-specific
+choice
+
+- can have potential management implications
+
+- we encourage `r colorize("investigation")` of potential use of HDIs in stock
+ assessments
+
+- also applies to other fields where skewed distributions arise
+
+\medskip
+
+R package: hdiAnalysis on GitHub, reproduces all results and provides code and
+vignettes for users.
+
 ## Acknowledgments
+
+- Jaclyn Cleary, Mackenzie Mazur, and Robyn Forrest for providing MCMC results
 
 - Catarina Wor, Nick Fisch, Irene Andrushchenko, Paul van Dam-Bates, Matt
 Grinnell, Chris Grandin, and Kendra Holt for useful comments.
+
+- Reviewers (Will Satterthwaite and Allan Hicks) for their thorough and
+  insightful reviews
 
 - Funding (MAM): the Canada Research
 Chairs program, the BC Knowledge Development Fund program, Canada Foundation for
