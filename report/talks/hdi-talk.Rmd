@@ -450,6 +450,56 @@ different catches. Simplified example:
 
 `r colorize("Unaffected by choice of interval")`
 
+# Other species
+
+## Pacific Herring Strait of Georgia stock -- recruitment
+
+```{r herringrec, echo = FALSE}
+credibility_herring <- 0.90
+res_all_years_herring_rec <- create_intervals(herring_recruitment_sog_mcmc,
+                                              credibility = credibility_herring)
+
+plot(res_all_years_herring_rec,
+     xlab = "Year",
+     ylab = "Recruitment (billions of age-2 fish)",
+     leg_loc = "topleft",
+     y_tick_by = 0.5)
+```
+
+## Pacific Herring Strait of Georgia stock -- recruitment
+
+- 90% intervals for age-2 herring
+
+- Slight lowering of the HDIs compared to the usual ETIs.
+
+- Sum of the differences over all years between the width of the ETI and width of
+the HDI is `r colorize("1.6 billion fish")`
+
+- Across all five Pacific Herring major stocks, sum of differences is `r colorize("4.6 billion fish")`
+
+## Pacific Herring -- relative spawning biomass
+
+```{r calcherringrelbiomass, echo = FALSE, warning = FALSE, results = FALSE}
+herring_relative_biomass_sog <- herring_biomass_sog_mcmc /
+  herring_unfished_biomass_sog_mcmc
+herring_relative_biomass_sog <- tibble::as_tibble(herring_relative_biomass_sog) %>%
+  dplyr::select(-`2024`)
+res_all_years_herring_relative_biomass <- create_intervals(herring_relative_biomass_sog,
+                                          credibility = credibility_herring)
+```
+
+0.3 is limit reference point
+```{r, plotherringrelbiomass, echo = FALSE}
+plot(res_all_years_herring_relative_biomass,
+     xlab = "Year",
+     ylab = "Relative spawning biomass",
+     ylim = c(0, 1),
+     y_tick_by = 0.1,
+     add_line = 0.3,
+     add_line_col = "darkred",
+     leg_loc = "topleft")
+```
+
 # Moving window
 
 ## Equal-tailed intervals -- calculation for usual approach
