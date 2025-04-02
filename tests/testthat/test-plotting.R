@@ -29,7 +29,7 @@ test_that("remaining options for plot.intervals_density_list() work", {
 
   expect_invisible(plot(res_all_years_short,
                         type = "separate",
-                        y_ticks_start = NULL))
+                        y_tick_start = NULL))
 
   res_all_years_short_2 <- res_all_years_short
   res_all_years_short_2$intervals_all$quantity  <- rep("a", 4)

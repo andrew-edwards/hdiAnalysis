@@ -133,8 +133,7 @@ test_that("create_intervals.numeric() works with negative MCMC values", {
 
 test_that("decreasing distribution works, for which should be left-hand value or 0 and so add to coverage", {
   exp_sim <- rexp(8000)
-  res_3 <- create_intervals(exp_sim)
-
+  expect_invisible(res_3 <- create_intervals(exp_sim))
 })
 
 # test_that("left-skewed distribution works", {
