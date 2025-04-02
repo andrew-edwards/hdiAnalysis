@@ -443,13 +443,6 @@ plot.intervals_density_list <- function(obj,
            labels = FALSE,
            tcl = -0.3)
     }
-    # y-axis tickmarks:
-    if(is.null(y_tick_start)){
-      y_tick_start <- floor(par("usr")[3])
-    }
-    if(is.null(y_tick_end)){
-      y_tick_end  <- ceiling(par("usr")[4])
-    }
 
     axis(2,
          seq(y_tick_start,
