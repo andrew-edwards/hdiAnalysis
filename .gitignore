@@ -27,9 +27,6 @@ report/hake_natage_res_list.rds
 report/natage_mcmc.rds
 report/pacific-cod/
 
-talks/hdi-talk.tex
-talks/hdi-talk_cache/
-
 vignettes/vignettes-old/
 
 vignettes/results-extra-figs-cache/
