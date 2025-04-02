@@ -1,6 +1,7 @@
 *.html
 *.docx
 *.pdf
+*.pptx
 
 .Rproj.user
 data-raw/hake-2024/*
@@ -12,8 +13,8 @@ report/*cache*
 
 report/herring/herring_mcmc.rds
 report/herring/herring_recruitment_mcmc.rds
-report/talks/hdi-talk.tex
-report/talks/hdi-talk_cache/
+talks/hdi-talk.tex
+talks/hdi-talk_cache/
 report/petrale-sole/*
 
 data/hake_recruitment_mcmc_14_long.rda
@@ -26,12 +27,17 @@ report/hake_natage_res_list.rds
 report/natage_mcmc.rds
 report/pacific-cod/
 
+talks/hdi-talk.tex
+talks/hdi-talk_cache/
+
 vignettes/vignettes-old/
 
 vignettes/results-extra-figs-cache/
 vignettes/results-extra_cache/
 vignettes/results-extra_files/
+vignettes/results-extra_files-subm/
 vignettes/results-figs-cache/
 vignettes/results_cache/
 vignettes/results-herring-petrale-cod-figs-cache/
 vignettes/results-herring-petrale-cod_cache/
+vignettes/*cache*/

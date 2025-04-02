@@ -1,0 +1,100 @@
+---
+title: "Results-hake-amalgamate"
+author: "Andrew Edwards"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Results}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+date: "Last rendered on `r format(Sys.time(), '%d %B, %Y')`"
+---
+
+```{r, rendering, echo = FALSE, eval = FALSE}
+rmarkdown::render("results-hake-amalgamate.Rmd")
+# to build, or click the knit button in RStudio
+```
+
+```{r, options, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  cache = TRUE,
+  cache_path = "results-hake-amalgamate-cache/",
+  fig.path = "results-figs-hake-amalgamate-cache/",
+  fig.width = 7,
+  fig.height = 6
+)
+```
+
+Quickly - wanting a posterior estimate of all recruitments across all
+years. During 2025 meeting. 2024 results as already have here.
+Move somewhere sensible at some point, prob report/
+
+Set up:
+```{r, setup}
+library(hdiAnalysis)
+library(dplyr)
+```
+
+Recruitment, but remove Virgin, 2023, and 2024 (since no data).
+```{r hake_mcmc}
+hake_recruitment_mcmc
+
+tib <- dplyr::select(hake_recruitment_mcmc,
+                     -c("Virgin", "2023", "2024"))
+vec <- unlist(tib)
+nrow(tib) * ncol(tib)
+length(vec)
+
+vec_2024 <- dplyr::select(hake_recruitment_mcmc,
+                          "2024") %>%
+  unlist()
+
+```
+
+```{r vectorres}
+res_vec <- create_intervals(vec)
+res_vec
+
+res_vec_2024 <- create_intervals(vec_2024)
+res_vec_2024
+
+```
+
+```{r plot, fig.height = 4}
+par(mfrow=c(2,1))
+plot(res_vec,
+     type = "eti",
+     xlim = c(0, 30),
+     ylim = c(0, 0.6),
+     y_arrow = 0.6,
+     interval_arrows = FALSE,
+     xlab = "Recruitment (billions of age-0 fish)",
+     arrowhead_gap = 0.1)
+# 2024 assessment results -- all MCMC recruitments (excluding 2023 and 2024)
+
+plot(res_vec_2024,
+     type = "eti",
+     xlim = c(0, 30),
+     ylim = c(0, 0.6),
+     y_arrow = 0.6,
+     interval_arrows = FALSE,
+     xlab = "Recruitment (billions of age-0 fish)",
+     arrowhead_gap = 0.1)
+# 2024 assessment results -- just MCMC recruitment from 2024, so essentially the
+# prior
+
+```
+
+
+and the HDI plot (Figure 1B) is
+```{r plot2, fig.height = 4}
+plot(res_vec,
+     type = "hdi",
+     xlim = c(0, 30),
+     ylim = c(0, 0.6),
+     y_arrow = 0.6,
+     interval_arrows = TRUE,
+     xlab = "Recruitment (billions of age-0 fish)",
+     arrowhead_gap = 0.1)
+```

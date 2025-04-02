@@ -110,7 +110,7 @@ colorize <- function(x, color = "red"){
 
 ```{r coverpage, echo=FALSE, out.width = "100%"}
 knitr::include_graphics(paste0(here::here(),
-                               "/report/talks/hdi-title-slide-bio-2025.png"))
+                               "/talks/hdi-title-slide-bio-2025.png"))
 ```
 
 # Motivation
@@ -145,7 +145,7 @@ uncertainty as much as possible.
 
 ```{r fishpics, echo=FALSE, out.width = "80%"}
 knitr::include_graphics(paste0(here::here(),
-                               "/report/talks/fish-pics.png"))
+                               "/talks/fish-pics.png"))
 ```
 
 # ETI
@@ -154,7 +154,7 @@ knitr::include_graphics(paste0(here::here(),
 
 ```{r hakemap, echo=FALSE, out.width = "30%"}
 knitr::include_graphics(paste0(here::here(),
-                               "/report/talks/hake-25-survey-cropped.png"))
+                               "/talks/hake-25-survey-cropped.png"))
 ```
 
 ## Pacific Hake stock assessment
@@ -176,7 +176,7 @@ knitr::include_graphics(paste0(here::here(),
 
 ```{r motivation, echo=FALSE, out.width = "70%"}
 knitr::include_graphics(paste0(here::here(),
-                               "report/talks/hake-25-fig-46.png"))
+                               "talks/hake-25-fig-46.png"))
 ```
 
 ## Using 2001 recruitment as example
