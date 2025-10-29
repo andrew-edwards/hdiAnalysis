@@ -13,6 +13,8 @@ output:
     keep_tex: yes
     includes:
       in_header: latex-topmatter.tex
+    highlight: espresso
+    # pandoc_args: ["--syntax-highlighting", "default"]
     # toc_depth: 1
     #  title_page_image: "../man/figures/logo.png"
     #  title_page_image_height_in: 1
@@ -34,7 +36,7 @@ urlcolor: blue
 
 load_all()      # as necessary, then
 
-rmarkdown::render("hdi-talk.Rmd")
+rmarkdown::render("hdi-talk.Rmd")xx
 
 or click the knit button in RStudio
 
@@ -90,7 +92,8 @@ knitr::opts_chunk$set(
 # the talk. Have commented as it reloads each time, which isn't necessary.
 library(dplyr)
 library(tibble)
-library(kableExtra)
+# library(kableExtra)   # Don't actually create any tables here, and think it
+# messed up my simple Markdown manual ones.
 
 options(pillar.print_max = 6,   # number of rows to show for a tibble
         pillar.print_min = 6)
@@ -110,7 +113,7 @@ colorize <- function(x, color = "red"){
 
 ```{r coverpage, echo=FALSE, out.width = "100%"}
 knitr::include_graphics(paste0(here::here(),
-                               "/talks/hdi-title-slide-bio-2025.png"))
+                               "/talks/hdi-title-slide-pbs-tesa-2025.png"))
 ```
 
 # Motivation
@@ -400,13 +403,46 @@ mtext("B. Highest density interval", side = 3, adj = 0, cex = 0.7,
 
 ## Comparing ETI and HDI
 
+\begin{table}[]
+\begin{tabular}{lrr}
+\toprule
+Type & Interval & Interval width \\
+\midrule
+ETI & 4.1 -- 29.5 & 25.4 \\
+HDI & 2.8 -- 25.2 & 22.4 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\medskip
+
+So the HDI reduces uncertainty by 3 billion fish.
+
+<!-- 
+From .tex (then simplifying above), as generated from Markdown:
+
+\protect\phantomsection\label{comparing-eti-and-hdi-1}
+{\def\LTcaptype{} % do not increment counter
+\begin{longtable}[]{@{}lrr@{}}
+\toprule\noalign{}
+Type & Interval & Interval width \\
+\midrule\noalign{}
+\endhead
+ETI & 4.1 -- 29.5 & 25.4 \\
+HDI & 2.8 -- 25.2 & 22.4 \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+Markdown version:
+
 | Type | Interval | Interval width |
 | :-------| -----:| -----:|
 | ETI     | 4.1 -- 29.5 | 25.4 |
 | HDI     | 2.8 -- 25.2 | 22.4 |
 
 So the HDI reduces uncertainty by 3 billion fish.
-
+-->
 
 ## Estimated recruitment through time
 
