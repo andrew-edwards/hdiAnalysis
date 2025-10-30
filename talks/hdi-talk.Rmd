@@ -92,6 +92,7 @@ knitr::opts_chunk$set(
 # the talk. Have commented as it reloads each time, which isn't necessary.
 library(dplyr)
 library(tibble)
+library(pacea)
 # library(kableExtra)   # Don't actually create any tables here, and think it
 # messed up my simple Markdown manual ones.
 
@@ -109,6 +110,7 @@ colorize <- function(x, color = "red"){
       x)
   } else x
 }
+source("../R-extra/plot-mcmc-subsample.R") 
 ```
 
 ```{r coverpage, echo=FALSE, out.width = "100%"}
@@ -117,6 +119,23 @@ knitr::include_graphics(paste0(here::here(),
 ```
 
 # Motivation
+
+## Question
+
+You have to summarise 8000 values.
+
+\medskip
+
+What are you more interested in:
+
+\medskip
+
+  - The `r colorize("middle 95\\%")` of values?
+
+\medskip
+
+  - The `r colorize("most likely 95\\%")` of values?
+
 
 ## Motivation
 
@@ -153,12 +172,27 @@ knitr::include_graphics(paste0(here::here(),
 
 # ETI
 
-## Pacific Hake
-
-```{r hakemap, echo=FALSE, out.width = "30%"}
+```{r hakemap, echo=FALSE, out.width = "30%", eval = FALSE}
 knitr::include_graphics(paste0(here::here(),
                                "/talks/hake-25-survey-cropped.png"))
 ```
+
+## Pacific Hake
+
+\begin{columns}[onlytextwidth, T]
+  \begin{column}{0.45\linewidth}
+  \includegraphics[width=0.8\linewidth, height = 0.9\linewidth]{hake-25-survey-cropped.png}
+  \end{column}
+  \begin{column}{.45\linewidth}
+    \begin{itemize}
+	  \item midwater schooling species
+	  \item live to 15-20 years
+	  \item grow to about 1 kg
+	  \item 50\% mature at 2-3~yrs
+    \end{itemize}
+  \end{column}
+\end{columns}
+
 
 ## Pacific Hake stock assessment
 
@@ -174,17 +208,96 @@ knitr::include_graphics(paste0(here::here(),
 
 - Need to summarise these -- done using 95% credible intervals from  8000 Markov chain Monte Carlo samples
 
+\medskip
 
+- Results are from 2024 assessment (Grandin et al., 2024)
+
+<!--
 ## Example plot that contains 305 credible intervals
 
 ```{r motivation, echo=FALSE, out.width = "70%"}
 knitr::include_graphics(paste0(here::here(),
                                "talks/hake-25-fig-46.png"))
 ```
+-->
 
-## Using 2001 recruitment as example
+## MCMC samples of recruitment through time
 
-- estimate of number of age-0 fish in 2001
+```{r recsample1, echo=FALSE}
+y_max_traceplot = 20
+plot_mcmc_subsample(hake_recruitment_mcmc,
+                    highlight = FALSE,
+                    samples_explicit = 1,
+                    samples_lwd = 2,
+                    y_max = y_max_traceplot)
+```
+
+## MCMC samples of recruitment through time
+
+```{r recsample2, echo=FALSE}
+plot_mcmc_subsample(hake_recruitment_mcmc,
+                    highlight = FALSE,
+                    samples_explicit = 1:2,
+                    samples_lwd = 2,
+                    y_max = y_max_traceplot)
+```
+
+## MCMC samples of recruitment through time
+
+```{r recsample3, echo=FALSE}
+plot_mcmc_subsample(hake_recruitment_mcmc,
+                    highlight = FALSE,
+                    samples_explicit = 1:3,
+                    samples_lwd = 2,
+                    y_max = y_max_traceplot)
+```
+
+## MCMC samples of recruitment through time
+
+```{r recsample4, echo=FALSE}
+plot_mcmc_subsample(hake_recruitment_mcmc,
+                    highlight = FALSE,
+                    samples_explicit = 1:4,
+                    samples_lwd = 2,
+                    y_max = y_max_traceplot)
+```
+
+## MCMC samples of recruitment through time
+
+```{r recsample5, echo=FALSE}
+plot_mcmc_subsample(hake_recruitment_mcmc,
+                    highlight = FALSE,
+                    samples_explicit = 1:5,
+                    samples_lwd = 2,
+                    y_max = y_max_traceplot)
+```
+
+## MCMC samples of recruitment through time
+
+```{r recsample20, echo=FALSE}
+plot_mcmc_subsample(hake_recruitment_mcmc,
+                    highlight = FALSE,
+                    samples_explicit = 1:20,
+                    samples_lwd = 2,
+                    y_max = y_max_traceplot)
+```
+
+And that is only 20 of the 8000 MCMC time series for recruitment. 
+
+Hence need to summarise the 8000 values.
+
+## 95% credible intervals of samples of recruitment through time
+
+```{r recsample, echo=FALSE}
+plot(hake_recruitment_2024,
+     xlim = c(lubridate::dmy(01012006),
+              lubridate::dmy(01012025)),
+     y_max = 30)
+```
+
+## Using 2021 recruitment as example
+
+- estimate of number of age-0 fish in 2021
 - based on the 8000 MCMC samples
 
 ```{r vector, size = "Large"}
@@ -524,6 +637,10 @@ different catches. Simplified example:
 - critical zone is relative spawning biomass < 0.3
 - `r colorize("90\\%")` credible intervals
 
+\medskip
+
+- Assessment in 2023 (DFO, 2024a)
+
 ## Pacific Herring Strait of Georgia stock -- recruitment
 
 ```{r herringrec, echo = FALSE}
@@ -539,8 +656,6 @@ plot(res_all_years_herring_rec,
 ```
 
 ## Pacific Herring Strait of Georgia stock -- recruitment
-
-
 
 - Slight lowering of the HDIs compared to the usual ETIs.
 
@@ -577,9 +692,13 @@ plot(res_all_years_herring_relative_biomass,
 - Bayesian delay-difference model
 - combines three different models that assumed different values of natural mortality (with 50% of total samples coming from one
 model and 25% from each of the other two)
-- relative spawning biomass is $B/B_{msy}$
-- critical zone is $B/B_{msy} < 0.4$
+- relative spawning biomass is $B/B_{\mathrm{MSY}}$
+- critical zone is $B/B_{\mathrm{MSY}} < 0.4$
 - 95% credible intervals
+
+\medskip
+
+- Assessment in 2024 (Mazur, Holt, Fisch, and English, in press)
 
 ## Petrale Sole -- relative spawning biomass
 
@@ -677,6 +796,10 @@ MCMC samples
 upon as an undesirable state to be avoided, defined as estimated biomass in
 1986
 - 95% credible intervals
+
+\medskip
+
+- Assessment in 2023 (DFO, 2024b)
 
 ## Pacific Cod - recruitment
 
@@ -892,15 +1015,18 @@ plot(res_vec,
 Occasional uses of HDIs in marine ecology include:
 
 - estimates of global fisheries
-- analysis of salmon migration
-- development of stock assessment methods
+- analysis of salmon migration*
+- development of stock assessment methods*
 - summaries of biological and environmental data relating to Atlantic Cod
-- estimating population sizes of sharks and whales
+- estimating population sizes of sharks and whales*
 - `r colorize("one example")` in a fisheries stock assessment
-
 
 Advantages of HDIs over ETIs not investigated or discussed.
 
+\medskip
+
+*PBS authors: Freshwater et al. (2019), Fisch et al. (2019, 2022), 
+Fisch & Bence (2020), Ford et al. (2014)
 
 ## Discussion
 

@@ -131,7 +131,13 @@ plot_pointwise_intervals <- function(values,
   }
 
   if(type == "moving_window"){
-    mtext(paste0("Moving window interval starting with ordered sample ", moving_window_start),
+    mtext(paste0("Moving window interval with ",
+                 moving_window_start-1,
+                 ifelse(moving_window_start == 2,
+                        " sample on the left,",
+                        " samples on the left,"),
+                 round((1 - credibility) * n - moving_window_start +1),
+                 " on right"),
           side = 3, adj = 0, cex = 1.5,
           line = 0.3)
   }
