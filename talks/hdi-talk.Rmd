@@ -689,7 +689,7 @@ plot(res_all_years_herring_relative_biomass,
 
 ## Petrale Sole
 
-- Bayesian delay-difference model
+- Bayesian statistical catch-at-age model
 - combines three different models that assumed different values of natural mortality (with 50% of total samples coming from one
 model and 25% from each of the other two)
 - relative spawning biomass is $B/B_{\mathrm{MSY}}$
