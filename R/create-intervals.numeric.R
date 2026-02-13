@@ -96,6 +96,10 @@ create_intervals.numeric <- function(dat,
                   width_hdi = hdi_upper - hdi_lower,
                   width_diff = width_eti - width_hdi)
 
+  prop_below_hdi <- sum(dat < intervals$hdi_lower)/length(dat)
+
+  prop_above_hdi <- sum(dat > intervals$hdi_upper)/length(dat)
+
   # old thoughts, might need some, some was figured out:
   # Calculate the pdf value at low and high x values, have to interpolate.
   # Don't need to for HDI, since values will be exact x values, which I hadn't
@@ -208,7 +212,10 @@ create_intervals.numeric <- function(dat,
                                      domain = c(intervals$hdi_lower,
                                                 intervals$hdi_upper),
                                      tol = tol)
+
   intervals <- dplyr::mutate(intervals,
+                             prop_below_hdi = prop_below_hdi,
+                             prop_above_hdi = prop_above_hdi,
                              a_lower = a_lower,
                              b_lower = b_lower,
                              i_eti_lower = i_eti_lower,

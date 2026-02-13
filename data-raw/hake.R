@@ -254,11 +254,11 @@ names(hake_relative_biomass_mcmc) <- gsub(pattern = "Bratio_",
                                           x = names(hake_relative_biomass_mcmc))
 
 
-create_intervals(hake_relative_biomass_mcmc$`2026`)$intervals %>% a()
+B_rel_res_95 <- create_intervals(hake_relative_biomass_mcmc$`2026`)$intervals %>% a()
 # ETI match 2026 assessment bullet point
 
 # 90%:
-create_intervals(hake_relative_biomass_mcmc$`2026`,
+B_rel_res_90 <- create_intervals(hake_relative_biomass_mcmc$`2026`,
                  credibility = 0.9)$intervals %>% a()
 # ETI match 2026 assessment Table 3 first row
 
@@ -277,7 +277,7 @@ names(hake_spawning_biomass_mcmc) <- gsub(pattern = "B_",
 # Convert from tonnes to millions of tonnes to have reasonable numbers:
 hake_spawning_biomass_mcmc <- as_tibble(hake_spawning_biomass_mcmc/1e6)
 
-create_intervals(hake_spawning_biomass_mcmc$`2026`)$intervals %>% a()
+B_res_95 <- create_intervals(hake_spawning_biomass_mcmc$`2026`)$intervals %>% a()
 # ETI match 2026 assessment bullet point
 
 # 90%:

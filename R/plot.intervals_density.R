@@ -21,6 +21,8 @@
 ##' @param rug_top logical whether to show rug at the top for the density values
 ##' @param rug_bottom logical whether to show rug at the bottom for the raw data values
 ##' @param interval_arrows logical whether to show arrows depicting intervals
+##' @param annotate_hdi_arrows logical whether to annotated the outside HDI
+##' arrows with the percentages in each tail
 ##' @param y_arrow value on y-axis to show the arrows depicting intervals
 ##' @param arrowhead_length length of arrowheads on intervals
 ##' @param arrowhead_gap half the gap between arrowheads of interval; manually
@@ -75,6 +77,7 @@ plot.intervals_density <- function(ints_dens,
                                    rug_top = FALSE,
                                    rug_bottom = FALSE,
                                    interval_arrows = FALSE,
+                                   annotate_hdi_arrows = FALSE,
                                    y_arrow = 0.098,
                                    arrowhead_length = 0.2,
                                    arrowhead_gap = 0,
@@ -330,6 +333,23 @@ plot.intervals_density <- function(ints_dens,
            col = col_tail,
            pos = 3)
     }
+
+    # Annotate if HDI if required
+    if(type == "hdi" & annotate_hdi_arrows){
+      text(interval_low/2,
+           y_arrow,
+           paste0(round(ints$prop_below_hdi * 100, 1),
+                        "%"),
+           col = col_tail,
+           pos = 3)
+      text(mean(c(interval_high, par("usr")[2])),
+           y_arrow,
+           paste0(round(ints$prop_above_hdi * 100, 1),
+                  "%"),
+           col = col_tail,
+           pos = 3)
+    }
+
   }
 
   # If HDI is discontinuous then show the regions above the critical value of

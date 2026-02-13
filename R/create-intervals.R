@@ -59,6 +59,11 @@
 ##'     * width_hdi: width of the HDI
 ##'     * width_diff: difference in widths, how much smaller (more certain) the
 ##'   HDI is than the ETI
+##'     * prop_below_hdi: proportion of values that are below the HDI (obviously
+##' 0.025 for 95% ETI, so not reported)
+##'     * prop_above_hdi: proportion of values that are above the HDI
+##'     * a_lower: density at the lower end of interval a (see paper)
+##'     * b_lower: density at the lower end of interval b
 ##'     * i_eti_lower: index for which `eti_lower` is between
 ##'   `dens$x[i_eti_lower]` and `dens$x[i_eti_lower + 1]`
 ##'     * y_eti_lower: linearly interpolated value based on `i_eti_lower`
