@@ -1,4 +1,6 @@
 # Outputs from the hake stock assessment. Run code line-by-line and check plots.
+# For hake SRG in 2026, just running the relevant lines by hand to be able to get the
+# spawning biomass intervals calculated for the talk.
 
 # hake-2024/hake_mcmc.rds contains a large tibble, with each row being an MCMC
 # sample, and columns representing various things we might want to look
@@ -15,7 +17,7 @@
 load_all()
 library(dplyr)
 
-assess_yr <- 2024       # Year of the hake assessment; update each year
+assess_yr <- 2026       # Year of the hake assessment; update each year
 
 # The hake-2024/*.rds files is built automatically from (Andy or Chris Grandin)
 #  running `mcmc_save()` in the hake-assessment repo after having just built the document.
@@ -46,6 +48,7 @@ hake_mcmc
 # This is everything that is saved:
 names(hake_mcmc)
 
+# Jump to the end for calculations for 2026 SRG talk.
 
 # Recruitment
 # Define objects similar to in pacea, but with _mcmc after
@@ -233,3 +236,51 @@ hake_recruitment_mcmc_14_long <- as_tibble(hake_recruitment_mcmc_14_long/1e6)   
 
 usethis::use_data(hake_recruitment_mcmc_14_long,
                   overwrite = TRUE)
+
+# 2026 SRG - jumping to here to do some calculations, not saving anything new in
+# the package.
+
+# Relative spawning biomass
+
+hake_relative_biomass_mcmc <- dplyr::select(hake_mcmc,
+                                            "Bratio_1967":"Bratio_2027")
+                                            # There is no
+                                            # Bratio_unfished, presumably since
+                                            # should all be 1
+hake_relative_biomass_mcmc                  # NOte we will add forecasts on later
+
+names(hake_relative_biomass_mcmc) <- gsub(pattern = "Bratio_",
+                                          replacement = "",
+                                          x = names(hake_relative_biomass_mcmc))
+
+
+create_intervals(hake_relative_biomass_mcmc$`2026`)$intervals %>% a()
+# ETI match 2026 assessment bullet point
+
+# 90%:
+create_intervals(hake_relative_biomass_mcmc$`2026`,
+                 credibility = 0.9)$intervals %>% a()
+# ETI match 2026 assessment Table 3 first row
+
+
+# Female spawning biomass
+
+hake_spawning_biomass_mcmc <- dplyr::select(hake_mcmc,
+                                            "B_Virgin",
+                                            "B_1966":"B_2026")
+hake_spawning_biomass_mcmc
+
+names(hake_spawning_biomass_mcmc) <- gsub(pattern = "B_",
+                                          replacement = "",
+                                          x = names(hake_spawning_biomass_mcmc))
+
+# Convert from tonnes to millions of tonnes to have reasonable numbers:
+hake_spawning_biomass_mcmc <- as_tibble(hake_spawning_biomass_mcmc/1e6)
+
+create_intervals(hake_spawning_biomass_mcmc$`2026`)$intervals %>% a()
+# ETI match 2026 assessment bullet point
+
+# 90%:
+B_res_90 <- create_intervals(hake_spawning_biomass_mcmc$`2026`,
+                 credibility = 0.9)
+

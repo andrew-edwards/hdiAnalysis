@@ -1,5 +1,5 @@
 ---
-title: "Using highest density intervals can reduce perceived uncertainty in stock assessments by billions of fish"
+title: "Using highest density intervals to reduce perceived uncertainty in the Pacific Hake stock assessment"
 author: "Andrew Edwards and Marie Auger-Méthé"
 output:
   beamer_presentation:
@@ -36,7 +36,7 @@ urlcolor: blue
 
 load_all()      # as necessary, then
 
-rmarkdown::render("hdi-talk.Rmd")xx
+rmarkdown::render("hdi-talk.Rmd")
 
 or click the knit button in RStudio
 
@@ -115,10 +115,16 @@ source("../R-extra/plot-mcmc-subsample.R")
 
 ```{r coverpage, echo=FALSE, out.width = "100%"}
 knitr::include_graphics(paste0(here::here(),
-                               "/talks/hdi-title-slide-pbs-tesa-2025.png"))
+                               "/talks/hdi-title-slide-srg-2026.png"))
 ```
 
 # Motivation
+
+## Links
+
+Link to paper: https://doi.org/10.1016/j.fishres.2025.107326
+
+Link to R package: https://github.com/andrew-edwards/hdiAnalysis
 
 ## Question
 
@@ -143,15 +149,15 @@ What are you more interested in:
 
 - Often done through figures and tables depicting `r colorize("95\\% credible or confidence intervals")`
 
-<!-- - Example: Pacific Hake assessment presents thousands of such intervals. Cannot
-  show full estimated distributions for everything. -->
+- The typical Pacific Hake assessment presents thousands of such intervals. Cannot
+  show full estimated distributions for everything.
 
 - We show that computing such intervals with the usual equal-tailed approach has
 undesirable consequences
 
 ## Motivation
 
-Regarding recent assessment results, a fisherman remarked:
+Regarding hake assessment results, a fisherman remarked:
 
 \vspace{10mm}
 
@@ -162,6 +168,8 @@ Regarding recent assessment results, a fisherman remarked:
 
 Highlights the need to investigate ways to reduce
 uncertainty as much as possible.
+
+<!-- 
 
 ## Outline
 
@@ -212,14 +220,35 @@ knitr::include_graphics(paste0(here::here(),
 
 - Results are from 2024 assessment (Grandin et al., 2024)
 
-<!--
-## Example plot that contains 305 credible intervals
-
-```{r motivation, echo=FALSE, out.width = "70%"}
-knitr::include_graphics(paste0(here::here(),
-                               "talks/hake-25-fig-46.png"))
-```
 -->
+
+# ETI
+
+## Pacific Hake stock assessment from 2024
+
+- Statistical catch-at-age model conducted in a Bayesian setting
+
+- Marginal posterior distributions for numerous quantities
+
+- Need to summarise these -- done using 95% credible intervals from  8000 Markov chain Monte Carlo samples
+
+\medskip
+
+- Results shown here are `r colorize("based on 2024 hake assessment")` (Grandin et al., 2024)
+
+
+
+## Example plot that contains 480 credible intervals
+
+\medskip
+
+Fig. 48 of 2024 hake assessment:
+
+```{r motivation, echo=FALSE, out.width = "110%", fig.align = 'center'}
+
+knitr::include_graphics(paste0(here::here(),
+                               "talks/hake-24-fig-48.png"))
+```
 
 ## MCMC samples of recruitment through time
 
@@ -356,7 +385,7 @@ plot(res_vec,
 
 ## Equal-tailed intervals -- usual approach
 
-Values in range a are just as likely as values in range b.
+Values in range a are just as likely as values in range b (same span of y-axis).
 
 But a is outside the ETI yet b is inside it.
 ```{r eti3, echo = FALSE}
@@ -529,7 +558,7 @@ HDI & 2.8 -- 25.2 & 22.4 \\
 
 \medskip
 
-So the HDI reduces uncertainty by 3 billion fish.
+So the HDI reduces perceived uncertainty by 3 billion fish.
 
 <!-- 
 From .tex (then simplifying above), as generated from Markdown:
@@ -627,6 +656,7 @@ different catches. Simplified example:
 
 `r colorize("Unaffected by choice of interval, but we don't generally give probabilities for previous years")`
 
+<!-- 
 # Other species
 
 ## Pacific Herring Strait of Georgia stock
@@ -718,7 +748,9 @@ plot(res_all_years_petrale_relative_biomass,
      add_line_col = "darkred")
 ```
 
-## Petrale Sole -- relative spawning biomass
+--> 
+
+## Petrale Sole example  -- relative spawning biomass
 
 ```{r plotlikeassessmentpetrale, echo = FALSE}
 to_plot <- res_all_years_petrale_relative_biomass$intervals_all
@@ -784,6 +816,7 @@ mtext("HDIs",
       line = 0.1)
 ```
 
+<!-- 
 ## Pacific Cod (Area 3CD stock, west coast of Vancouver Island)
 
 - Bayesian delay-difference model
@@ -869,6 +902,8 @@ plot(res_all_years_cod_biomass,
      ylim = c(0, 200),
      y_tick_by = 10)
 ```
+
+-->
 
 # Moving window
 
@@ -1032,17 +1067,27 @@ Fisch & Bence (2020), Ford et al. (2014)
 
 In general, ETI previously recommended because:
 
-\medskip
+\vspace{\baselineskip}
 
 (i) it has a direct interpretation as the 2.5% and 97.5% percentiles.
 
-\medskip
+\vspace{\baselineskip}
+
+\vspace{\baselineskip}
 
 (ii) it is invariant to nonlinear transformations of the data.
 
-\medskip
+\vspace{\baselineskip}
+
+\vspace{\baselineskip}
 
 (iii) it is easier to compute.
+
+\vspace{\baselineskip}
+
+\vspace{\baselineskip}
+
+\vspace{\baselineskip}
 
 ## Discussion
 
@@ -1061,7 +1106,7 @@ In general, ETI previously recommended because:
 (ii) it is invariant to nonlinear transformations of the data.
 
 **Yes, but usually quantities are defined on the scale of interest**
-
+ 
 \medskip
 
 \pause
@@ -1076,7 +1121,7 @@ Thus, we recommend investigating the use of HDIs in stock assessments.
 
 - results show expected narrower HDIs compared to ETIs
 
-- consquences are stock-specific
+- consequences are stock-specific (not shown here; see paper)
 
 \pause
 
@@ -1087,27 +1132,74 @@ rather than `r colorize("middle 95\\%")` from ETI
 
 \pause
 
-- presenting HDIs or ETIs may come down to a case-specific
-choice
+<!-- - presenting HDIs or ETIs may come down to a case-specific
+choice -->
 
-- can have potential management implications
+- could have potential management implications
 
-- we encourage `r colorize("investigation")` of potential use of HDIs in stock
+<!-- - we encourage `r colorize("investigation")` of potential use of HDIs in stock
  assessments
 
 - also applies to other fields where skewed distributions arise
-
+-->
 \medskip
 
 R package: hdiAnalysis on GitHub, reproduces all results and provides code and
 vignettes for users.
 
-## Acknowledgments
+## Questions for this meeting
 
-- Jaclyn Cleary, Mackenzie Mazur, and Robyn Forrest for providing MCMC results
+1. Thoughts on switching to HDIs for the hake assessment.
+
+  - Caveats:
+    - may take a while to compute given we usually show so many intervals
+
+    - so may want to use HDIs just for main results, have not investigated yet
+
+\medskip
+
+2. And (while we're at it!), why do we mostly* show 95% intervals? Bayesian
+   analyses are often 90%.
+   
+\medskip
+
+*except for forecast Tables 3 and 4.
+
+## One-page summary bullet points from 2026 assessment
+
+
+Relative spawning biomass in 2026:
+
+- The median is 58% with 95% credible interval from 24% to 138% -- `r colorize("ETI", "blue")`
+
+- The median is 58% with 95% credible interval from 19% to 122% -- `r colorize("HDI")`
+
+- The median is 58% with `r colorize("90")`% credible interval from 23% to 105% -- `r colorize("HDI")`
+
+\medskip
+
+\pause
+
+Female spawning biomass at the start of 2026:
+
+- Median is 1,066,200 t, 95% credible interval 415,262 to 2,728,108 t
+  -- `r colorize("ETI", "blue")`
+
+- Median is 1,066,200 t, 95% credible interval 293,757 to 2,372,560 t --
+ `r colorize("HDI")`
+ 
+- Median is 1,066,200 t, `r colorize("90")`% credible interval 385,905 to 2,008,890 t -- `r colorize("HDI")`
+
+
+
+
+## Acknowledgments
 
 - Catarina Wor, Nick Fisch, Irene Andrushchenko, Paul van Dam-Bates, Matt
 Grinnell, Chris Grandin, and Kendra Holt for useful comments.
+
+- Jaclyn Cleary, Mackenzie Mazur, and Robyn Forrest for providing MCMC results
+  (for other stocks in the paper)
 
 - Reviewers (Will Satterthwaite and Allan Hicks) for their thorough and
   insightful reviews
