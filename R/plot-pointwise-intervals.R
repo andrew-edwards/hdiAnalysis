@@ -4,7 +4,9 @@
 ##'
 ##' @param values a vector of values to use, e.g. MCMC outputs
 ##' @param results object of class `intervals_density`, from doing
-##'   `create_intervals(values)`. Would rather not have to recalculate this each time.
+##'   `create_intervals(values)`. Would rather not have to recalculate this each
+##' time.
+##' @param annotate_hdi_arrows logical whether to annotated the outside HDI
 ##' @return
 ##' @export
 ##' @author Andrew Edwards
@@ -15,12 +17,13 @@
 plot_pointwise_intervals <- function(values,
                                      ints_dens,
                                      type = "eti",   # type of plot to do, can
-                                        # be "moving_window" also
+                                        # be "hdi" or "moving_window" also
                                      col_main = "blue",
                                      col_main_text = NULL,
                                      col_tail = "red",
                                      jitter_amount = 0.005,
                                      interval_arrows = TRUE,
+                                     annotate_hdi_arrows = TRUE,
                                      arrowhead_gap = 0,
                                      arrowhead_length = 0.2,
                                      y_lim = c(0.95, 1.05),
@@ -28,7 +31,8 @@ plot_pointwise_intervals <- function(values,
                                      moving_window_start = 2,  # index to start
                                         # the interval
                                      ...){
-  vals <- values
+  vals <- sort(values)   # if sort should not overlap plots and get straighter
+  # delineation at the interval ends
   n <- length(vals)
 
   ints <- ints_dens$intervals
@@ -46,7 +50,15 @@ plot_pointwise_intervals <- function(values,
   if(type == "eti"){
     interval_low <- ints$eti_lower
     interval_high <- ints$eti_upper
-  } else {          # type == "moving_window"
+  }
+
+  if(type == "hdi"){
+    interval_low <- ints$hdi_lower
+    interval_high <- ints$hdi_upper
+  }
+
+  # can prob remove sort here
+  if(type == "moving_window"){
     interval_low <- sort(vals)[moving_window_start]  # first point in interval
     points_in_interval <- credibility * n
     interval_high <- sort(vals)[moving_window_start + points_in_interval - 1] # last
@@ -122,10 +134,34 @@ plot_pointwise_intervals <- function(values,
            col = col_tail,
            pos = 3)
     }
+
+   # Annotate if HDI
+    if(type == "hdi" & annotate_hdi_arrows){
+      text(interval_low/2,
+           y_arrow,
+           paste0(round(ints$prop_below_hdi * 100, 1),
+                        "%"),
+           col = col_tail,
+           pos = 3)
+      text(mean(c(interval_high, par("usr")[2])),
+           y_arrow,
+           paste0(round(ints$prop_above_hdi * 100, 1),
+                  "%"),
+           col = col_tail,
+           pos = 3)
+    }
+
+
   }
 
   if(type == "eti"){
     mtext(paste0("Equal-tailed interval based on ", n, " samples"),
+          side = 3, adj = 0, cex = 1.5,
+          line = 0.3)
+  }
+
+  if(type == "hdi"){
+    mtext(paste0("Highest density interval based on ", n, " samples"),
           side = 3, adj = 0, cex = 1.5,
           line = 0.3)
   }

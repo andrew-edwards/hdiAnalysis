@@ -1,100 +1,3 @@
-# What percentage of values lie below the HDI (2021 recruitment example)
-
-```{r, both, echo=FALSE}
-par(mai = c(0.32, 0.3, 0.15, 0.12),
-    mfrow = c(2,1),
-    mgp = c(1.6,0.5,0),
-    cex = 0.6)
-
-plot(res_vec,
-     type = "eti",
-     xlim = c(0, 40),
-     ylim = c(0, 0.11),
-     interval_arrows = TRUE,
-     xlab = "Recruitment (billions of age-0 fish)",
-     arrowhead_gap = 0.1)
-
-mtext("A. Equal-tailed interval", side = 3, adj = 0, cex = 0.7,
-line = 0.3)
-
-plot(res_vec,
-     type = "hdi",
-     xlim = c(0, 40),
-     ylim = c(0, 0.11),
-     interval_arrows = TRUE,
-     xlab = "Recruitment (billions of age-0 fish)",
-     arrowhead_gap = 0.1)
-
-mtext("B. Highest density interval", side = 3, adj = 0, cex = 0.7,
-        line = 0.3)
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\medskip
-
-  - The `r colorize("middle 95\\%")` of values?
-
-\medskip
-
-  - The `r colorize("most likely 95\\%")` of values?
-
-
-## Motivation
-
-- Stock assessments need to `r colorize("communicate uncertainty")` of estimated quantities
-
-- Often done through figures and tables depicting `r colorize("95\\% credible or confidence intervals")`
-
-- The typical Pacific Hake assessment presents thousands of such intervals. Cannot
-  show full estimated distributions for everything.
-
-- We show that computing such intervals with the usual equal-tailed approach has
-undesirable consequences
-
-## Motivation
-
-Regarding hake assessment results, a fisherman remarked:
-
-\vspace{10mm}
-
-\centering
-*No offence to anyone, but my granddaughter could provide that amount of uncertainty.*
-
-\vspace{10mm}
-
-Highlights the need to investigate ways to reduce
-uncertainty as much as possible.
-
-<!-- 
-
-## Outline
-
-```{r fishpics, echo=FALSE, out.width = "80%"}
-knitr::include_graphics(paste0(here::here(),
-                               "/talks/fish-pics.png"))
-```
-
 ---
 title: "Some plots related to SRG 2026 discussion"
 author: "Andrew Edwards"
@@ -108,8 +11,8 @@ output:
     # fig_height: 5
     # fig_width: 8
     keep_tex: yes
-    includes:
-      in_header: latex-topmatter.tex
+    #includes:
+    #  in_header: latex-topmatter.tex  # gave me errors suddenly
     highlight: espresso
     # pandoc_args: ["--syntax-highlighting", "default"]
     # toc_depth: 1
@@ -210,166 +113,7 @@ colorize <- function(x, color = "red"){
 source("../R-extra/plot-mcmc-subsample.R") 
 ```
 
-# ETI
-
-```{r hakemap, echo=FALSE, out.width = "30%", eval = FALSE}
-knitr::include_graphics(paste0(here::here(),
-                               "/talks/hake-25-survey-cropped.png"))
-```
-
-## Pacific Hake
-
-\begin{columns}[onlytextwidth, T]
-  \begin{column}{0.45\linewidth}
-  \includegraphics[width=0.8\linewidth, height = 0.9\linewidth]{hake-25-survey-cropped.png}
-  \end{column}
-  \begin{column}{.45\linewidth}
-    \begin{itemize}
-	  \item midwater schooling species
-	  \item live to 15-20 years
-	  \item grow to about 1 kg
-	  \item 50\% mature at 2-3~yrs
-    \end{itemize}
-  \end{column}
-\end{columns}
-
-
-## Pacific Hake stock assessment
-
-- Ecological and economic importance in Canada and US
-
-- Surveyed, assessed, reviewed, and managed jointly with US NOAA colleagues
-
-- Statistical catch-at-age model conducted in a Bayesian setting
-
-\pause
-
-- Marginal posterior distributions for numerous quantities
-
-- Need to summarise these -- done using 95% credible intervals from  8000 Markov chain Monte Carlo samples
-
-\medskip
-
-- Results are from 2024 assessment (Grandin et al., 2024)
-
--->
-
-# ETI
-
-## Pacific Hake stock assessment from 2024
-
-- Statistical catch-at-age model conducted in a Bayesian setting
-
-- Marginal posterior distributions for numerous quantities
-
-- Need to summarise these -- done using 95% credible intervals from  8000 Markov chain Monte Carlo samples
-
-\medskip
-
-- Results shown here are `r colorize("based on 2024 hake assessment")` (Grandin et al., 2024)
-
-
-
-## Example plot that contains 480 credible intervals
-
-\medskip
-
-Fig. 48 of 2024 hake assessment:
-
-```{r motivation, echo=FALSE, out.width = "110%", fig.align = 'center'}
-
-knitr::include_graphics(paste0(here::here(),
-                               "talks/hake-24-fig-48.png"))
-```
-
-## MCMC samples of recruitment through time
-
-```{r recsample1, echo=FALSE}
-y_max_traceplot = 20
-plot_mcmc_subsample(hake_recruitment_mcmc,
-                    highlight = FALSE,
-                    samples_explicit = 1,
-                    samples_lwd = 2,
-                    y_max = y_max_traceplot)
-```
-
-## MCMC samples of recruitment through time
-
-```{r recsample2, echo=FALSE}
-plot_mcmc_subsample(hake_recruitment_mcmc,
-                    highlight = FALSE,
-                    samples_explicit = 1:2,
-                    samples_lwd = 2,
-                    y_max = y_max_traceplot)
-```
-
-## MCMC samples of recruitment through time
-
-```{r recsample3, echo=FALSE}
-plot_mcmc_subsample(hake_recruitment_mcmc,
-                    highlight = FALSE,
-                    samples_explicit = 1:3,
-                    samples_lwd = 2,
-                    y_max = y_max_traceplot)
-```
-
-## MCMC samples of recruitment through time
-
-```{r recsample4, echo=FALSE}
-plot_mcmc_subsample(hake_recruitment_mcmc,
-                    highlight = FALSE,
-                    samples_explicit = 1:4,
-                    samples_lwd = 2,
-                    y_max = y_max_traceplot)
-```
-
-## MCMC samples of recruitment through time
-
-```{r recsample5, echo=FALSE}
-plot_mcmc_subsample(hake_recruitment_mcmc,
-                    highlight = FALSE,
-                    samples_explicit = 1:5,
-                    samples_lwd = 2,
-                    y_max = y_max_traceplot)
-```
-
-## MCMC samples of recruitment through time
-
-```{r recsample20, echo=FALSE}
-plot_mcmc_subsample(hake_recruitment_mcmc,
-                    highlight = FALSE,
-                    samples_explicit = 1:20,
-                    samples_lwd = 2,
-                    y_max = y_max_traceplot)
-```
-
-And that is only 20 of the 8000 MCMC time series for recruitment. 
-
-Hence need to summarise the 8000 values.
-
-## 95% credible intervals of samples of recruitment through time
-
-```{r recsample, echo=FALSE}
-plot(hake_recruitment_2024,
-     xlim = c(lubridate::dmy(01012006),
-              lubridate::dmy(01012025)),
-     y_max = 30)
-```
-
-## Using 2021 recruitment as example
-
-- estimate of number of age-0 fish in 2021
-- based on the 8000 MCMC samples
-
-```{r vector, size = "Large"}
-length(rec_2021)
-
-summary(rec_2021)
-
-rec_2021[1:20]
-```
-
-## Equal-tailed intervals for 2021 recruitment -- usual approach
+## Intervals for 2021 recruitment (2024 assessment)
 
 ```{r calc, echo = FALSE}
 res_vec <- create_intervals(rec_2021)
@@ -379,6 +123,8 @@ vec_sub <- sample(rec_2021, 200)    # then can easily see the 5 at each end
 res_sub <- create_intervals(vec_sub)
 ```
 
+## ETI
+
 ```{r eti1d2, echo = FALSE}
 plot_pointwise_intervals(rec_2021,
                          res_vec,
@@ -386,6 +132,127 @@ plot_pointwise_intervals(rec_2021,
                          xlim = c(0, 42),
                          xlab = "Recruitment (billions of fish)")
 ```
+
+## HDI
+
+```{r hdipoints2, echo = FALSE}
+plot_pointwise_intervals(rec_2021,
+                         res_vec,
+                         type = "hdi",
+                         xlim = c(0, 42),
+                         jitter_amount = 0.01,
+                         xlab = "Recruitment (billions of fish)")
+```
+
+
+## Full x range 
+
+```{r eti1d3, echo = FALSE}
+plot_pointwise_intervals(rec_2021,
+                         res_vec,
+                         jitter_amount = 0.01,
+                         xlab = "Recruitment (billions of fish)")
+```
+
+## Full x range - HDI
+
+```{r hdipoints, echo = FALSE}
+plot_pointwise_intervals(rec_2021,
+                         res_vec,
+                         type = "hdi",
+                         jitter_amount = 0.01,
+                         xlab = "Recruitment (billions of fish)")
+```
+
+## Relative spawning biomass
+
+```{r, relbiomass, echo = FALSE)
+res_rel_biomass_2024 <- create_intervals(hake_relative_biomass_mcmc$`2024`,
+                                         credibility = 0.6)
+```
+
+```{r relbioplot, echo = FALSE}
+plot_pointwise_intervals(hake_relative_biomass_mcmc$`2024`,
+                         res_rel_biomass_2024,
+                         jitter_amount = 0.01,
+                         xlab = "Relative spawning biomass")
+```
+
+## Relative spawning biomass
+
+```{r relbioplot2, echo = FALSE}
+plot_pointwise_intervals(hake_relative_biomass_mcmc$`2024`,
+                         res_rel_biomass_2024,
+                         type = "hdi",
+                         jitter_amount = 0.01,
+                         xlab = "Relative spawning biomass")
+```
+
+## Relative spawning biomass
+
+```{r relbioplot3, echo = FALSE}
+plot_pointwise_intervals(hake_relative_biomass_mcmc$`2024`,
+                         res_rel_biomass_2024,
+                         jitter_amount = 0.01,
+                         xlim = c(0, 3),
+                         xlab = "Relative spawning biomass")
+abline(v = 0.4,
+       col = "darkgray")
+```
+
+## Relative spawning biomass
+
+```{r relbioplot4, echo = FALSE}
+plot_pointwise_intervals(hake_relative_biomass_mcmc$`2024`,
+                         res_rel_biomass_2024,
+                         type = "hdi",
+                         jitter_amount = 0.01,
+                         xlim = c(0, 3),                         
+                         xlab = "Relative spawning biomass")
+abline(v = 0.4,
+       col = "darkgray")
+```
+
+
+# What percentage of values lie below the HDI (2021 recruitment example)
+
+```{r, both, echo=FALSE}
+par(mai = c(0.32, 0.3, 0.15, 0.12),
+    mfrow = c(2,1),
+    mgp = c(1.6,0.5,0),
+    cex = 0.6)
+
+plot(res_vec,
+     type = "eti",
+     xlim = c(0, 40),
+     ylim = c(0, 0.11),
+     interval_arrows = TRUE,
+     xlab = "Recruitment (billions of age-0 fish)",
+     arrowhead_gap = 0.1)
+
+mtext("A. Equal-tailed interval", side = 3, adj = 0, cex = 0.7,
+line = 0.3)
+
+plot(res_vec,
+     type = "hdi",
+     xlim = c(0, 40),
+     ylim = c(0, 0.11),
+     interval_arrows = TRUE,
+     xlab = "Recruitment (billions of age-0 fish)",
+     arrowhead_gap = 0.1,
+     annotate_hdi_arrows = TRUE)
+
+mtext("B. Highest density interval", side = 3, adj = 0, cex = 0.7,
+        line = 0.3)
+```
+
+
+
+```{r, stop, cache = FALSE, echo = FALSE}
+knitr::knit_exit()
+```
+
+
 
 ## Equal-tailed intervals -- usual approach
 
