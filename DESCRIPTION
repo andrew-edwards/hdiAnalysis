@@ -21,7 +21,7 @@ LazyData: true
 LazyDataCompression: xz
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
-Remotes: github::pbs-assess/pacea
+Remotes: github::andrew-edwards/HDIanalysis
 Imports:
     dplyr (>= 1.0.2),
     HDInterval,
