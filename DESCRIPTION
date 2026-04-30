@@ -10,8 +10,8 @@ Authors@R: c(
         email = "auger-methe@stat.ubc.ca",
         role = c("aut"),
         comment = c(ORCID = "0000-0003-3550-4930")))
-URL: https://github.com/andrew-edwards/HDIanalysis
-BugReports: https://github.com/andrew-edwards/HDIanalysis/issues
+URL: https://github.com/andrew-edwards/hdiAnalysis
+BugReports: https://github.com/andrew-edwards/hdiAnalysis/issues
 Maintainer: Andrew Edwards <andrew.edwards@dfo-mpo.gc.ca>
 Date: 2025-01-30
 Description: This package provides functionality to calculate, understand, and plot highest density intervals. In our manuscript 'Reducing uncertainty in stock assessments by billions of fish' we show that using highest density intervals to characterise uncertainty is preferable to using the usual equal-tailed intervals. This was for a specific fisheries stock assessment, but the lessons are more generally applicable. See the manuscript and GitHub site (particularly vignettes) for details.
@@ -21,7 +21,7 @@ LazyData: true
 LazyDataCompression: xz
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
-Remotes: github::andrew-edwards/HDIanalysis
+Remotes: github::andrew-edwards/hdiAnalysis
 Imports:
     dplyr (>= 1.0.2),
     HDInterval,
